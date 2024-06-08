@@ -24,6 +24,16 @@ export default defineNuxtConfig({
     },
   },
 
+  routeRules: {
+    '/': {
+      swr: true,
+    },
+    '/sitemap.xml': {
+      prerender: true,
+    },
+    '/informasi/**': { isr: true },
+  },
+
   modules: [
     '@unocss/nuxt',
     '@nuxt/image',
@@ -91,9 +101,9 @@ export default defineNuxtConfig({
         },
         viewportSize: true,
       },
-      styles: {
-        configFile: 'assets/app.scss',
-      },
+      // styles: {
+      // configFile: 'assets/app.scss',
+      // },
     },
   },
   pwa: {
