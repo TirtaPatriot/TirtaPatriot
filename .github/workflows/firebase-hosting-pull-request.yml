@@ -17,8 +17,8 @@ jobs:
         run: |
           echo $ENV_PROD | base64 --decode > .env
       - run: bun run generate
-      - uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_PERUMDA_TIRTAPATRIOT }}'
-          projectId: perumda-tirtapatriot
+      # - uses: FirebaseExtended/action-hosting-deploy@v0
+      #   with:
+      #     repoToken: '${{ secrets.GITHUB_TOKEN }}'
+      #     firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_PERUMDA_TIRTAPATRIOT }}'
+      #     projectId: perumda-tirtapatriot

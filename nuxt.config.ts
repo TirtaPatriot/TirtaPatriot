@@ -24,14 +24,6 @@ export default defineNuxtConfig({
     },
   },
 
-  nitro: {
-    prerender: {
-      routes: [
-        '/sitemap.xml',
-      ],
-    },
-  },
-
   modules: [
     '@unocss/nuxt',
     '@nuxt/image',
@@ -46,6 +38,9 @@ export default defineNuxtConfig({
     url: process.env.NUXT_PUBLIC_DIRECTUS_URL,
   },
   site: {
+    url: 'https://tirtapatriot.co.id',
+    name: 'Perumda Tirta Patriot',
+    description: 'Menyediakan air lebih bersih, lebih sehat, lebih terjangkau.',
     defaultLocale: 'id',
   },
   seo: {
