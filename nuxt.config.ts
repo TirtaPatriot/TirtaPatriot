@@ -46,7 +46,7 @@ export default defineNuxtConfig({
     url: process.env.NUXT_PUBLIC_DIRECTUS_URL,
   },
   site: {
-
+    defaultLocale: 'id',
   },
   seo: {
     splash: true,

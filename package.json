@@ -1,7 +1,9 @@
 {
-  "name": "nuxt-app",
+  "name": "Perumda Tirta Patriot",
   "type": "module",
   "private": true,
+  "description": "Menyediakan air lebih bersih, lebih sehat, lebih terjangkau.",
+  "homepage": "https://tirtapatriot.co.id",
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
