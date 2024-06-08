@@ -1,0 +1,44 @@
+{
+  "name": "nuxt-app",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "lint": "eslint . --fix",
+    "postinstall": "nuxt prepare"
+  },
+  "dependencies": {
+    "@iconify/vue": "^4.1.2",
+    "@nuxtjs/seo": "^2.0.0-rc.10",
+    "@productdevbook/chatwoot": "^1.5.0",
+    "nuxt": "^3.11.2",
+    "nuxt-directus": "^5.6.1",
+    "nuxt-icon": "^0.6.10",
+    "vue": "^3.4.21",
+    "vue-recaptcha-v3": "^2.0.1",
+    "vue-router": "^4.3.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^2.16.1",
+    "@iconify-json/mdi": "^1.1.66",
+    "@nuxt/image": "^1.7.0",
+    "@nuxtjs/google-fonts": "^3.2.0",
+    "@unocss/eslint-plugin": "^0.59.4",
+    "@unocss/nuxt": "^0.59.4",
+    "@vite-pwa/assets-generator": "^0.2.4",
+    "@vite-pwa/nuxt": "^0.7.0",
+    "eslint": "^9.2.0",
+    "sass": "^1.76.0",
+    "sharp": "^0.33.4",
+    "vuetify-nuxt-module": "^0.13.5"
+  },
+  "trustedDependencies": [
+    "sharp",
+    "esbuild",
+    "vue-demi"
+  ]
+}

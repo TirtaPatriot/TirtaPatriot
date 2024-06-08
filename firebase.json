@@ -1,0 +1,11 @@
+{
+  "hosting": {
+    "site": "perumdatirtapatriot",
+    "public": ".output/public",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }
+}
