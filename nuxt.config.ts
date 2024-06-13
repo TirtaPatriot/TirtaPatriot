@@ -26,7 +26,7 @@ export default defineNuxtConfig({
 
   routeRules: {
     '/': {
-      prerender: true,
+      swr: true,
     },
     '/sitemap.xml': {
       prerender: true,
