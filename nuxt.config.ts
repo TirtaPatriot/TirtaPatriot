@@ -26,7 +26,7 @@ export default defineNuxtConfig({
 
   routeRules: {
     '/': {
-      swr: true,
+      prerender: true,
     },
     '/sitemap.xml': {
       prerender: true,
@@ -54,8 +54,8 @@ export default defineNuxtConfig({
     defaultLocale: 'id',
   },
   seo: {
-    splash: true,
-    redirectToCanonicalSiteUrl: true,
+    splash: false,
+    // redirectToCanonicalSiteUrl: true,
   },
   sitemap: {
     enabled: true,

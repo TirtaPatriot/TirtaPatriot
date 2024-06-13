@@ -1,4 +1,9 @@
 <script lang="ts" setup>
+definePageMeta({
+  alias: [
+    '/tempat-pembayaran',
+  ]
+})
 const { getItems } = useDirectusItems()
 
 const { data } = await useAsyncData<any[]>(

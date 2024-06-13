@@ -1,5 +1,10 @@
 <script lang="ts" setup>
-
+definePageMeta({
+  alias: [
+    '/info/berita',
+    '/pengumuman-pelanggan',
+  ],
+})
 </script>
 
 <template>

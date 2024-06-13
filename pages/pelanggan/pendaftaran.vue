@@ -1,4 +1,9 @@
 <script lang="ts" setup>
+definePageMeta({
+  alias: [
+    '/pendaftaran-pasang-baru',
+  ],
+})
 </script>
 
 <template>

@@ -1,4 +1,9 @@
 <script lang="ts" setup>
+definePageMeta({
+  alias: [
+    '/profile',
+  ]
+})
 const { sm, xs } = useDisplay()
 
 const { getItems } = useDirectusItems()

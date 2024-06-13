@@ -1,6 +1,9 @@
 <script lang="ts" setup>
-// import { VueReCaptcha, useReCaptcha } from 'vue-recaptcha-v3'
-
+definePageMeta({
+  alias: [
+    '/info/tagihan',
+  ]
+})
 const body = reactive({
   pelanggan: '',
 })
