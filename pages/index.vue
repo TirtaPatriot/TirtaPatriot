@@ -6,10 +6,6 @@ defineOgImageComponent('NuxtSeo', {
   theme: '#0487d2',
 })
 
-definePageMeta({
-  alias: ['/'],
-})
-
 const { mdAndDown } = useDisplay()
 useHead({
   title: 'Beranda',
