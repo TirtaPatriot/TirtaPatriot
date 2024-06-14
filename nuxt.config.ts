@@ -25,13 +25,13 @@ export default defineNuxtConfig({
   },
 
   routeRules: {
-    '/': {
-      swr: true,
-    },
-    '/sitemap.xml': {
-      prerender: true,
-    },
-    '/informasi/**': { isr: true },
+    // '/': {
+    //   swr: true,
+    // },
+    // '/sitemap.xml': {
+    //   prerender: true,
+    // },
+    // '/informasi/**': { isr: true },
   },
 
   modules: [
