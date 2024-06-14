@@ -117,7 +117,7 @@ export default defineNuxtConfig({
       runtimeCaching: [
         {
           handler: 'NetworkOnly',
-          urlPattern: /\/api\/.*/,
+          urlPattern: /(\/api)|https:\/\/cms.tirtapatriot.net\/.*/,
           method: 'POST',
           options: {
             backgroundSync: {
@@ -129,7 +129,7 @@ export default defineNuxtConfig({
           },
         },
         {
-          urlPattern: /\/api\/.*/i,
+          urlPattern: /(\/api)|https:\/\/cms.tirtapatriot.net\/.*/i,
           handler: 'CacheFirst',
           method: 'GET',
           options: {
@@ -147,7 +147,7 @@ export default defineNuxtConfig({
     },
     client: {
       installPrompt: true,
-      periodicSyncForUpdates: 3600,
+      periodicSyncForUpdates: 1800,
     },
     manifest: {
       name: 'TirtaPatriot',
