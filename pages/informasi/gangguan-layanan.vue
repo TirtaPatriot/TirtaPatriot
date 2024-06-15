@@ -8,7 +8,7 @@
 
     <v-container>
       <v-banner
-        class="border-thin my-4 py-4"
+        class="my-4 border-thin py-4"
         color="success"
         icon="i-mdi:check"
       >

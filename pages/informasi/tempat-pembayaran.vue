@@ -2,7 +2,7 @@
 definePageMeta({
   alias: [
     '/tempat-pembayaran',
-  ]
+  ],
 })
 const { getItems } = useDirectusItems()
 

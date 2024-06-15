@@ -94,8 +94,8 @@ export default defineNuxtConfig({
   vuetify: {
     moduleOptions: {
       ssrClientHints: {
-        reloadOnFirstRequest: false,
-        prefersColorScheme: true,
+        reloadOnFirstRequest: true,
+        prefersColorScheme: false,
         prefersColorSchemeOptions: {
           useBrowserThemeOnly: false,
         },
@@ -150,7 +150,7 @@ export default defineNuxtConfig({
       periodicSyncForUpdates: 1800,
     },
     manifest: {
-      name: 'TirtaPatriot',
+      name: 'Tirta Patriot',
       short_name: 'Perumda Tirta Patriot',
       description: 'Menyediakan air lebih bersih, lebih sehat, lebih terjangkau.',
       theme_color: '#ffffff',

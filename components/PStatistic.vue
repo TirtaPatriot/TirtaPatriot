@@ -11,7 +11,7 @@ const { data } = await useAsyncData(
 
 <template>
   <v-container>
-    <h3 class="text-white text-h6 text-center">
+    <h3 class="text-white text-center text-h6">
       Statistik Terakhir
     </h3>
     <v-divider />

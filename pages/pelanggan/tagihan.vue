@@ -2,7 +2,7 @@
 definePageMeta({
   alias: [
     '/info/tagihan',
-  ]
+  ],
 })
 const body = reactive({
   pelanggan: '',

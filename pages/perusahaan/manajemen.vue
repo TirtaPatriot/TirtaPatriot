@@ -2,23 +2,26 @@
 definePageMeta({
   alias: [
     '/profile',
-  ]
+  ],
 })
 const { sm, xs } = useDisplay()
 
 const { getItems } = useDirectusItems()
 
-const manPow = await getItems<any>({
-  collection: 'manajemen_pegawai',
-  params: {
-    fields: ['id', 'nama', 'jabatan', 'foto'],
-    filter: {
-      manajemen: {
-        _eq: 'direksi',
+const { data } = await useAsyncData(
+  'manajemen',
+  () => getItems<any>({
+    collection: 'manajemen_pegawai',
+    params: {
+      fields: ['id', 'nama', 'jabatan', 'foto'],
+      filter: {
+        manajemen: {
+          _eq: 'direksi',
+        },
       },
     },
-  },
-})
+  }),
+)
 </script>
 
 <template>
@@ -40,7 +43,7 @@ const manPow = await getItems<any>({
         JAJARAN <strong>DIREKSI</strong>
       </div>
       <v-row justify="center" align-content="center">
-        <v-col v-for="d of manPow" :key="d.id" :cols="xs ? 12 : sm ? 6 : 3">
+        <v-col v-for="d of data" :key="d.id" :cols="xs ? 12 : sm ? 6 : 3">
           <!-- <v-card class="mx-auto text-center" max-width="400"> -->
           <p-img style="text-shadow: -2px 1px 5px black" class="text-center text-white text-uppercase w-100 bg-blue align-end" :src="d.foto" :height="3512 / 10" :width="2558 / 10" provider="directus">
             <h5>

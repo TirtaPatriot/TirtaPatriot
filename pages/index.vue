@@ -59,7 +59,9 @@ const { data } = await useAsyncData(
 
 <template>
   <v-main>
-    <!-- <p-img cover src="/assets/bg_slide-1.jpg" aspect-ratio="1" :height="540">
+    {{
+      /*
+      <p-img cover src="/assets/bg_slide-1.jpg" aspect-ratio="1" :height="540">
       <div class="mx-4 text-white fill-height d-flex justify-center flex-column">
         <h1 class="mb-4 text-uppercase text-h4 text-md-right">
           Perumda Tirta Patriot
@@ -68,7 +70,9 @@ const { data } = await useAsyncData(
           Menyediakan air lebih bersih, lebih sehat, lebih terjangkau.
         </h4>
       </div>
-    </p-img> -->
+      </p-img>
+      */
+    }}
 
     <v-carousel
       class="w-100"
@@ -88,16 +92,20 @@ const { data } = await useAsyncData(
         class="w-100"
         :alt="slide.alt || slide.title"
       >
-        <!-- <v-sheet
+        {{
+      /*
+      <!-- <v-sheet
           :color="colors[i]"
           height="100%"
         >
           <div class="d-flex fill-height justify-center align-center">
             <div class="text-h2">
-              {{ slide }} Slide
+              { slide } Slide
             </div>
           </div>
         </v-sheet> -->
+      */
+      }}
       </p-carousel-item>
     </v-carousel>
     <div class="grad-1">
