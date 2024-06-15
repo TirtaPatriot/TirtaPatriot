@@ -59,21 +59,6 @@ const { data } = await useAsyncData(
 
 <template>
   <v-main>
-    {{
-      /*
-      <p-img cover src="/assets/bg_slide-1.jpg" aspect-ratio="1" :height="540">
-      <div class="mx-4 text-white fill-height d-flex justify-center flex-column">
-        <h1 class="mb-4 text-uppercase text-h4 text-md-right">
-          Perumda Tirta Patriot
-        </h1>
-        <h4 class="text-md-right text-uppercase text-md-h6">
-          Menyediakan air lebih bersih, lebih sehat, lebih terjangkau.
-        </h4>
-      </div>
-      </p-img>
-      */
-    }}
-
     <v-carousel
       class="w-100"
       :show-arrows="false"
@@ -91,22 +76,7 @@ const { data } = await useAsyncData(
         :width="3000 / 2"
         class="w-100"
         :alt="slide.alt || slide.title"
-      >
-        {{
-      /*
-      <!-- <v-sheet
-          :color="colors[i]"
-          height="100%"
-        >
-          <div class="d-flex fill-height justify-center align-center">
-            <div class="text-h2">
-              { slide } Slide
-            </div>
-          </div>
-        </v-sheet> -->
-      */
-      }}
-      </p-carousel-item>
+      />
     </v-carousel>
     <div class="grad-1">
       <div class="text-white d-flex justify-center flex-column align-center py-10">
@@ -146,32 +116,7 @@ const { data } = await useAsyncData(
       :elevation="4"
       class="d-flex flex-column bg-blue-darken-2 pt-8"
     >
-      <!-- <div class="text-white">
-        <v-btn
-          v-for="icon in ['i-mdi:whatsapp', 'i-mdi:telegram', 'i-mdi:facebook']"
-          :key="icon"
-          :icon="icon"
-          color="white"
-          variant="text"
-        />
-      </div> -->
-      <!--
-      <div class="pt-0">
-        Phasellus feugiat arcu sapien, et iaculis ipsum elementum sit amet. Mauris cursus commodo interdum. Praesent ut risus eget metus luctus accumsan id ultrices nunc. Sed at orci sed massa consectetur dignissim a sit amet dui. Duis commodo vitae velit et faucibus. Morbi vehicula lacinia malesuada. Nulla placerat augue vel ipsum ultrices, cursus iaculis dui sollicitudin. Vestibulum eu ipsum vel diam elementum tempor vel ut orci. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
-      </div> -->
-
-      <!-- <v-divider color="white" /> -->
-
       <v-row justify="space-evenly" class="w-100" no-gutters>
-        <!-- <v-col cols="1" class="mx-4 text-center">
-          <div class="d-flex flex-column align-center">
-            <v-img src="/pwa-64x64.png" :height="64" :width="64" aspect-ratio="1" />
-            <div class="font-weight-bold text-uppercase">
-              Perumda<br>
-              Tirta&NonBreakingSpace;Patriot
-            </div>
-          </div>
-        </v-col> -->
         <v-col>
           <h4 class="text-h5">
             Kantor Pusat
