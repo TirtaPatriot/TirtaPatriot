@@ -7,6 +7,7 @@ const gangguan = await getItems<any>({
     // limit: 2,
     sort: ['-waktu_mulai'],
     filter: {
+      status: { _eq: 'published' },
       selesai: {
         _null: true,
       },

@@ -31,7 +31,7 @@ const bahasa = {
 
 export default defineVuetifyConfiguration({
   ssr: {
-    clientWidth: 100,
+    clientWidth: 960,
   },
   // defaults: {
   //   VBtn: { color: 'blue' },
