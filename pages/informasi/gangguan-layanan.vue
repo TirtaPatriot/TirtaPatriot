@@ -29,7 +29,7 @@ function onClickAction() {
     <PageHeader title="Gangguan Layanan" />
     <v-container>
       <v-empty-state
-        v-if="!gangguan"
+        v-if="!gangguan?.length"
         icon="mdi-check"
         title="Layanan Berjalan Lancar"
         text="Tidak ada gangguan yang terdeteksi, jika anda merasa ada gangguan pada pelayanan kami, silahkan ajukan pengaduan"
