@@ -32,9 +32,12 @@ function formatDate(date: string) {
     <PageHeader title="Edukasi" />
     <v-container>
       <v-empty-state
-        v-if="!artikel"
-        icon="mdi:magnify"
-        title="Tidak Ada Edukasi"
+        v-if="!artikel?.length"
+        icon="mdi:account-school-outline"
+        text="Belum ada konten edukasi, jika anda memerlukan informasi lebih lanjut mohon hubungi kami"
+        title="Tidak Ada Konten"
+        action-text="Hubungi"
+        @click:action="() => navigateTo('/perusahaan/kontak')"
       />
       <div v-else>
         <v-row dense>
