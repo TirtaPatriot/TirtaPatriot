@@ -10,7 +10,7 @@ useHead({
 </script>
 
 <template>
-  <p-img cover :src="img || 'C74BDC20-E6AE-423E-BE27-68F220D0F119'" :height="180">
+  <p-img cover :src="$props.img || 'C74BDC20-E6AE-423E-BE27-68F220D0F119'" :height="180">
     <v-row justify="center" class="fill-height" align-content="center">
       <v-spacer />
       <v-col class="text-center text-white">

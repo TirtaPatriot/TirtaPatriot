@@ -36,10 +36,6 @@ const hours = useState('office.hours', () => [
     day: 'Sabtu',
     time: '08:00 - 15:00',
   },
-  // {
-  //   day: 'Minggu',
-  //   time: 'Tutup',
-  // },
 ])
 
 const { getItems } = useDirectusItems()
@@ -49,6 +45,11 @@ const { data } = await useAsyncData(
   async () => {
     const carousel = await getItems<any>({
       collection: 'korsel',
+      params: {
+        filter: {
+          status: { _eq: 'published' },
+        },
+      },
     })
     return {
       carousel,

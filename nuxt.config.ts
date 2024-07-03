@@ -2,6 +2,7 @@ import process from 'node:process'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  compatibilityDate: '2024-07-03',
   devtools: { enabled: true },
   app: {
     rootId: 'TirtaPatriot',
@@ -12,6 +13,9 @@ export default defineNuxtConfig({
       secretKey: process.env.NUXT_RECAPTCHA_SECRET_KEY,
     },
     public: {
+      mdc: {
+        useNuxtImage: true,
+      },
       chatwoot: {
         init: {
           websiteToken: process.env.NUXT_PUBLIC_CHATWOOT_WEBSITE_TOKEN,
@@ -43,7 +47,14 @@ export default defineNuxtConfig({
     '@nuxtjs/seo',
     'nuxt-icon',
     'nuxt-directus',
+    '@vueuse/nuxt',
+    '@nuxtjs/mdc',
   ],
+  mdc: {
+    components: {
+      prose: false,
+    }
+  },
   directus: {
     url: process.env.NUXT_PUBLIC_DIRECTUS_URL,
   },
