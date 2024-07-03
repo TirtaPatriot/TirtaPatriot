@@ -14,6 +14,7 @@ const artikel = await getItems<any>({
     sort: ['-date_created'],
     fields: ['judul', 'ringkasan', 'cover', 'date_created', 'permalink'],
     filter: {
+      status: { _eq: 'published' },
       jenis: {
         _eq: 'edukasi',
       },
