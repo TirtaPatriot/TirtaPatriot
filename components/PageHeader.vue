@@ -14,7 +14,7 @@ useHead({
     <v-row justify="center" class="fill-height" align-content="center">
       <v-spacer />
       <v-col class="text-right text-white">
-        <div class="text-h5 mr-2" style="text-shadow: 00px 0px 10px blue;">
+        <div class="text-h4 mr-4" style="text-shadow: 00px 0px 10px blue;">
           {{ title }}
         </div>
       </v-col>

@@ -24,7 +24,7 @@ const { data, error } = await useAsyncData<any>(
 
 <template>
   <v-main>
-    <PageHeader :title="data?.judul" :img="data?.head_img" />
+    <!-- <PageHeader :title="data?.judul" :img="data?.head_img" /> -->
     <v-container class="prose">
       <v-empty-state
         v-if="error"
@@ -34,8 +34,15 @@ const { data, error } = await useAsyncData<any>(
       />
 
       <template v-else>
-        <p-img cover :src="data?.cover || 'C74BDC20-E6AE-423E-BE27-68F220D0F119'" :height="520" />
+        <p-img cover :src="data?.cover || 'C74BDC20-E6AE-423E-BE27-68F220D0F119'" :height="540" />
+
+        <h1 class="text-h6">
+          {{ data?.judul }}
+        </h1>
         <MDC :value="data.content" />
+        <div class="text-caption text-right mx-4">
+          {{ useDatetimeFormat(data?.dipublikasi) }}
+        </div>
       </template>
     </v-container>
   </v-main>

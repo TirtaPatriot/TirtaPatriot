@@ -24,7 +24,6 @@ const { data, error } = await useAsyncData<any>(
 
 <template>
   <v-main>
-    <PageHeader :title="data?.judul" :img="data?.head_img" />
     <v-container class="prose">
       <v-empty-state
         v-if="error"
@@ -33,7 +32,15 @@ const { data, error } = await useAsyncData<any>(
         title="Terjadi kesalahan tak terduga."
       />
 
-      <MDC v-else :value="data.content" />
+      <template v-else>
+        <h1 class="text-h6">
+          {{ data?.judul }}
+        </h1>
+        <MDC :value="data.content" />
+        <div class="text-caption text-right mx-4">
+          {{ useDatetimeFormat(data?.dipublikasi) }}
+        </div>
+      </template>
     </v-container>
   </v-main>
 </template>
