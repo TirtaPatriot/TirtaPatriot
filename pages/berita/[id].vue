@@ -24,7 +24,7 @@ const { data, error } = await useAsyncData<any>(
 
 <template>
   <v-main>
-    <PageHeader :title="data?.judul" :img="data?.cover" />
+    <PageHeader :title="data?.judul" :img="data?.head_img" />
     <v-container class="prose">
       <v-empty-state
         v-if="error"
@@ -33,7 +33,10 @@ const { data, error } = await useAsyncData<any>(
         title="Terjadi kesalahan tak terduga."
       />
 
-      <MDC v-else  :value="data.content" />
+      <template v-else>
+        <p-img cover :src="data?.cover || 'C74BDC20-E6AE-423E-BE27-68F220D0F119'" :height="520" />
+        <MDC :value="data.content" />
+      </template>
     </v-container>
   </v-main>
 </template>

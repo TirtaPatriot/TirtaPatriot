@@ -24,7 +24,7 @@ const { data, error } = await useAsyncData<any>(
 
 <template>
   <v-main>
-    <PageHeader :title="data?.judul" :img="data?.cover" />
+    <PageHeader :title="data?.judul" :img="data?.head_img" />
     <v-container class="prose">
       <v-empty-state
         v-if="error"
