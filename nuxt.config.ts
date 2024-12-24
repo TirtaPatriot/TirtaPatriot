@@ -3,10 +3,24 @@ import process from 'node:process'
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2024-07-03',
+  ssr: true,
   devtools: { enabled: true },
   app: {
     rootId: 'TirtaPatriot',
     teleportId: 'Tele',
+  },
+   // when enabling ssr option you need to disable inlineStyles and maybe devLogs
+  features: {
+    inlineStyles: false,
+    devLogs: false,
+  },
+  build: {
+    transpile: ['vuetify'],
+  },
+  vite: {
+    ssr: {
+      noExternal: ['vuetify'],
+    },
   },
   runtimeConfig: {
     recaptcha: {
@@ -105,7 +119,7 @@ export default defineNuxtConfig({
   vuetify: {
     moduleOptions: {
       ssrClientHints: {
-        reloadOnFirstRequest: true,
+        reloadOnFirstRequest: false,
         prefersColorScheme: false,
         prefersColorSchemeOptions: {
           useBrowserThemeOnly: false,
