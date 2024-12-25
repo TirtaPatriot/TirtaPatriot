@@ -43,13 +43,13 @@ export default defineNuxtConfig({
   },
 
   routeRules: {
-    // '/': {
-    //   swr: true,
-    // },
-    // '/sitemap.xml': {
-    //   prerender: true,
-    // },
-    // '/informasi/**': { isr: true },
+    '/': {
+       prerender: true,
+     },
+    '/sitemap.xml': {
+       prerender: true,
+    },
+    '/informasi/**': { isr: true },
   },
 
   modules: [
@@ -73,7 +73,7 @@ export default defineNuxtConfig({
     url: process.env.NUXT_PUBLIC_DIRECTUS_URL,
   },
   site: {
-    url: 'https://tirtapatriot.co.id',
+    url: 'https://tirtapatriot.co.id/',
     name: 'Perumda Tirta Patriot',
     description: 'Menyediakan air lebih bersih, lebih sehat, lebih terjangkau.',
     defaultLocale: 'id',
