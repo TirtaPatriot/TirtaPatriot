@@ -80,7 +80,7 @@ export default defineNuxtConfig({
   },
   seo: {
     splash: false,
-    redirectToCanonicalSiteUrl: true,
+    redirectToCanonicalSiteUrl: false,
   },
   sitemap: {
     enabled: true,
