@@ -42,14 +42,11 @@ export default defineNuxtConfig({
     },
   },
 
-  routeRules: {
-    '/': {
-       prerender: true,
-     },
-    '/sitemap.xml': {
-       prerender: true,
+  nitro: {
+    prerender: {
+      crawlLinks: true,
+      routes: ["/sitemap.xml", "/robots.txt"],
     },
-    '/informasi/**': { isr: true },
   },
 
   modules: [
@@ -74,8 +71,8 @@ export default defineNuxtConfig({
   },
   site: {
     url: 'https://tirtapatriot.co.id/',
-    name: 'Perumda Tirta Patriot',
-    description: 'Menyediakan air lebih bersih, lebih sehat, lebih terjangkau.',
+    name: 'Perusahaan Umum Daerah Air Minum Tirta Patriot Kota Bekasi',
+    description: 'Perumda (dulunya PDAM) Tirta Patriot merupakan Badan Usaha Milik Daerah Pemerintah Kota Bekasi yang bergerak di bidang pelayanan air bersih.',
     defaultLocale: 'id',
   },
   seo: {
