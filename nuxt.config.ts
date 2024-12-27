@@ -74,6 +74,7 @@ export default defineNuxtConfig({
     name: 'Perusahaan Umum Daerah Air Minum Tirta Patriot Kota Bekasi',
     description: 'Perumda (dulunya PDAM) Tirta Patriot merupakan Badan Usaha Milik Daerah Pemerintah Kota Bekasi yang bergerak di bidang pelayanan air bersih.',
     defaultLocale: 'id',
+    trailingSlash: true,
   },
   seo: {
     splash: false,

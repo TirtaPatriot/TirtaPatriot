@@ -40,5 +40,8 @@
     "yaml",
     "toml",
     "astro"
+  ],
+  "githubPullRequests.ignoredPullRequestBranches": [
+    "main"
   ]
 }
