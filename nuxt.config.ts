@@ -85,8 +85,7 @@ export default defineNuxtConfig({
   },
 
   ogImage: {
-    zeroRuntime: true,
-    enabled: false,
+    enabled: true,
   },
   robots: {
     enabled: true,
