@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-defineOgImageComponent('Nuxt', {
+defineOgImageComponent('NuxtSeo', {
   headline: 'Beranda',
   title: 'Perumda Tirta Patriot',
   siteLogo: '/logo-1024.png',
