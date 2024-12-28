@@ -2,7 +2,7 @@
 defineOgImageComponent('NuxtSeo', {
   headline: 'Beranda',
   title: 'Perumda Tirta Patriot',
-  siteLogo: '/logo-1024.png',
+  siteLogo: 'https://tirtapatriot.co.id/logo.png',
   theme: '#0487d2',
 })
 
