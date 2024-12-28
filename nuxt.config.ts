@@ -1,4 +1,5 @@
 import process from 'node:process'
+import { defineOrganization } from 'nuxt-schema-org/schema'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -9,7 +10,7 @@ export default defineNuxtConfig({
     rootId: 'TirtaPatriot',
     teleportId: 'Tele',
   },
-   // when enabling ssr option you need to disable inlineStyles and maybe devLogs
+  // when enabling ssr option you need to disable inlineStyles and maybe devLogs
   features: {
     inlineStyles: false,
     devLogs: false,
@@ -45,7 +46,7 @@ export default defineNuxtConfig({
   nitro: {
     prerender: {
       crawlLinks: true,
-      routes: ["/sitemap.xml", "/robots.txt", "/"],
+      routes: ['/sitemap.xml', '/robots.txt', '/'],
     },
   },
 
@@ -56,7 +57,7 @@ export default defineNuxtConfig({
     '@vite-pwa/nuxt',
     '@nuxtjs/google-fonts',
     '@nuxtjs/seo',
-    'nuxt-icon',
+    '@nuxt/icon',
     'nuxt-directus',
     '@vueuse/nuxt',
     '@nuxtjs/mdc',
@@ -64,7 +65,7 @@ export default defineNuxtConfig({
   mdc: {
     components: {
       prose: false,
-    }
+    },
   },
   directus: {
     url: process.env.NUXT_PUBLIC_DIRECTUS_URL,
@@ -77,12 +78,12 @@ export default defineNuxtConfig({
     trailingSlash: true,
   },
   seo: {
-    splash: false,
     redirectToCanonicalSiteUrl: false,
   },
   sitemap: {
     enabled: true,
   },
+
   ogImage: {
     enabled: true,
   },
@@ -94,6 +95,71 @@ export default defineNuxtConfig({
   },
   schemaOrg: {
     enabled: true,
+    identity: defineOrganization({
+      // Basic Information
+      name: 'Perumda Tirta Patriot',
+      alternateName: 'Tirta Patriot',
+      description: 'Perusahaan Umum Daerah Air Minum Tirta Patriot merupakan Badan Usaha Milik Daerah Pemerintah Kota Bekasi yang bergerak di bidang pelayanan air bersih.',
+      url: 'https://tirtapatriot.co.id',
+      logo: '/logo.png',
+
+      // Address Information, if applicable
+      address: {
+        '@type': 'PostalAddress',
+        'streetAddress': 'Jl. Perjuangan No.99, RT.003/RW.011, Marga Mulya, Kec. Bekasi Utara',
+        'addressLocality': 'Kota Bekasi',
+        'addressRegion': 'Jawa Barat',
+        'postalCode': '17142',
+        'addressCountry': 'ID',
+      },
+
+      // Contact Information, if applicable
+      email: 'sekretariat@tirtapatriot.co.id',
+      telephone: '+6221-8896-6161',
+      contactPoint: {
+        '@type': 'ContactPoint',
+        'telephone': '+62 878-7516-3845',
+        'email': 'humas@tirtapatriot.co.id',
+      },
+
+      // Business Details, if applicable
+      foundingDate: '2010-01-15',
+      numberOfEmployees: {
+        '@type': 'QuantitativeValue',
+        'minValue': 500,
+        'maxValue': 999,
+      },
+
+      // Social and External Links, if applicable
+      sameAs: [
+        'https://x.com/TirtaPatriot',
+        'https://www.facebook.com/PerumdaTirtaPatriot',
+        'https://instagram.com/TirtaPatriot',
+        'https://tiktok.com/PerumdaTirtaPatriot',
+        'https://youtube.com/@TirtaPatriot',
+      ],
+
+      // Business Identifiers, if applicable
+      legalName: 'Perusahaan Umum Daerah Air Minum Tirta Patriot Kota Bekasi',
+      taxID: '31.448.123.6-407.000',
+      // vatID: 'GB123456789',
+      duns: '56-457-1833',
+      iso6523Code: '0060:123456789',
+      // naics: '541512',
+
+      // Return Policy, if applicable
+      // hasMerchantReturnPolicy: {
+      //   '@type': 'MerchantReturnPolicy',
+      //   'name': 'Standard Return Policy',
+      //   'inStoreReturnsOffered': true,
+      //   'returnPolicyCategory': 'https://schema.org/MerchantReturnFiniteReturnWindow',
+      //   'returnPolicyCountry': 'US',
+      //   'returnWindow': {
+      //     '@type': 'BusinessDaysSpecification',
+      //     'numberOfDays': 30,
+      //   },
+      // },
+    }),
   },
   linkChecker: {
     enabled: true,
@@ -173,9 +239,9 @@ export default defineNuxtConfig({
       periodicSyncForUpdates: 1800,
     },
     manifest: {
-      name: 'Tirta Patriot',
-      short_name: 'Perumda Tirta Patriot',
-      description: 'Menyediakan air lebih bersih, lebih sehat, lebih terjangkau.',
+      name: 'Perumda Tirta Patriot',
+      short_name: 'Tirta Patriot',
+      description: 'Perusahaan Umum Daerah Air Minum Tirta Patriot merupakan Badan Usaha Milik Daerah Pemerintah Kota Bekasi yang bergerak di bidang pelayanan air bersih.',
       theme_color: '#ffffff',
       icons: [
         {
