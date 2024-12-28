@@ -71,7 +71,7 @@ export default defineNuxtConfig({
     url: process.env.NUXT_PUBLIC_DIRECTUS_URL,
   },
   site: {
-    url: 'https://tirtapatriot.co.id/',
+    url: 'https://tirtapatriot.co.id',
     name: 'Perusahaan Umum Daerah Air Minum Tirta Patriot Kota Bekasi',
     description: 'Perumda (dulunya PDAM) Tirta Patriot merupakan Badan Usaha Milik Daerah Pemerintah Kota Bekasi yang bergerak di bidang pelayanan air bersih.',
     defaultLocale: 'id',
@@ -85,7 +85,8 @@ export default defineNuxtConfig({
   },
 
   ogImage: {
-    enabled: true,
+    zeroRuntime: true,
+    enabled: false,
   },
   robots: {
     enabled: true,
