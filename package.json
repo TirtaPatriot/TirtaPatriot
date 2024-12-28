@@ -29,6 +29,7 @@
   "devDependencies": {
     "@antfu/eslint-config": "^3.12.1",
     "@iconify-json/mdi": "^1.2.2",
+    "@nuxt/icon": "^1.10.3",
     "@nuxt/image": "^1.8.1",
     "@nuxtjs/google-fonts": "^3.2.0",
     "@nuxtjs/partytown": "^1.5.0",
@@ -37,6 +38,7 @@
     "@vite-pwa/assets-generator": "^0.2.6",
     "@vite-pwa/nuxt": "^0.10.6",
     "eslint": "^9.17.0",
+    "nuxt-icon": "^1.0.0-beta.7",
     "sass": "^1.83.0",
     "sharp": "^0.33.5",
     "vuetify-nuxt-module": "^0.18.3"
