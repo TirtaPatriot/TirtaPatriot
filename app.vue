@@ -2,6 +2,12 @@
 // useHead({
 //   titleTemplate: '%s | Perumda Tirta Patriot',
 // })
+useHead({
+  meta: {
+    property: 'og:logo',
+    content: 'https://tirtapatriot.co.id/logo.png'
+  }
+})
 </script>
 
 <template>
