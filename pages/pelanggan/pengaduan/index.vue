@@ -1,5 +1,11 @@
 <script lang="ts" setup>
 const config = useRuntimeConfig()
+defineOgImageComponent('NuxtSeo', {
+  headline: 'Pengaduan Pelanggan',
+  title: 'Perumda Tirta Patriot',
+  siteLogo: 'https://tirtapatriot.co.id/logo.png',
+  theme: '#0487d2',
+})
 const { data } = await useAsyncData<any>(
   'pengaduan',
   () => $fetch(`${config.public.apiUrl}/pengaduan`),

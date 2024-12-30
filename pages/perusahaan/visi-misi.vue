@@ -1,4 +1,10 @@
 <script lang="ts" setup>
+defineOgImageComponent('NuxtSeo', {
+  headline: 'Visi & Misi Perusahaan',
+  title: 'Perumda Tirta Patriot',
+  siteLogo: 'https://tirtapatriot.co.id/logo.png',
+  theme: '#0487d2',
+})
 const { getSingletonItem } = useDirectusItems()
 const { data } = await useAsyncData<any>('content.visi', () => {
   return getSingletonItem({ collection: 'visi' })

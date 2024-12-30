@@ -1,4 +1,11 @@
 <script lang="ts" setup>
+defineOgImageComponent('NuxtSeo', {
+  headline: 'Tagihan Pelanggan',
+  title: 'Perumda Tirta Patriot',
+  siteLogo: 'https://tirtapatriot.co.id/logo.png',
+  theme: '#0487d2',
+})
+
 definePageMeta({
   alias: [
     '/info/tagihan',
