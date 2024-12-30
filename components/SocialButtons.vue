@@ -31,14 +31,14 @@ const socials = useState('socials', () => [
     title: 'Facebook',
     icon: 'i-mdi:facebook',
     color: '#1877f2',
-    href: 'https://www.facebook.com/TirtaPatriot',
+    href: 'https://www.facebook.com/PerumdaTirtaPatriot',
   },
 
   {
-    title: 'X (Twitter)',
+    title: 'X',
     icon: 'i-mdi:twitter',
     color: 'black',
-    href: 'https://twitter.com/TirtaPatriot',
+    href: 'https://x.com/TirtaPatriot',
   },
 ])
 </script>

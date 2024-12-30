@@ -137,6 +137,10 @@ export default defineNuxtConfig({
         'https://instagram.com/TirtaPatriot',
         'https://tiktok.com/PerumdaTirtaPatriot',
         'https://youtube.com/@TirtaPatriot',
+        'https://t.me/TirtaPatriot',
+        'https://t.me/PerumdaTirtaPatriot',
+        'https://whatsapp.com/channel/0029VaaWmpGId7nRB1BLj52w',
+        'https://wa.me/6287875163845',
       ],
 
       // Business Identifiers, if applicable
