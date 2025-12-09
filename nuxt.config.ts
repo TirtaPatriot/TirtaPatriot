@@ -36,6 +36,11 @@ export default defineNuxtConfig({
           websiteToken: process.env.NUXT_PUBLIC_CHATWOOT_WEBSITE_TOKEN,
           baseUrl: process.env.NUXT_PUBLIC_CHATWOOT_BASE_URL,
         },
+        settings: {
+          locale: 'id',
+          theme: 'light',
+          launcherTitle: 'Hubungi Kami',
+        },
       },
       apiUrl: process.env.NUXT_PUBLIC_API_URL ?? '/api',
       recaptchaSiteKey: process.env.NUXT_PUBLIC_RECAPTCHA_SITE_KEY,
