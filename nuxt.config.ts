@@ -61,6 +61,7 @@ export default defineNuxtConfig({
     'nuxt-directus',
     '@vueuse/nuxt',
     '@nuxtjs/mdc',
+    '@productdevbook/chatwoot',
   ],
   mdc: {
     components: {
