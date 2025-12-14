@@ -201,7 +201,7 @@ async function submit() {
           </v-banner-text>
         </v-banner>
 
-        <v-banner
+        <!-- <v-banner
           class="my-4"
         >
           <template #prepend>
@@ -219,7 +219,7 @@ async function submit() {
           </v-banner-text>
 
           <template #actions />
-        </v-banner>
+        </v-banner> -->
       </div>
     </v-container>
   </v-main>
