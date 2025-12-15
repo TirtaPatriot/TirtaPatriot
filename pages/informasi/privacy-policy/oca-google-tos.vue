@@ -51,7 +51,7 @@ definePageMeta({
           <h2>Integrasi Pihak Ketiga (Google OAuth)</h2>
           <p>Layanan ini memungkinkan Anda mengintegrasikan akun Google Anda (termasuk Gmail) melalui Google OAuth untuk fungsi <em>Sign-In</em> dan Saluran Email.</p>
           <ul>
-            <li>Dengan menggunakan integrasi ini, Anda mengizinkan kami untuk mengakses informasi Anda sesuai dengan <a href="[LINK KE KEBIJAKAN PRIVASI ANDA]">Kebijakan Privasi</a> kami.</li>
+            <li>Dengan menggunakan integrasi ini, Anda mengizinkan kami untuk mengakses informasi Anda sesuai dengan <a href="https://tirtapatriot.co.id/informasi/privacy-policy/oca-google">Kebijakan Privasi</a> kami.</li>
             <li>Anda bertanggung jawab penuh atas konfigurasi dan izin yang Anda berikan kepada Google.</li>
             <li>Kami tidak bertanggung jawab atas kegagalan layanan Google atau perubahan kebijakan Google yang memengaruhi integrasi.</li>
           </ul>
