@@ -9,63 +9,111 @@ definePageMeta({
     <PageHeader title="Persyaratan Layanan" />
 
     <v-container class="prose">
-      <h1>Persyaratan Layanan Aplikasi Tirta Patriot ID</h1>
-      <p>
-        Ketentuan Layanan ini menetapkan syarat dan ketentuan yang mengikat antara Anda (selanjutnya disebut "Pengguna") dan Perusahaan Umum Daerah Air Minum Tirta Patriot (selanjutnya disebut "Kami") terkait penggunaan layanan, fitur, dan platform dukungan pelanggan digital kami (OCA). Dokumen ini menjelaskan hak dan kewajiban Pengguna, aturan penggunaan platform, batasan tanggung jawab Kami, serta prosedur penyelesaian sengketa, memastikan lingkungan yang adil dan aman bagi semua pengguna layanan kami.
+      <h1>Kebijakan Privasi Perusahaan Umum Daerah Air Minum Tirta Patriot (OCA)</h1>
+      <p><em>Kebijakan Privasi ini efektif berlaku sejak 15 Desember 2025</em></p>
+
+      <section id="pendahuluan">
+        <h2>Pendahuluan</h2>
+        <p>
+          Kebijakan Privasi ini menjelaskan bagaimana Perusahaan Umum Daerah Air Minum Tirta Patriot (selanjutnya disebut **"Kami"** atau **"Perusahaan"**) mengumpulkan, menggunakan, dan melindungi informasi Anda sehubungan dengan layanan kami melalui platform dukungan pelanggan (OCA), khususnya yang terkait dengan **integrasi Google OAuth** (melalui layanan email Google).
+        </p>
+        <p>
+          Kami berkomitmen untuk melindungi privasi Anda dan menjaga kerahasiaan informasi yang kami akses.
+        </p>
+      </section>
+
+      <hr>
+
+      <section id="pengumpulan-data">
+        <h2>1. Informasi yang Kami Kumpulkan dan Akses</h2>
+        <p>
+          Melalui integrasi Google OAuth, kami dapat mengakses informasi berikut dari akun Google Anda, yang digunakan semata-mata untuk tujuan penyediaan dan pengoperasian fitur dukungan pelanggan (Saluran Email):
+        </p>
+        <table>
+          <thead>
+            <tr>
+              <th>Jenis Data</th>
+              <th>Tujuan Pengumpulan</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Informasi Dasar Akun (Sign-In)</strong></td>
+              <td>Untuk mengidentifikasi Anda sebagai Pengguna Layanan dan memfasilitasi proses <em>Sign-In</em> (meliputi nama dan alamat email utama).</td>
+            </tr>
+            <tr>
+              <td><strong>Data Saluran Email (Gmail API)</strong></td>
+              <td>Untuk memungkinkan platform kami (OCA) mengirim dan menerima email layanan pelanggan melalui akun Gmail yang Anda integrasikan. Ini meliputi akses ke <strong>metadata pesan</strong> (header, pengirim, penerima), <strong>badan pesan</strong>, dan <strong>lampiran</strong> yang relevan dengan komunikasi dukungan pelanggan yang sedang ditangani dalam sistem OCA.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Catatan Khusus Penggunaan Data Gmail:</h3>
+        <blockquote>
+          <p>
+            <strong>Kami tidak akan mentransfer atau menjual data pengguna Gmail Anda kepada pihak ketiga. Akses dan penggunaan data yang diperoleh dari Google API akan tetap mematuhi Google API Services User Data Policy, termasuk persyaratan penggunaan terbatas.</strong>
+          </p>
+        </blockquote>
+      </section>
+
+      <section id="penggunaan-data">
+        <h2>2. Bagaimana Kami Menggunakan Informasi Anda</h2>
+        <p>
+          Informasi yang kami akses dari integrasi Google OAuth digunakan secara eksklusif untuk tujuan-tujuan berikut:
+        </p>
+        <ul>
+          <li><strong>Penyediaan Layanan Inti:</strong> Mengaktifkan dan mengelola saluran komunikasi email Anda dalam platform OCA, memungkinkan Anda untuk berinteraksi dengan pelanggan secara efisien.</li>
+          <li><strong>Dukungan Pelanggan:</strong> Menganalisis riwayat komunikasi (email) untuk memberikan jawaban yang akurat dan dukungan yang relevan kepada pelanggan Anda.</li>
+          <li><strong>Keamanan dan Audit:</strong> Memastikan kepatuhan terhadap kebijakan internal dan eksternal, serta melakukan audit keamanan sistem.</li>
+        </ul>
+      </section>
+
+      <section id="pembagian-data">
+        <h2>3. Pembagian dan Pengungkapan Informasi</h2>
+        <p>
+          Kami tidak akan membagikan, menjual, atau menyewakan informasi pribadi Anda (termasuk konten email) kepada pihak ketiga, kecuali dalam kondisi berikut:
+        </p>
+        <ul>
+          <li><strong>Penyedia Layanan:</strong> Kepada pihak ketiga yang bekerja atas nama kami (seperti penyedia <em>hosting</em> atau teknisi pemeliharaan sistem), yang terikat oleh perjanjian kerahasiaan ketat untuk tujuan memproses data atas instruksi kami.</li>
+          <li><strong>Kewajiban Hukum:</strong> Jika diharuskan oleh hukum, perintah pengadilan, atau otoritas pemerintah yang berwenang.</li>
+        </ul>
+      </section>
+
+      <section id="perlindungan-data">
+        <h2>4. Perlindungan Data</h2>
+        <p>
+          Kami menerapkan langkah-langkah keamanan teknis dan organisasi yang wajar untuk melindungi data yang kami akses dari akses tidak sah, pengungkapan, perubahan, atau penghancuran. Ini termasuk enkripsi data, kontrol akses yang ketat, dan protokol keamanan yang dirancang untuk melindungi informasi sensitif, khususnya data yang diakses melalui Gmail API.
+        </p>
+      </section>
+
+      <section id="retensi-data">
+        <h2>5. Retensi Data</h2>
+        <p>
+          Kami akan menyimpan informasi Anda selama akun Anda aktif atau selama diperlukan untuk menyediakan Layanan. Setelah akun Anda dihentikan, kami akan menghapus atau menganonimkan data Anda sesuai dengan kebijakan retensi internal kami dan persyaratan hukum yang berlaku.
+        </p>
+      </section>
+
+      <section id="persetujuan">
+        <h2>6. Pilihan dan Persetujuan Anda (Opt-In)</h2>
+        <p>
+          Integrasi layanan Google adalah **opsional**. Dengan menghubungkan akun Google Anda (melalui <em>Sign-In</em> atau Saluran Email), Anda memberikan persetujuan eksplisit kepada Kami untuk memproses data Anda sesuai dengan Kebijakan Privasi ini. Anda memiliki hak untuk mencabut akses ini kapan saja dengan memutuskan koneksi layanan Google melalui pengaturan akun Anda.
+        </p>
+      </section>
+
+      <section id="kontak">
+        <h2>7. Hubungi Kami</h2>
+        <p>
+          Jika Anda memiliki pertanyaan mengenai Kebijakan Privasi ini atau praktik data kami, silakan hubungi kami di:
+        </p>
+        <ul>
+          <li><strong>Email:</strong> <a href="mailto:sekretariat@tirtapatriot.co.id">sekretariat@tirtapatriot.co.id</a></li>
+          <li><strong>Alamat:</strong> Jl. Perjuangan No.99, RT.003/RW.011, Marga Mulya, Kec. Bekasi Utara, Kota Bekasi, Jawa Barat 17142</li>
+        </ul>
+      </section>
+
+      <p style="text-align: right; font-size: small;">
+        Terakhir Diperbarui: 15 Desember 2025
       </p>
-      <h2>1. Penerimaan Persyaratan</h2>
-      <p>Selamat datang di layanan Perusahaan Umum Daerah Air Minum Tirta Patriot ("Kami," "Layanan," atau "Aplikasi"). Layanan yang kami sediakan melalui platform OCA di <a href="https://omni.app.tirtapatriot.com/">omni.app.tirtapatriot.com</a> diatur oleh Persyaratan Layanan ("Persyaratan") ini. Dengan mengakses atau menggunakan Layanan, Anda setuju untuk terikat oleh Persyaratan ini.</p>
-
-      <h2>2. Deskripsi Layanan</h2>
-      <p>Kami menyediakan platform manajemen hubungan pelanggan (Customer Relationship Management/CRM) dan dukungan pelanggan melalui OCA, yang memungkinkan Anda mengelola komunikasi dengan pelanggan melalui berbagai saluran, termasuk email, yang terintegrasi melalui Google OAuth.</p>
-
-      <h2>3. Akun Pengguna</h2>
-      <ul>
-        <li>Anda harus memberikan informasi yang akurat dan lengkap saat membuat akun.</li>
-        <li>Anda bertanggung jawab untuk menjaga kerahasiaan kata sandi dan aktivitas yang terjadi di bawah akun Anda.</li>
-        <li>Anda dilarang membagikan detail akun Anda kepada pihak lain.</li>
-      </ul>
-
-      <h2>4. Integrasi Pihak Ketiga (Google OAuth)</h2>
-      <ul>
-        <li>Layanan ini memungkinkan Anda mengintegrasikan akun Google Anda (termasuk Gmail) melalui Google OAuth untuk fungsi *Sign-In* dan Saluran Email.</li>
-        <li>Dengan menggunakan integrasi ini, Anda mengizinkan kami untuk mengakses informasi Anda sesuai dengan Kebijakan Privasi kami.</li>
-        <li>Anda bertanggung jawab penuh atas konfigurasi dan izin yang Anda berikan kepada Google.</li>
-        <li>Kami tidak bertanggung jawab atas kegagalan layanan Google atau perubahan kebijakan Google yang memengaruhi integrasi.</li>
-      </ul>
-
-      <h2>5. Kewajiban Pengguna</h2>
-      <p>Anda setuju untuk tidak:</p>
-      <ul>
-        <li>Menggunakan Layanan untuk mengirim spam, materi berbahaya, atau konten ilegal.</li>
-        <li>Melanggar hukum yang berlaku atau hak pihak ketiga.</li>
-        <li>Mengganggu atau merusak integritas atau kinerja Layanan.</li>
-      </ul>
-
-      <h2>6. Penghentian</h2>
-      <p>Kami dapat menangguhkan atau menghentikan akses Anda ke Layanan kapan saja, tanpa pemberitahuan atau kewajiban, jika Anda melanggar Persyaratan ini.</p>
-
-      <h2>7. Penolakan Jaminan</h2>
-      <p>Layanan disediakan atas dasar "sebagaimana adanya" dan "sebagaimana tersedia" tanpa jaminan apa pun, baik tersurat maupun tersirat, termasuk, tetapi tidak terbatas pada, jaminan tersirat tentang kelayakan jual, kesesuaian untuk tujuan tertentu, dan non-pelanggaran.</p>
-
-      <h2>8. Pembatasan Kewajiban</h2>
-      <p>Sejauh diizinkan oleh hukum, Perusahaan Umum Daerah Air Minum Tirta Patriot tidak akan bertanggung jawab atas kerusakan tidak langsung, insidental, khusus, konsekuensial, atau hukuman, termasuk, namun tidak terbatas pada, kerugian keuntungan, data, atau penggunaan, yang timbul dari akses atau penggunaan Anda terhadap Layanan.</p>
-
-      <h2>9. Hukum yang Mengatur</h2>
-      <p>Persyaratan ini diatur dan ditafsirkan sesuai dengan hukum Indonesia, tanpa memperhatikan pertentangan prinsip hukumnya.</p>
-
-      <h2>10. Perubahan Persyaratan</h2>
-      <p>Kami berhak, atas kebijakan tunggal kami, untuk mengubah atau mengganti Persyaratan ini kapan saja. Kami akan berusaha memberikan pemberitahuan setidaknya 30 hari sebelum Persyaratan baru mulai berlaku.</p>
-
-      <h2>11. Hubungi Kami</h2>
-      <p>Jika Anda memiliki pertanyaan tentang Persyaratan ini, silakan hubungi kami di:</p>
-      <ul>
-        <li>Email: sekretariat@tirtapatriot.co.id</li>
-        <li>
-          Alamat: Jl. Perjuangan No.99, RT.003/RW.011, Marga Mulya,
-          Kec. Bekasi Utara, Kota Bekasi, Jawa Barat 17142
-        </li>
-      </ul>
     </v-container>
   </v-main>
 </template>
