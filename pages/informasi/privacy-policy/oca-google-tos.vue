@@ -61,7 +61,7 @@ definePageMeta({
         <p>Sejauh diizinkan oleh hukum, Perusahaan Umum Daerah Air Minum Tirta Patriot tidak akan bertanggung jawab atas kerusakan tidak langsung, insidental, khusus, konsekuensial, atau hukuman, termasuk, namun tidak terbatas pada, kerugian keuntungan, data, atau penggunaan, yang timbul dari akses atau penggunaan Anda terhadap Layanan.</p>
 
         <h2>10. Hukum yang Mengatur</h2>
-        <p>Persyaratan ini diatur dan ditafsirkan sesuai dengan hukum [NEGARA ANDA, misal: Indonesia], tanpa memperhatikan pertentangan prinsip hukumnya.</p>
+        <p>Persyaratan ini diatur dan ditafsirkan sesuai dengan hukum Indonesia, tanpa memperhatikan pertentangan prinsip hukumnya.</p>
 
         <h2>11. Perubahan Persyaratan</h2>
         <p>Kami berhak, atas kebijakan tunggal kami, untuk mengubah atau mengganti Persyaratan ini kapan saja. Kami akan berusaha memberikan pemberitahuan setidaknya 30 hari sebelum Persyaratan baru mulai berlaku.</p>

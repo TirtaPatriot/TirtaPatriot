@@ -51,7 +51,7 @@ definePageMeta({
         </ul>
 
         <h2>3. Keamanan Data</h2>
-        <p>Kami menerapkan langkah-langkah keamanan teknis dan organisasi yang sesuai untuk melindungi informasi yang kami kumpulkan dari akses, pengungkapan, perubahan, atau penghancuran yang tidak sah. Data email disimpan di server yang aman [SEBUTKAN LOKASI SERVER JIKA RELEVAN, MISALNYA: server hosting kami di Indonesia/Singapura] dan akses dibatasi hanya untuk agen dukungan yang berwenang.</p>
+        <p>Kami menerapkan langkah-langkah keamanan teknis dan organisasi yang sesuai untuk melindungi informasi yang kami kumpulkan dari akses, pengungkapan, perubahan, atau penghancuran yang tidak sah. Data email disimpan di server yang aman di Jawa Barat, Indonesia dan akses dibatasi hanya untuk agen dukungan yang berwenang.</p>
 
         <h2>4. Pengungkapan Kepada Pihak Ketiga</h2>
         <p>Kami tidak akan membagikan, menyewakan, atau menjual informasi email Anda kepada pihak ketiga mana pun kecuali dalam keadaan berikut:</p>
