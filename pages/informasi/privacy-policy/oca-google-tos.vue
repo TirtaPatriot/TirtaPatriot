@@ -17,10 +17,10 @@ definePageMeta({
         <h1>Persyaratan Layanan Aplikasi Tirta Patriot ID</h1>
 
         <h2>1. Penerimaan Persyaratan</h2>
-        <p>Selamat datang di layanan Perusahaan Umum Daerah Air Minum Tirta Patriot ("Kami," "Layanan," atau "Aplikasi"). Layanan yang kami sediakan melalui platform Chatwoot di https://www.chatwoot.com/ diatur oleh Persyaratan Layanan ("Persyaratan") ini. Dengan mengakses atau menggunakan Layanan, Anda setuju untuk terikat oleh Persyaratan ini.</p>
+        <p>Selamat datang di layanan Perusahaan Umum Daerah Air Minum Tirta Patriot ("Kami," "Layanan," atau "Aplikasi"). Layanan yang kami sediakan melalui platform OCA di https://omni.app.tirtapatriot.com/ diatur oleh Persyaratan Layanan ("Persyaratan") ini. Dengan mengakses atau menggunakan Layanan, Anda setuju untuk terikat oleh Persyaratan ini.</p>
 
         <h2>2. Deskripsi Layanan</h2>
-        <p>Kami menyediakan platform manajemen hubungan pelanggan (Customer Relationship Management/CRM) dan dukungan pelanggan melalui Chatwoot, yang memungkinkan Anda mengelola komunikasi dengan pelanggan melalui berbagai saluran, termasuk email, yang terintegrasi melalui Google OAuth.</p>
+        <p>Kami menyediakan platform manajemen hubungan pelanggan (Customer Relationship Management/CRM) dan dukungan pelanggan melalui OCA, yang memungkinkan Anda mengelola komunikasi dengan pelanggan melalui berbagai saluran, termasuk email, yang terintegrasi melalui Google OAuth.</p>
 
         <h2>3. Akun Pengguna</h2>
         <ul>
