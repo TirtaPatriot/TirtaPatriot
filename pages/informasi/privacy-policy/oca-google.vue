@@ -11,8 +11,15 @@ definePageMeta({
     <v-container class="prose">
       <h1>Kebijakan Privasi Aplikasi Tirta Patriot ID</h1>
       <p>
-        Kebijakan Privasi ini menjelaskan bagaimana Perusahaan Umum Daerah Air Minum Tirta Patriot (selanjutnya disebut **"Kami"**) mengumpulkan, menggunakan, dan melindungi informasi Anda sehubungan dengan integrasi kami dengan layanan email Google melalui platform dukungan pelanggan kami (OCA).
+        <strong>Tanggal Efektif: 15 Desember 2025</strong>
       </p>
+
+      <section id="pendahuluan">
+        <h2>Pendahuluan</h2>
+        <p>
+          Kebijakan Privasi ini menjelaskan bagaimana Perusahaan Umum Daerah Air Minum Tirta Patriot (selanjutnya disebut **"Kami"**) mengumpulkan, menggunakan, dan melindungi informasi Anda sehubungan dengan integrasi kami dengan layanan email Google melalui platform dukungan pelanggan kami (OCA).
+        </p>
+      </section>
 
       <hr>
 
@@ -67,7 +74,7 @@ definePageMeta({
         </li>
 
         <li>
-          <h2>Pengungkapan Kepada Pihak Ketiga</h2>
+          <h2>Pengungkusan Kepada Pihak Ketiga</h2>
           <p>Kami tidak akan membagikan, menyewakan, atau menjual informasi email Anda kepada pihak ketiga mana pun kecuali dalam keadaan berikut:</p>
           <ul>
             <li>Dengan persetujuan eksplisit Anda.</li>
@@ -99,6 +106,7 @@ definePageMeta({
           </ul>
         </li>
       </ol>
+
       <p style="text-align: right; font-size: small;">
         Terakhir Diperbarui: 15 Desember 2025
       </p>
