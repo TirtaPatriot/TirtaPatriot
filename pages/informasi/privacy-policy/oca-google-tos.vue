@@ -6,7 +6,7 @@ definePageMeta({
 
 <template>
   <v-main>
-    <PageHeader title="Kebijakan Privasi" />
+    <PageHeader title="Persyaratan Layanan" />
 
     <v-container class="prose">
       <h2 class="text-h4 my-4 font-weight-light">
