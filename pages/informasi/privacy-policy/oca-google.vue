@@ -14,26 +14,26 @@ definePageMeta({
       </h2>
 
       <div>
-        <p>Kebijakan Privasi ini menjelaskan bagaimana Perusahaan Umum Daerah Air Minum Tirta Patriot (selanjutnya disebut "Kami") mengumpulkan, menggunakan, dan melindungi informasi Anda sehubungan dengan integrasi kami dengan layanan email Google melalui platform dukungan pelanggan kami (OCA).</p>
+        <p>Kebijakan Privasi ini menjelaskan bagaimana Perusahaan Umum Daerah Air Minum Tirta Patriot (selanjutnya disebut "Kami") mengumpulkan, menggunakan, dan melindungi informasi Anda sehubungan dengan integrasi kami dengan layanan email Google melalui platform dukungan pelanggan kami (Chatwoot).</p>
 
         <h2>1. Data yang Kami Kumpulkan dan Tujuannya</h2>
-        <p>Kami mengakses data Google Anda secara eksklusif untuk menyediakan fungsi saluran (channel) email pada platform dukungan pelanggan kami (OCA).</p>
+        <p>Kami mengakses data Google Anda secara eksklusif untuk menyediakan fungsi saluran (channel) email pada platform dukungan pelanggan kami (Chatwoot).</p>
 
         <h3>1.1. Data Akun Google (Digunakan untuk SSO dan Identifikasi)</h3>
         <ul>
           <li><strong>Data yang Dikumpulkan:</strong> Alamat email, nama, dan informasi profil dasar.</li>
-          <li><strong>Tujuan:</strong> Untuk mengautentikasi pengguna (Single Sign-On/SSO) dan mengidentifikasi agen atau administrator dalam sistem OCA.</li>
+          <li><strong>Tujuan:</strong> Untuk mengautentikasi pengguna (Single Sign-On/SSO) dan mengidentifikasi agen atau administrator dalam sistem Chatwoot.</li>
         </ul>
 
         <h3>1.2. Data Gmail (Digunakan untuk Saluran Email)</h3>
         <p>Aplikasi kami menggunakan Google API Services untuk mengaktifkan fungsi Saluran Email. Penggunaan data yang diterima dari Google API akan mematuhi <a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank">Google API Services User Data Policy</a>, termasuk Persyaratan Penggunaan Batasan (Limited Use Requirements).</p>
         <ul>
-          <li><strong>Data yang Dikumpulkan:</strong> Kami mengakses, membaca, menulis, mengirim, dan menghapus email dari kotak masuk (inbox) yang telah Anda hubungkan sebagai saluran dukungan pelanggan di OCA.</li>
+          <li><strong>Data yang Dikumpulkan:</strong> Kami mengakses, membaca, menulis, mengirim, dan menghapus email dari kotak masuk (inbox) yang telah Anda hubungkan sebagai saluran dukungan pelanggan di Chatwoot.</li>
           <li>
             <strong>Tujuan:</strong> Data ini digunakan secara ketat untuk:
             <ul>
-              <li>Mengubah email masuk menjadi "Percakapan" atau "Tiket" dukungan pelanggan di OCA.</li>
-              <li>Memungkinkan agen dukungan pelanggan kami untuk membalas email keluar langsung dari antarmuka OCA.</li>
+              <li>Mengubah email masuk menjadi "Percakapan" atau "Tiket" dukungan pelanggan di Chatwoot.</li>
+              <li>Memungkinkan agen dukungan pelanggan kami untuk membalas email keluar langsung dari antarmuka Chatwoot.</li>
               <li>Mengelola utas percakapan (threading) dan status tiket dukungan pelanggan.</li>
             </ul>
           </li>
@@ -46,7 +46,7 @@ definePageMeta({
           <li>Penggunaan internal untuk menyediakan atau meningkatkan fitur yang relevan dengan pengguna aplikasi.</li>
           <li>Keamanan pengguna (misalnya, menyelidiki penyalahgunaan).</li>
           <li>Kepatuhan terhadap hukum yang berlaku.</li>
-          <li>Transfer ke pihak lain hanya jika diperlukan untuk menyediakan layanan (misalnya, ke server OCA untuk pemrosesan tiket) dan dengan persetujuan pengguna.</li>
+          <li>Transfer ke pihak lain hanya jika diperlukan untuk menyediakan layanan (misalnya, ke server Chatwoot untuk pemrosesan tiket) dan dengan persetujuan pengguna.</li>
           <li>**Kami tidak akan** menjual atau membagikan data ini untuk tujuan periklanan atau pemasaran.</li>
         </ul>
 
@@ -58,11 +58,11 @@ definePageMeta({
         <ul>
           <li>Dengan persetujuan eksplisit Anda.</li>
           <li>Untuk mematuhi kewajiban hukum atau peraturan.</li>
-          <li>Kepada penyedia layanan pihak ketiga (seperti vendor hosting OCA) yang hanya memproses data atas nama kami.</li>
+          <li>Kepada penyedia layanan pihak ketiga (seperti vendor hosting Chatwoot) yang hanya memproses data atas nama kami.</li>
         </ul>
 
         <h2>5. Kontrol dan Retensi Data</h2>
-        <p>Anda dapat mengontrol data yang kami akses dengan mencabut izin integrasi Google kapan saja melalui pengaturan akun Google Anda atau dengan menghapus saluran email dari pengaturan OCA Anda. Kami akan menyimpan data email selama akun OCA Anda aktif atau selama diperlukan untuk memenuhi tujuan yang diuraikan dalam Kebijakan Privasi ini.</p>
+        <p>Anda dapat mengontrol data yang kami akses dengan mencabut izin integrasi Google kapan saja melalui pengaturan akun Google Anda atau dengan menghapus saluran email dari pengaturan Chatwoot Anda. Kami akan menyimpan data email selama akun Chatwoot Anda aktif atau selama diperlukan untuk memenuhi tujuan yang diuraikan dalam Kebijakan Privasi ini.</p>
 
         <h2>6. Perubahan Kebijakan Privasi</h2>
         <p>Kami dapat memperbarui Kebijakan Privasi ini dari waktu ke waktu. Kami akan memberitahu Anda tentang perubahan apa pun dengan memposting Kebijakan Privasi baru di halaman ini.</p>
