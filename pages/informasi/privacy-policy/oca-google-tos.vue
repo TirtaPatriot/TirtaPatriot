@@ -17,7 +17,7 @@ definePageMeta({
         <h1>Persyaratan Layanan Aplikasi Tirta Patriot ID</h1>
 
         <h2>1. Penerimaan Persyaratan</h2>
-        <p>Selamat datang di layanan Perusahaan Umum Daerah Air Minum Tirta Patriot ("Kami," "Layanan," atau "Aplikasi"). Layanan yang kami sediakan melalui platform OCA di https://omni.app.tirtapatriot.com/ diatur oleh Persyaratan Layanan ("Persyaratan") ini. Dengan mengakses atau menggunakan Layanan, Anda setuju untuk terikat oleh Persyaratan ini.</p>
+        <p>Selamat datang di layanan Perusahaan Umum Daerah Air Minum Tirta Patriot ("Kami," "Layanan," atau "Aplikasi"). Layanan yang kami sediakan melalui platform OCA di <a href="https://omni.app.tirtapatriot.com/">omni.app.tirtapatriot.com</a> diatur oleh Persyaratan Layanan ("Persyaratan") ini. Dengan mengakses atau menggunakan Layanan, Anda setuju untuk terikat oleh Persyaratan ini.</p>
 
         <h2>2. Deskripsi Layanan</h2>
         <p>Kami menyediakan platform manajemen hubungan pelanggan (Customer Relationship Management/CRM) dan dukungan pelanggan melalui OCA, yang memungkinkan Anda mengelola komunikasi dengan pelanggan melalui berbagai saluran, termasuk email, yang terintegrasi melalui Google OAuth.</p>
@@ -45,28 +45,22 @@ definePageMeta({
           <li>Mengganggu atau merusak integritas atau kinerja Layanan.</li>
         </ul>
 
-        <h2>6. Pembayaran dan Biaya (Opsional - Hapus jika layanan gratis)</h2>
-        <ul>
-          <li>Semua biaya harus dibayar di muka sesuai dengan paket layanan yang Anda pilih.</li>
-          <li>Biaya tidak dapat dikembalikan kecuali diatur lain secara tertulis.</li>
-        </ul>
-
-        <h2>7. Penghentian</h2>
+        <h2>6. Penghentian</h2>
         <p>Kami dapat menangguhkan atau menghentikan akses Anda ke Layanan kapan saja, tanpa pemberitahuan atau kewajiban, jika Anda melanggar Persyaratan ini.</p>
 
-        <h2>8. Penolakan Jaminan</h2>
+        <h2>7. Penolakan Jaminan</h2>
         <p>Layanan disediakan atas dasar "sebagaimana adanya" dan "sebagaimana tersedia" tanpa jaminan apa pun, baik tersurat maupun tersirat, termasuk, tetapi tidak terbatas pada, jaminan tersirat tentang kelayakan jual, kesesuaian untuk tujuan tertentu, dan non-pelanggaran.</p>
 
-        <h2>9. Pembatasan Kewajiban</h2>
+        <h2>8. Pembatasan Kewajiban</h2>
         <p>Sejauh diizinkan oleh hukum, Perusahaan Umum Daerah Air Minum Tirta Patriot tidak akan bertanggung jawab atas kerusakan tidak langsung, insidental, khusus, konsekuensial, atau hukuman, termasuk, namun tidak terbatas pada, kerugian keuntungan, data, atau penggunaan, yang timbul dari akses atau penggunaan Anda terhadap Layanan.</p>
 
-        <h2>10. Hukum yang Mengatur</h2>
+        <h2>9. Hukum yang Mengatur</h2>
         <p>Persyaratan ini diatur dan ditafsirkan sesuai dengan hukum Indonesia, tanpa memperhatikan pertentangan prinsip hukumnya.</p>
 
-        <h2>11. Perubahan Persyaratan</h2>
+        <h2>10. Perubahan Persyaratan</h2>
         <p>Kami berhak, atas kebijakan tunggal kami, untuk mengubah atau mengganti Persyaratan ini kapan saja. Kami akan berusaha memberikan pemberitahuan setidaknya 30 hari sebelum Persyaratan baru mulai berlaku.</p>
 
-        <h2>12. Hubungi Kami</h2>
+        <h2>11. Hubungi Kami</h2>
         <p>Jika Anda memiliki pertanyaan tentang Persyaratan ini, silakan hubungi kami di:</p>
         <ul>
           <li>Email: sekretariat@tirtapatriot.co.id</li>
