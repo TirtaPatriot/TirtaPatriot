@@ -154,6 +154,15 @@ const { data } = await useAsyncData(
       <div>
         &copy; {{ new Date().getFullYear() }} — <strong>Perusahaan Umum Daerah Air Minum Tirta Patriot</strong>
       </div>
+      <div>
+        <a href="https://tirtapatriot.co.id/informasi/privacy-policy/oca-google">
+          OCA Privacy Policy
+        </a>
+        -
+        <a href="https://tirtapatriot.co.id/informasi/privacy-policy/oca-google-tos">
+          OCA ToS
+        </a>
+      </div>
     </v-footer>
   </v-main>
 </template>
