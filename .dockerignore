@@ -13,11 +13,3 @@ helm-charts
 .editorconfig
 .idea
 coverage*
-
-# Nuxt dev/build outputs
-.output
-.data
-.nuxt
-.nitro
-.cache
-dist
