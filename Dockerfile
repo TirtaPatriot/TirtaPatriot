@@ -1,13 +1,16 @@
 # use the official Bun image
 # see all versions at https://hub.docker.com/r/oven/bun/tags
-FROM oven/bun:1 as base
+FROM oven/bun:1-alpine as base
 WORKDIR /usr/src/app
-
-RUN apt-get update && apt-get install -y libvips-dev
 
 # install dependencies into temp directory
 # this will cache them and speed up future builds
 FROM base AS install
+RUN apk add --no-cache \
+    python3 \
+    make \
+    g++ \
+    vips-dev
 RUN mkdir -p /temp/dev
 COPY package.json bun.lockb /temp/dev/
 RUN cd /temp/dev && bun install --frozen-lockfile
