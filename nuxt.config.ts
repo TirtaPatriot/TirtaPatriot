@@ -3,7 +3,7 @@ import { defineOrganization } from 'nuxt-schema-org/schema'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  compatibilityDate: '2024-07-03',
+  compatibilityDate: '2024-12-31',
   ssr: true,
   devtools: { enabled: true },
   app: {
@@ -50,11 +50,11 @@ export default defineNuxtConfig({
 
   nitro: {
     externals: {
-      inline: ['css-tree'],
+      traceInclude: ['css-tree'],
     },
-    moduleSideEffects: ['css-tree'],
+    moduleSideEffects: ['css-tree/data/patch.json'],
     prerender: {
-      crawlLinks: true,
+      crawlLinks: false,
       routes: ['/sitemap.xml', '/robots.txt', '/'],
     },
   },

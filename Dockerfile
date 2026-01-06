@@ -7,12 +7,15 @@ FROM node:20-slim AS builder
 
 WORKDIR /app
 
-COPY package.json bun.lockb* ./
+COPY package.json bun.lockb* package-lock.json ./
 
 # Install with npm (handles dependencies better than bun in containers)
-RUN npm install
+RUN npm ci
 
 COPY . .
+
+# Copy .env for build-time env vars (Directus URL for prerender, etc.)
+COPY .env* ./
 
 # Build with npm run
 RUN npm run build
