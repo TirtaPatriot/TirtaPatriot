@@ -1,28 +1,40 @@
-# 1. Base Image
+# --- Stage 1: Base ---
 FROM oven/bun:1-alpine AS base
 WORKDIR /usr/src/app
 
-# 2. Install Dependencies
+# --- Stage 2: Install ---
 FROM base AS install
 COPY package.json bun.lockb ./
+# Pastikan gunakan --network=host saat build jika DNS masih bermasalah
 RUN bun install --frozen-lockfile
 
-# 3. Build Project
+# --- Stage 3: Build ---
 FROM base AS prerelease
+# Ambil node_modules dari stage install
 COPY --from=install /usr/src/app/node_modules ./node_modules
 COPY . .
+
+# Tambahkan argumen ini untuk memastikan build nuxt lebih "berani"
 ENV NODE_ENV=production
-RUN bun run build --preset=bun
+RUN bun run build
 
-# 4. Final Release (Hanya ambil yang perlu saja)
+# --- Stage 4: Release ---
 FROM base AS release
-# COPY folder .output adalah kunci utama Nuxt 3
-COPY --from=prerelease /usr/src/app/.output ./.output
-COPY --from=prerelease /usr/src/app/package.json .
+WORKDIR /usr/src/app
 
-# Jalankan sebagai user bun (lebih aman)
+# COPY yang paling krusial adalah folder .output
+COPY --from=prerelease /usr/src/app/.output ./.output
+
+# TRIK KHUSUS: Jika css-tree masih rewel, kita copy folder data-nya secara manual
+# ke dalam struktur node_modules yang dibuat oleh Nitro di dalam .output
+COPY --from=prerelease /usr/src/app/node_modules/css-tree/data ./.output/server/node_modules/css-tree/data
+
+# Environment wajib agar container bisa diakses
+ENV HOST=0.0.0.0
+ENV PORT=3000
+ENV NODE_ENV=production
+
 USER bun
 EXPOSE 3000/tcp
 
-# Pointing langsung ke hasil build Nitro
 ENTRYPOINT [ "bun", "run", ".output/server/index.mjs" ]
