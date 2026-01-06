@@ -1,38 +1,24 @@
-# --- Stage 1: Base ---
-FROM oven/bun:1-alpine AS base
+FROM oven/bun:1-alpine
+
 WORKDIR /usr/src/app
 
-# --- Stage 2: Install ---
-FROM base AS install
+# 1. Copy file package saja untuk caching
 COPY package.json bun.lockb ./
-# Pastikan gunakan --network=host saat build jika DNS masih bermasalah
+
+# 2. Install (Gunakan network host saat build jika DNS bermasalah)
 RUN bun install --frozen-lockfile
 
-# --- Stage 3: Build ---
-FROM base AS prerelease
-# Ambil node_modules dari stage install
-COPY --from=install /usr/src/app/node_modules ./node_modules
+# 3. Copy seluruh source code
 COPY . .
 
-# Tambahkan argumen ini untuk memastikan build nuxt lebih "berani"
+# 4. Build Nuxt
 ENV NODE_ENV=production
-RUN bun run build
+RUN bun run build --preset=bun
 
-# --- Stage 4: Release ---
-FROM base AS release
-WORKDIR /usr/src/app
-
-# COPY yang paling krusial adalah folder .output
-COPY --from=prerelease /usr/src/app/.output ./.output
-
-COPY --from=prerelease /usr/src/app/node_modules/css-tree/data ./.output/server/node_modules/css-tree/data
-
-# Environment wajib agar container bisa diakses
+# 5. Konfigurasi Runtime
 ENV HOST=0.0.0.0
 ENV PORT=3000
-ENV NODE_ENV=production
 
-USER bun
-EXPOSE 3000/tcp
+EXPOSE 3000
 
 ENTRYPOINT [ "bun", "run", ".output/server/index.mjs" ]
