@@ -50,9 +50,9 @@ export default defineNuxtConfig({
 
   nitro: {
     externals: {
-      trace: true,
-      include: ['css-tree']
+      traceInclude: ['css-tree'],
     },
+    moduleSideEffects: ['css-tree/data/patch.json'],
     prerender: {
       crawlLinks: true,
       routes: ['/sitemap.xml', '/robots.txt', '/'],
@@ -92,7 +92,7 @@ export default defineNuxtConfig({
   },
   sitemap: {
     enabled: true,
-    zeroRuntime: true
+    zeroRuntime: true,
   },
 
   ogImage: {
