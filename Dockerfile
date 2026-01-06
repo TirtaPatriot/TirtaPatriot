@@ -1,24 +1,46 @@
-FROM oven/bun:1-alpine
+# syntax=docker/dockerfile:1.7
 
-WORKDIR /usr/src/app
+############################
+# base
+############################
+FROM oven/bun:1-alpine AS base
+WORKDIR /app
+ENV NODE_ENV=production \
+    NUXT_TELEMETRY_DISABLED=1 \
+    NUXT_HOST=0.0.0.0 \
+    NUXT_PORT=3000
 
-# 1. Copy file package saja untuk caching
+############################
+# deps (cached)
+############################
+FROM base AS deps
+
+# Copy only manifest + lock for best cache hit rate
 COPY package.json bun.lockb ./
 
-# 2. Install (Gunakan network host saat build jika DNS bermasalah)
-RUN bun install --frozen-lockfile
+# BuildKit cache for bun to speed up rebuilds
+RUN --mount=type=cache,target=/root/.bun \
+    bun install --frozen-lockfile
 
-# 3. Copy seluruh source code
+############################
+# build
+############################
+FROM base AS build
+COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# 4. Build Nuxt
-# ENV NODE_ENV=production
-RUN bun run build --preset=bun
+# Build Nuxt -> .output/
+RUN bun run build
 
-# 5. Konfigurasi Runtime
-ENV HOST=0.0.0.0
-ENV PORT=3000
+############################
+# runner (small)
+############################
+FROM base AS runner
 
+# Only ship build output (small + secure)
+COPY --from=build /app/.output ./.output
+COPY --from=build /app/package.json ./package.json
+
+USER bun
 EXPOSE 3000
-
-ENTRYPOINT [ "bun", "run", ".output/server/index.mjs" ]
+CMD ["bun", ".output/server/index.mjs"]
