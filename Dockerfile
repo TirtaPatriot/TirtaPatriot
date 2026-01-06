@@ -26,7 +26,12 @@ RUN --mount=type=cache,target=/root/.bun \
 # build
 ############################
 FROM base AS build
-COPY --from=deps /app/node_modules ./node_modules
+
+# Copy lock files and install ALL dependencies (including dev)
+COPY package.json bun.lockb ./
+RUN --mount=type=cache,target=/root/.bun \
+    bun install --frozen-lockfile
+
 COPY . .
 
 # Build Nuxt -> .output/
