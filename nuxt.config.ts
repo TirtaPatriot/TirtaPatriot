@@ -49,6 +49,10 @@ export default defineNuxtConfig({
   },
 
   nitro: {
+    externals: {
+      inline: ['css-tree'],
+    },
+    moduleSideEffects: ['css-tree'],
     prerender: {
       crawlLinks: true,
       routes: ['/sitemap.xml', '/robots.txt', '/'],

@@ -23,19 +23,13 @@ RUN --mount=type=cache,target=/root/.bun \
     bun install --frozen-lockfile
 
 ############################
-# build
+# build - copy pre-built output from local
 ############################
 FROM base AS build
 
-# Copy lock files and install ALL dependencies (including dev)
+WORKDIR /app
 COPY package.json bun.lockb ./
-RUN --mount=type=cache,target=/root/.bun \
-    bun install --frozen-lockfile
-
-COPY . .
-
-# Build Nuxt -> .output/
-RUN bun run build
+COPY .output ./.output
 
 ############################
 # runner (small)
