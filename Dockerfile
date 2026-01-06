@@ -12,7 +12,7 @@ RUN bun install --frozen-lockfile
 COPY . .
 
 # 4. Build Nuxt
-ENV NODE_ENV=production
+# ENV NODE_ENV=production
 RUN bun run build --preset=bun
 
 # 5. Konfigurasi Runtime
