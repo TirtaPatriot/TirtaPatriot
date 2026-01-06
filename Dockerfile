@@ -1,36 +1,28 @@
-# use the official Bun image
-# see all versions at https://hub.docker.com/r/oven/bun/tags
-FROM oven/bun:1-alpine as base
+# 1. Base Image
+FROM oven/bun:1-alpine AS base
 WORKDIR /usr/src/app
 
-# install dependencies into temp directory
-# this will cache them and speed up future builds
+# 2. Install Dependencies
 FROM base AS install
-COPY package.json bun.lockb /temp/dev/
-RUN cd /temp/dev && bun install --frozen-lockfile
+COPY package.json bun.lockb ./
+RUN bun install --frozen-lockfile
 
-# install with --production (exclude devDependencies)
-RUN mkdir -p /temp/prod
-COPY package.json bun.lockb /temp/prod/
-RUN cd /temp/prod && bun install --frozen-lockfile --production
-
-# copy node_modules from temp directory
-# then copy all (non-ignored) project files into the image
+# 3. Build Project
 FROM base AS prerelease
-COPY --from=install /temp/dev/node_modules node_modules
+COPY --from=install /usr/src/app/node_modules ./node_modules
 COPY . .
-
-# [optional] tests & build
 ENV NODE_ENV=production
-RUN bun run build --preset bun
+RUN bun run build
 
-# copy production dependencies and source code into final image
+# 4. Final Release (Hanya ambil yang perlu saja)
 FROM base AS release
-COPY --from=install /temp/prod/node_modules node_modules
-COPY --from=prerelease /usr/src/app/index.ts .
+# COPY folder .output adalah kunci utama Nuxt 3
+COPY --from=prerelease /usr/src/app/.output ./.output
 COPY --from=prerelease /usr/src/app/package.json .
 
-# run the app
+# Jalankan sebagai user bun (lebih aman)
 USER bun
 EXPOSE 3000/tcp
+
+# Pointing langsung ke hasil build Nitro
 ENTRYPOINT [ "bun", "run", ".output/server/index.mjs" ]
