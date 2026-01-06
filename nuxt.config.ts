@@ -50,7 +50,7 @@ export default defineNuxtConfig({
 
   nitro: {
     externals: {
-      inline: ['css-tree'],
+      inline: ['css-tree', 'unocss'],
     },
     prerender: {
       crawlLinks: true,

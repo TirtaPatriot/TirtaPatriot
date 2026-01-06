@@ -25,8 +25,6 @@ WORKDIR /usr/src/app
 # COPY yang paling krusial adalah folder .output
 COPY --from=prerelease /usr/src/app/.output ./.output
 
-# TRIK KHUSUS: Jika css-tree masih rewel, kita copy folder data-nya secara manual
-# ke dalam struktur node_modules yang dibuat oleh Nitro di dalam .output
 COPY --from=prerelease /usr/src/app/node_modules/css-tree/data ./.output/server/node_modules/css-tree/data
 
 # Environment wajib agar container bisa diakses
