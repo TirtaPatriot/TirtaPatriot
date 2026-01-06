@@ -49,9 +49,12 @@ export default defineNuxtConfig({
   },
 
   nitro: {
+    noExternals: true,
     externals: {
-      inline: ['css-tree', 'unocss'],
+      inline: ['css-tree', 'unocss', '@unocss/nuxt'],
     },
+    // Pastikan file JSON dipaksa masuk
+    moduleSideEffects: ['css-tree/data/patch.json'],
     prerender: {
       crawlLinks: true,
       routes: ['/sitemap.xml', '/robots.txt', '/'],
