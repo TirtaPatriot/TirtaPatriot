@@ -12,7 +12,7 @@ FROM base AS prerelease
 COPY --from=install /usr/src/app/node_modules ./node_modules
 COPY . .
 ENV NODE_ENV=production
-RUN bun run build
+RUN bun run build --preset=bun
 
 # 4. Final Release (Hanya ambil yang perlu saja)
 FROM base AS release
