@@ -53,10 +53,10 @@ export default defineNuxtConfig({
       traceInclude: ['css-tree'],
     },
     moduleSideEffects: ['css-tree/data/patch.json'],
-    prerender: {
-      crawlLinks: false,
-      routes: ['/sitemap.xml', '/robots.txt', '/'],
-    },
+    // prerender: {
+    //   crawlLinks: false,
+    //   routes: ['/sitemap.xml', '/robots.txt', '/'],
+    // },
   },
 
   modules: [
