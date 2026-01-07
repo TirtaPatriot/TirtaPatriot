@@ -34,7 +34,7 @@ ENV NODE_ENV=production \
 
 # Only copy built output + package.json
 COPY --from=builder /app/.output ./.output
-COPY package.json ./
+COPY package.json package-lock.json ./
 
 USER bun
 EXPOSE 3000
