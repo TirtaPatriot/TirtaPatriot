@@ -10,7 +10,7 @@ WORKDIR /app
 COPY package.json bun.lockb* package-lock.json ./
 
 # Install with npm (handles dependencies better than bun in containers)
-RUN npm ci
+RUN npm i
 
 COPY . .
 
