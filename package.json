@@ -15,7 +15,7 @@
   "dependencies": {
     "@iconify/vue": "^5.0.0",
     "@nuxtjs/mdc": "^0.19.2",
-    "@nuxtjs/seo": "^3.3.0",
+    "@nuxtjs/seo": "^5.1.0",
     "@productdevbook/chatwoot": "^2.0.0",
     "@vueuse/nuxt": "^14.1.0",
     "nuxt": "^4.2.2",
