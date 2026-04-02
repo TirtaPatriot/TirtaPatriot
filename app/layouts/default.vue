@@ -23,8 +23,6 @@
     }
   }
 
-  const { mdAndUp } = useDisplay()
-
   function normalizeCmsIcon (icon?: string | null): string | undefined {
     if (!icon)
       return undefined
@@ -134,7 +132,7 @@
         </NuxtLink>
       </template>
       <template #append>
-        <template v-if="mdAndUp">
+        <div class="desktop-nav">
           <template v-for="(m, x) of navigation" :key="m.id">
             <v-btn
               v-if="!m.children?.length"
@@ -173,15 +171,11 @@
               </ClientOnly>
             </v-btn>
           </template>
-          <!-- <v-btn variant="text" href="https://e-proc.perumdatirtapatriot.co.id/announcement" rel="external no-follow" class="text-capitalize">
-            Pelelangan
-          </v-btn> -->
-        </template>
-        <template v-else>
-          <!-- <v-divider vertical /> -->
-          <!-- <v-btn v-if="enableToogleTheme" icon="i-mdi:theme-light-dark" @click="toogleTheme" /> -->
+        </div>
+
+        <div class="mobile-nav">
           <v-app-bar-nav-icon variant="text" @click.stop="drawer = !drawer" />
-        </template>
+        </div>
       </template>
     </v-app-bar>
 
@@ -200,3 +194,26 @@
 
   </v-layout>
 </template>
+
+<style scoped>
+  .desktop-nav {
+    display: none;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .mobile-nav {
+    display: flex;
+    align-items: center;
+  }
+
+  @media (width >= 960px) {
+    .desktop-nav {
+      display: flex;
+    }
+
+    .mobile-nav {
+      display: none;
+    }
+  }
+</style>

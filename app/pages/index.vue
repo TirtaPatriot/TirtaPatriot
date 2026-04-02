@@ -6,8 +6,7 @@
     theme: '#0487d2',
   })
 
-  const { mdAndDown } = useDisplay()
-  const heroHeight = computed(() => mdAndDown.value ? 300 : 560)
+  const heroHeight = 'clamp(300px, 46vw, 560px)'
   const currentYear = useState('site.currentYear', () => new Date().getFullYear())
 
   useHead({
@@ -68,6 +67,7 @@
       cycle
       delimiter-icon="i-mdi:water"
       hide-delimiter-background
+      :height="heroHeight"
       :show-arrows="false"
     >
       <p-carousel-item
@@ -76,7 +76,6 @@
         :alt="slide.alt || slide.title"
         class="w-100"
         cover
-        :height="heroHeight"
         provider="directus"
         :src="slide.image"
       />
@@ -115,7 +114,7 @@
     <div class="text-white bg-blue py-md-10">
       <v-container class="border-lg border-surface-light">
         <v-row justify="center">
-          <v-col v-if="!mdAndDown" cols="1">
+          <v-col class="himbauan-icon" cols="1">
             <v-icon icon="i-mdi:message-fast-outline" size="86" />
           </v-col>
           <v-col cols="auto">
@@ -182,3 +181,15 @@
     </v-footer>
   </v-main>
 </template>
+
+<style scoped>
+  .himbauan-icon {
+    display: none;
+  }
+
+  @media (width >= 960px) {
+    .himbauan-icon {
+      display: block;
+    }
+  }
+</style>
