@@ -55,16 +55,14 @@
         @click:action="() => navigateTo('/perusahaan/kontak')"
       />
       <div v-else>
-        <v-row density="comfortable">
-          <v-col
+        <div class="berita-grid">
+          <v-card
             v-for="item in artikel"
             :key="item.id"
-            cols="12"
-            sm="6"
-            md="4"
-            lg="3"
+            border
+            class="pb-3 h-100 berita-card"
+            flat
           >
-            <v-card border class="pb-3 h-100" flat>
               <p-img cover :height="200" :src="item.cover" />
 
               <v-list-item class="mb-2" :subtitle="item.ringkasan">
@@ -92,8 +90,7 @@
                 />
               </div>
             </v-card>
-          </v-col>
-        </v-row>
+        </div>
 
         <v-row v-if="page > 1 || hasNext" class="my-6" justify="center">
           <v-btn
@@ -117,6 +114,32 @@
   </v-main>
 </template>
 
-<style>
+<style scoped>
+  .berita-grid {
+    display: grid;
+    gap: 16px;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
 
+  @media (width >= 600px) {
+    .berita-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (width >= 960px) {
+    .berita-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  @media (width >= 1280px) {
+    .berita-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  .berita-card {
+    min-width: 0;
+  }
 </style>

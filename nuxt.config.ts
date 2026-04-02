@@ -49,6 +49,16 @@ export default defineNuxtConfig({
     zeroRuntime: true,
   },
 
+  nitro: {
+    prerender: {
+      // Throttle static crawling to avoid Directus API rate limiting on generate.
+      concurrency: 1,
+      interval: 250,
+      retry: 3,
+      retryDelay: 500,
+    },
+  },
+
   ogImage: {
     enabled: true,
     zeroRuntime: true,
