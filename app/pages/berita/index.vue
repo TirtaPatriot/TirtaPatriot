@@ -71,17 +71,17 @@
                 </template>
               </v-list-item>
 
-              <div class="d-flex justify-space-between px-4">
-                <div class="d-flex align-center text-caption text-medium-emphasis me-1">
-                  <v-icon icon="mdi-clock" start />
+              <div class="berita-meta">
+                <div class="berita-date">
+                  <v-icon class="berita-date-icon" icon="mdi-clock" />
 
-                  <div class="text-truncate">
+                  <span class="berita-date-text">
                     {{ formatDate(item.date_created) }}
-                  </div>
+                  </span>
                 </div>
 
                 <v-btn
-                  class="text-none"
+                  class="berita-link"
                   color="blue"
                   flat
                   size="small"
@@ -141,5 +141,37 @@
 
   .berita-card {
     min-width: 0;
+  }
+
+  .berita-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding-inline: 16px;
+  }
+
+  .berita-date {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: rgb(var(--v-theme-on-surface), 0.6);
+    font-size: 0.9rem;
+  }
+
+  .berita-date-icon {
+    flex-shrink: 0;
+  }
+
+  .berita-date-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .berita-link {
+    flex-shrink: 0;
+    text-transform: none;
   }
 </style>
