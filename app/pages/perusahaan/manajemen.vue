@@ -49,29 +49,29 @@
       </div>
       <v-row justify="center">
         <v-col
-          v-for="d of data"
+          v-for="d of data || []"
           :key="d.id"
           cols="12"
-          md="3"
           sm="6"
+          md="4"
+          lg="3"
         >
-          <!-- <v-card class="mx-auto text-center" max-width="400"> -->
           <p-img
-            class="text-center text-white text-uppercase w-100 bg-blue align-end"
-            :height="3512 / 10"
+            class="direksi-photo text-white text-uppercase w-100 align-end"
+            cover
+            :aspect-ratio="3 / 4"
             provider="directus"
             :src="d.foto"
-            style="text-shadow: -2px 1px 5px black"
-            :width="2558 / 10"
           >
-            <h5>
-              {{ d.nama }}
-            </h5>
-            <h6>
-              {{ d.jabatan }}
-            </h6>
+            <div class="direksi-overlay">
+              <h5 class="direksi-name">
+                {{ d.nama }}
+              </h5>
+              <h6 class="direksi-role">
+                {{ d.jabatan }}
+              </h6>
+            </div>
           </p-img>
-          <!-- </v-card> -->
         </v-col>
       </v-row>
 
@@ -147,3 +147,33 @@
     </v-sheet>
   </v-main>
 </template>
+
+<style scoped>
+  .direksi-photo {
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #1f95db;
+  }
+
+  .direksi-overlay {
+    width: 100%;
+    padding: 18px 12px 14px;
+    background: linear-gradient(to top, rgb(0 0 0 / 72%), rgb(0 0 0 / 8%));
+    text-align: center;
+  }
+
+  .direksi-name {
+    margin: 0;
+    font-size: 1.05rem;
+    line-height: 1.35;
+    text-shadow: 0 2px 6px rgb(0 0 0 / 55%);
+  }
+
+  .direksi-role {
+    margin: 6px 0 0;
+    font-size: 0.9rem;
+    line-height: 1.3;
+    font-weight: 700;
+    text-shadow: 0 2px 6px rgb(0 0 0 / 55%);
+  }
+</style>
