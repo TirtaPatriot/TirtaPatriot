@@ -19,7 +19,7 @@
         limit: perPage + 1,
         offset: (page.value - 1) * perPage,
         sort: ['-date_created'],
-        fields: ['judul', 'ringkasan', 'cover', 'date_created', 'permalink'],
+        fields: ['id', 'judul', 'ringkasan', 'cover', 'date_created', 'permalink'],
         filter: {
           status: { _eq: 'published' },
           jenis: { _eq: 'berita' },
@@ -59,10 +59,12 @@
           <v-col
             v-for="item in artikel"
             :key="item.id"
-            cols="auto"
+            cols="12"
+            sm="6"
             md="4"
+            lg="3"
           >
-            <v-card border class="pb-3" flat>
+            <v-card border class="pb-3 h-100" flat>
               <p-img cover :height="200" :src="item.cover" />
 
               <v-list-item class="mb-2" :subtitle="item.ringkasan">
