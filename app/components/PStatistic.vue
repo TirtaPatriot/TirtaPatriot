@@ -5,6 +5,9 @@
     'statistic',
     () => getItems<any>({
       collection: 'statistik',
+      params: {
+        sort: ['sort', 'id'],
+      },
     }),
   )
 </script>

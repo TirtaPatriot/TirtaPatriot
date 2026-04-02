@@ -5,6 +5,12 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-12-21',
   devtools: { enabled: true },
 
+  vite: {
+    build: {
+      cssMinify: 'lightningcss',
+    },
+  },
+
   // ssr: false,
   modules: ['@nuxt/fonts', '@unocss/nuxt', 'vuetify-nuxt-module', '@nuxt/eslint', '@nuxt/image', 'nuxt-directus', '@productdevbook/chatwoot', '@nuxtjs/seo', '@nuxtjs/mdc'],
 

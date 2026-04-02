@@ -8,6 +8,7 @@
 
   const heroHeight = 'clamp(300px, 46vw, 560px)'
   const currentYear = useState('site.currentYear', () => new Date().getFullYear())
+  const carouselReady = ref(false)
 
   useHead({
     title: 'Beranda',
@@ -48,6 +49,7 @@
       const carousel = await getItems<any>({
         collection: 'korsel',
         params: {
+          sort: ['sort', 'id'],
           filter: {
             status: { _eq: 'published' },
           },
@@ -58,28 +60,42 @@
       }
     },
   )
+
+  onMounted(() => {
+    carouselReady.value = true
+  })
 </script>
 
 <template>
   <v-main>
-    <v-carousel
-      class="w-100"
-      cycle
-      delimiter-icon="i-mdi:water"
-      hide-delimiter-background
-      :height="heroHeight"
-      :show-arrows="false"
-    >
-      <p-carousel-item
-        v-for="(slide, i) in data?.carousel"
-        :key="i"
-        :alt="slide.alt || slide.title"
+    <template v-if="carouselReady">
+      <v-carousel
         class="w-100"
-        cover
-        provider="directus"
-        :src="slide.image"
-      />
-    </v-carousel>
+        cycle
+        delimiter-icon="i-mdi:water"
+        hide-delimiter-background
+        :height="heroHeight"
+        :show-arrows="false"
+      >
+        <p-carousel-item
+          v-for="(slide, i) in data?.carousel"
+          :key="String(slide?.id ?? slide?.image ?? i)"
+          :alt="slide.alt || slide.title"
+          class="w-100"
+          cover
+          provider="directus"
+          :src="slide.image"
+        />
+      </v-carousel>
+    </template>
+    <p-img
+      v-else
+      class="w-100"
+      cover
+      :height="heroHeight"
+      provider="directus"
+      :src="data?.carousel?.[0]?.image || '/bg_slide-1.jpg'"
+    />
     <div class="grad-1">
       <div class="text-white d-flex justify-center flex-column align-center py-10">
         <div class="text-h5 pa-4">

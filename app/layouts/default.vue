@@ -48,11 +48,17 @@
   const mainNavigation = await getItems({
     collection: 'butir_navigasi',
     params: {
+      sort: ['sort', 'id'],
       filter: {
         navigasi: {
           pid: {
             _eq: 'main',
           },
+        },
+      },
+      deep: {
+        children: {
+          _sort: ['sort', 'id'],
         },
       },
       fields: [
@@ -133,7 +139,7 @@
       </template>
       <template #append>
         <div class="desktop-nav">
-          <template v-for="(m, x) of navigation" :key="m.id">
+          <template v-for="(m, x) of navigation" :key="String(m.id ?? m.title ?? x)">
             <v-btn
               v-if="!m.children?.length"
               v-bind="m.props"
