@@ -42,7 +42,6 @@ export default defineNuxtConfig({
   },
 
   app: {
-    buildAssetsDir: '/assets/',
     head: {
       htmlAttrs: {
         lang: 'id',
@@ -123,7 +122,7 @@ export default defineNuxtConfig({
     enabled: true,
   },
   seoExperiments: {
-    enabled: true,
+    enabled: process.env.NODE_ENV === 'production',
   },
   schemaOrg: {
     enabled: true,
@@ -198,7 +197,7 @@ export default defineNuxtConfig({
     }),
   },
   linkChecker: {
-    enabled: true,
+    enabled: process.env.NODE_ENV === 'production',
   },
   vuetify: {
     moduleOptions: {

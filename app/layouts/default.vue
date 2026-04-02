@@ -144,7 +144,7 @@
         </NuxtLink>
       </template>
       <template #append>
-        <div class="desktop-nav">
+        <div class="desktop-nav" style="display: none;">
           <template v-for="(m, x) of navigation" :key="String(m.id ?? m.title ?? x)">
             <v-btn
               v-if="!m.children?.length"
@@ -185,7 +185,7 @@
           </template>
         </div>
 
-        <div class="mobile-nav">
+        <div class="mobile-nav" style="display: flex; align-items: center;">
           <v-app-bar-nav-icon variant="text" @click.stop="drawer = !drawer" />
         </div>
       </template>
@@ -209,23 +209,17 @@
 
 <style scoped>
   .desktop-nav {
-    display: none;
     align-items: center;
     gap: 4px;
   }
 
-  .mobile-nav {
-    display: flex;
-    align-items: center;
-  }
-
   @media (width >= 960px) {
     .desktop-nav {
-      display: flex;
+      display: flex !important;
     }
 
     .mobile-nav {
-      display: none;
+      display: none !important;
     }
   }
 </style>
