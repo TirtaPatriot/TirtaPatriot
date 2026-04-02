@@ -145,33 +145,33 @@
             >
               {{ m.title }}
             </v-btn>
-            <ClientOnly v-else>
-              <v-menu>
-                <template #activator="{ props }">
-                  <v-btn
-                    :active="x === currentMenu"
-                    append-icon="i-mdi:chevron-down"
-                    class="text-capitalize"
-                    v-bind="{ ...m.props, ...props }"
-                    rounded="xl"
-                    variant="text"
-                  >
-                    {{ m.title }}
-                  </v-btn>
-                </template>
-                <!-- {{ m.children }} -->
+            <v-btn
+              v-else
+              :active="x === currentMenu"
+              append-icon="i-mdi:chevron-down"
+              class="text-capitalize"
+              v-bind="m.props"
+              rounded="xl"
+              variant="text"
+            >
+              {{ m.title }}
 
-                <v-list :items="m.children" />
-              <!-- <v-list>
-                <v-list-item
-                  v-for="(item, index) in m.children"
-                  :key="index"
-                  v-bind="item"
-                  :value="index"
-                />
-              </v-list> -->
-              </v-menu>
-            </ClientOnly>
+              <ClientOnly>
+                <v-menu activator="parent">
+                  <v-list>
+                    <v-list-item
+                      v-for="(item, index) in m.children"
+                      :key="String(item.id ?? index)"
+                      :prepend-icon="item.props.prependIcon"
+                      :title="item.title"
+                      :to="item.props.to"
+                      :href="item.props.href"
+                      :value="index"
+                    />
+                  </v-list>
+                </v-menu>
+              </ClientOnly>
+            </v-btn>
           </template>
           <!-- <v-btn variant="text" href="https://e-proc.perumdatirtapatriot.co.id/announcement" rel="external no-follow" class="text-capitalize">
             Pelelangan

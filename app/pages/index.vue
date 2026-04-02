@@ -8,6 +8,7 @@
 
   const { mdAndDown } = useDisplay()
   const heroHeight = computed(() => mdAndDown.value ? 300 : 560)
+  const currentYear = useState('site.currentYear', () => new Date().getFullYear())
 
   useHead({
     title: 'Beranda',
@@ -167,7 +168,7 @@
         </v-col>
       </v-row>
       <div>
-        &copy; {{ new Date().getFullYear() }} — <strong>Perusahaan Umum Daerah Air Minum Tirta Patriot</strong>
+        &copy; {{ currentYear }} — <strong>Perusahaan Umum Daerah Air Minum Tirta Patriot</strong>
       </div>
       <div>
         <a href="/informasi/privacy-policy/oca-google">

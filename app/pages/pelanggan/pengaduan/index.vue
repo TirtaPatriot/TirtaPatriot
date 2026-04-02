@@ -11,18 +11,26 @@
 
   // ── Ticket tracking view ─────────────────────────────────────────────
   const tiketId = computed(() => route.query.tiket as string | undefined)
+  const showTicketTracking = ref(false)
 
-  const { data: tiketData } = useLazyFetch<any>(
+  const { data: tiketData, execute: loadTiketData } = useLazyFetch<any>(
     () => `${config.public.apiUrl}/pengaduan/${tiketId.value}`,
     {
       server: false,
       default: () => ({}),
-      watch: [tiketId],
-      immediate: computed(() => !!tiketId.value),
+      immediate: false,
     },
   )
 
-  const fdate = (d: string) => new Intl.DateTimeFormat('id').format(new Date(d))
+  if (import.meta.client) {
+    watch(tiketId, (id) => {
+      showTicketTracking.value = !!id
+      if (id)
+        loadTiketData()
+    }, { immediate: true })
+  }
+
+  const fdate = (d: string) => new Intl.DateTimeFormat('id-ID', { timeZone: 'Asia/Jakarta' }).format(new Date(d))
 
   // ── Complaint form ───────────────────────────────────────────────────
   const { data } = await useAsyncData<any>(
@@ -142,7 +150,7 @@
     <PageHeader title="Pengaduan" />
     <v-container>
       <!-- ── Ticket tracking view ─────────────────────────────────── -->
-      <template v-if="tiketId">
+      <template v-if="showTicketTracking">
         <h3 class="text-title text-uppercase mb-4 text-center">
           Status Pengaduan #{{ tiketId }}
         </h3>
