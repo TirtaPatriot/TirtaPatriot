@@ -1,32 +1,20 @@
-import process from 'node:process'
 import { defineOrganization } from 'nuxt-schema-org/schema'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  compatibilityDate: '2024-12-31',
-  ssr: true,
+  compatibilityDate: '2025-12-21',
   devtools: { enabled: true },
-  app: {
-    rootId: 'TirtaPatriot',
-    teleportId: 'Tele',
-  },
-  // when enabling ssr option you need to disable inlineStyles and maybe devLogs
-  features: {
-    inlineStyles: false,
-    devLogs: false,
-  },
-  build: {
-    transpile: ['vuetify'],
-  },
-  vite: {
-    ssr: {
-      noExternal: ['vuetify'],
-    },
-  },
+
+  // ssr: false,
+  modules: ['@nuxt/fonts', '@unocss/nuxt', 'vuetify-nuxt-module', '@nuxt/eslint', '@nuxt/image', 'nuxt-directus', '@productdevbook/chatwoot', '@nuxtjs/seo', '@nuxtjs/mdc'],
+
+  css: [
+    'assets/styles/layers.css',
+    'vuetify/styles',
+    'assets/styles/main.scss',
+  ],
+
   runtimeConfig: {
-    recaptcha: {
-      secretKey: process.env.NUXT_RECAPTCHA_SECRET_KEY,
-    },
     public: {
       mdc: {
         useNuxtImage: true,
@@ -48,45 +36,11 @@ export default defineNuxtConfig({
     },
   },
 
-  nitro: {
-    externals: {
-      traceInclude: ['css-tree'],
-    },
-    moduleSideEffects: ['css-tree/data/patch.json'],
-    // prerender: {
-    //   crawlLinks: false,
-    //   routes: ['/sitemap.xml', '/robots.txt', '/'],
-    // },
+  site: {
+    name: process.env.NUXT_SITE_NAME ?? process.env.NUXT_ENV_SITE_NAME ?? 'Perumda Tirta Patriot',
+    url: process.env.NUXT_SITE_URL ?? process.env.NUXT_PUBLIC_SITE_URL ?? process.env.NUXT_ENV_SITE_URL ?? 'https://tirtapatriot.co.id',
   },
 
-  modules: [
-    '@unocss/nuxt',
-    '@nuxt/image',
-    'vuetify-nuxt-module',
-    '@vite-pwa/nuxt',
-    '@nuxtjs/google-fonts',
-    '@nuxtjs/seo',
-    '@nuxt/icon',
-    'nuxt-directus',
-    '@vueuse/nuxt',
-    '@nuxtjs/mdc',
-    '@productdevbook/chatwoot',
-  ],
-  mdc: {
-    components: {
-      prose: false,
-    },
-  },
-  directus: {
-    url: process.env.NUXT_PUBLIC_DIRECTUS_URL,
-  },
-  site: {
-    url: 'https://tirtapatriot.co.id',
-    name: 'Perusahaan Umum Daerah Air Minum Tirta Patriot Kota Bekasi',
-    description: 'Perumda (dulunya PDAM) Tirta Patriot merupakan Badan Usaha Milik Daerah Pemerintah Kota Bekasi yang bergerak di bidang pelayanan air bersih.',
-    defaultLocale: 'id',
-    trailingSlash: true,
-  },
   seo: {
     redirectToCanonicalSiteUrl: false,
   },
@@ -97,6 +51,8 @@ export default defineNuxtConfig({
 
   ogImage: {
     enabled: true,
+    zeroRuntime: true,
+    renderer: 'satori',
   },
   robots: {
     enabled: true,
@@ -179,108 +135,36 @@ export default defineNuxtConfig({
   linkChecker: {
     enabled: true,
   },
-  googleFonts: {
-    display: 'swap',
-    download: false,
-    families: {
-      Roboto: {
-        wght: [100, 300, 400, 500, 700, 900],
-        ital: [100, 300, 400, 500, 700, 900],
+  vuetify: {
+    moduleOptions: {
+      styles: { configFile: 'assets/styles/settings.scss' },
+      ssrClientHints: {
+        reloadOnFirstRequest: false,
+        viewportSize: true,
+        prefersColorScheme: false,
+        prefersReducedMotion: true,
+        prefersColorSchemeOptions: {
+          useBrowserThemeOnly: true,
+        },
       },
     },
+    vuetifyOptions: './vuetify.config.ts',
+  },
+
+  eslint: {
+    config: {
+      import: {
+        package: 'eslint-plugin-import-lite',
+      },
+    },
+  },
+  directus: {
+    url: process.env.NUXT_PUBLIC_DIRECTUS_URL,
   },
   image: {
     provider: process.env.NUXT_IMAGE_PROVIDER,
     directus: {
-      baseURL: process.env.NUXT_IMAGE_PROVIDER_BASE_URL,
-    },
-  },
-  vuetify: {
-    moduleOptions: {
-      ssrClientHints: {
-        reloadOnFirstRequest: false,
-        prefersColorScheme: false,
-        prefersColorSchemeOptions: {
-          useBrowserThemeOnly: false,
-        },
-        viewportSize: true,
-      },
-      // styles: {
-      // configFile: 'assets/app.scss',
-      // },
-    },
-  },
-  pwa: {
-    pwaAssets: {
-      image: 'public/logo.png',
-    },
-    registerType: 'autoUpdate',
-    includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'],
-    workbox: {
-      globPatterns: ['**/*.{js,css,html,ico,png,svg,jpg,jpeg,webp,woff2,woff}'],
-      runtimeCaching: [
-        {
-          handler: 'NetworkOnly',
-          urlPattern: /(\/api)|https:\/\/cms.tirtapatriot.net\/.*/,
-          method: 'POST',
-          options: {
-            backgroundSync: {
-              name: 'apiPost',
-              options: {
-                maxRetentionTime: 24 * 60,
-              },
-            },
-          },
-        },
-        {
-          urlPattern: /(\/api)|https:\/\/cms.tirtapatriot.net\/.*/i,
-          handler: 'CacheFirst',
-          method: 'GET',
-          options: {
-            cacheName: 'apiGet',
-            expiration: {
-              maxEntries: 10,
-              maxAgeSeconds: 60 * 60 * 24, // <== 1d
-            },
-            cacheableResponse: {
-              statuses: [0, 200],
-            },
-          },
-        },
-      ],
-    },
-    client: {
-      installPrompt: true,
-      periodicSyncForUpdates: 1800,
-    },
-    manifest: {
-      name: 'Perumda Tirta Patriot',
-      short_name: 'Tirta Patriot',
-      description: 'Perusahaan Umum Daerah Air Minum Tirta Patriot merupakan Badan Usaha Milik Daerah Pemerintah Kota Bekasi yang bergerak di bidang pelayanan air bersih.',
-      theme_color: '#ffffff',
-      icons: [
-        {
-          src: 'pwa-64x64.png',
-          sizes: '64x64',
-          type: 'image/png',
-        },
-        {
-          src: 'pwa-192x192.png',
-          sizes: '192x192',
-          type: 'image/png',
-        },
-        {
-          src: 'pwa-512x512.png',
-          sizes: '512x512',
-          type: 'image/png',
-        },
-        {
-          src: 'maskable-icon-512x512.png',
-          sizes: '512x512',
-          type: 'image/png',
-          purpose: 'maskable',
-        },
-      ],
+      baseURL: process.env.NUXT_IMAGE_PROVIDER_BASE_URL!,
     },
   },
 })

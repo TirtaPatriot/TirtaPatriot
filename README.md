@@ -1,75 +1,81 @@
-# Nuxt 3 Minimal Starter
+# tirtapatriot-web
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+Scaffolded with Vuetify CLI.
 
-## Setup
+## ❗️ Documentation
 
-Make sure to install the dependencies:
+- Primary docs: https://vuetifyjs.com/
+- Getting started guide: https://vuetifyjs.com/en/getting-started/installation/
+- Community support: https://community.vuetifyjs.com/
+- Issue tracker: https://issues.vuetifyjs.com/
+
+## 🧱 Stack
+
+- Framework: Nuxt 4
+- UI Library: Vuetify
+- Language: TypeScript
+- Package manager: bun
+
+## 🧭 Start Here
+
+- Main entry: `app/app.vue`
+- Main app component: `app/app.vue`
+- Main styles: `app/assets/styles/`
+- Plugin setup: `app/plugins/`
+
+## 📁 Project Structure
+
+- `app/pages/` — application routes
+- `app/components/` — reusable Vue components
+- `app/assets/` — styles and static assets used in app
+- `app/plugins/` — Nuxt plugins
+- `public/` — static public files
+
+## ✨ Enabled Features
+
+- ESLint
+- Vuetify MCP
+- UnoCSS + Vuetify Preset
+- Client Hints
+
+## 💿 Install
+
+Use your selected package manager (bun) to install dependencies:
 
 ```bash
-# npm
-npm install
-
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
 bun install
 ```
 
-## Development Server
-
-Start the development server on `http://localhost:3000`:
+## 🚀 Quick Start
 
 ```bash
-# npm
-npm run dev
-
-# pnpm
-pnpm run dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
+bun install
+bun dev
 ```
 
-## Production
-
-Build the application for production:
+## 🏗️ Build
 
 ```bash
-# npm
-npm run build
-
-# pnpm
-pnpm run build
-
-# yarn
-yarn build
-
-# bun
-bun run build
+bun build
 ```
 
-Locally preview production build:
+## 🧪 Available Scripts
 
-```bash
-# npm
-npm run preview
+- `bun build`
+- `bun dev`
+- `bun generate`
+- `bun preview`
+- `bun postinstall`
+- `bun lint`
+- `bun lint:fix`
+- `bun mcp`
+- `bun mcp:revert`
 
-# pnpm
-pnpm run preview
+## 💪 Support Vuetify Development
 
-# yarn
-yarn preview
+This project uses Vuetify - an MIT licensed Open Source project. We are glad to welcome contributors and any support for ongoing development:
 
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+- Contribute to Vuetify and ecosystem projects: https://github.com/vuetifyjs
+- Request enterprise support: https://support.vuetifyjs.com/
+- Sponsor on GitHub: https://github.com/sponsors/vuetifyjs
+- Support on Open Collective: https://opencollective.com/vuetify

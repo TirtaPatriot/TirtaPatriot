@@ -1,9 +1,8 @@
-import lint from '@antfu/eslint-config'
+import vuetify from 'eslint-config-vuetify'
+import withNuxt from './.nuxt/eslint.config.mjs'
 
-export default lint({
-  unocss: true,
-  vue: true,
-  rules: {
-    'vue/no-v-text-v-html-on-component': 'off',
-  }
-})
+export default withNuxt(
+  vuetify({
+    ts: true,
+  }),
+)
