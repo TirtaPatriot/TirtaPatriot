@@ -12,6 +12,12 @@
     children?: RawNavItem[]
   }
 
+  useHead({
+    htmlAttrs: {
+      lang: 'id',
+    },
+  })
+
   type NormalizedNavItem = {
     [key: string]: unknown
     title?: string
@@ -166,10 +172,10 @@
                     <v-list-item
                       v-for="(item, index) in m.children"
                       :key="String(item.id ?? index)"
+                      :href="item.props.href"
                       :prepend-icon="item.props.prependIcon"
                       :title="item.title"
                       :to="item.props.to"
-                      :href="item.props.href"
                       :value="index"
                     />
                   </v-list>

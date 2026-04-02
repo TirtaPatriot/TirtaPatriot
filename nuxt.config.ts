@@ -1,9 +1,48 @@
 import { defineOrganization } from 'nuxt-schema-org/schema'
 
+type DirectusArticleRecord = {
+  permalink?: string | null
+}
+
+async function loadArticleRoutesFromDirectus (): Promise<string[]> {
+  const directusUrl = process.env.NUXT_PUBLIC_DIRECTUS_URL
+
+  if (!directusUrl) {
+    return []
+  }
+
+  try {
+    const response = await $fetch<{ data?: DirectusArticleRecord[] }>(`${directusUrl}/items/artikel`, {
+      query: {
+        'fields': 'permalink',
+        'limit': -1,
+        'sort': '-date_created',
+        'filter[status][_eq]': 'published',
+      },
+    })
+
+    return (response.data ?? [])
+      .map(item => item.permalink?.trim())
+      .filter((route): route is string => !!route && route.startsWith('/'))
+  } catch {
+    return []
+  }
+}
+
+const articleRoutes = await loadArticleRoutesFromDirectus()
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2025-12-21',
   devtools: { enabled: true },
+
+  app: {
+    head: {
+      htmlAttrs: {
+        lang: 'id',
+      },
+    },
+  },
 
   vite: {
     build: {
@@ -45,6 +84,8 @@ export default defineNuxtConfig({
   site: {
     name: process.env.NUXT_SITE_NAME ?? process.env.NUXT_ENV_SITE_NAME ?? 'Perumda Tirta Patriot',
     url: process.env.NUXT_SITE_URL ?? process.env.NUXT_PUBLIC_SITE_URL ?? process.env.NUXT_ENV_SITE_URL ?? 'https://tirtapatriot.co.id',
+    defaultLocale: 'id',
+    language: 'id-ID',
   },
 
   seo: {
@@ -53,6 +94,7 @@ export default defineNuxtConfig({
   sitemap: {
     enabled: true,
     zeroRuntime: true,
+    urls: articleRoutes,
   },
 
   nitro: {
@@ -62,6 +104,7 @@ export default defineNuxtConfig({
       interval: 250,
       retry: 3,
       retryDelay: 500,
+      routes: articleRoutes,
     },
   },
 
