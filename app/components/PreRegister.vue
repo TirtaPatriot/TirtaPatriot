@@ -35,10 +35,7 @@
 
 <template>
   <v-container fluid>
-    <!-- <div class="text-h6 text-center mb-4">
-      PROSES <strong>PEMASANGAN BARU</strong>
-    </div> -->
-    <v-timeline align="center" class="px-lg prereg-timeline prereg-timeline-desktop" direction="horizontal">
+    <v-timeline align="start" side="start">
       <v-timeline-item
         v-for="(item, i) in items"
         :key="i"
@@ -46,53 +43,21 @@
         fill-dot
         :icon="item.icon"
       >
-        <template #opposite>
-          <div class="text-title">
+        <v-card>
+          <v-card-title :class="['text-title-large', `bg-${item.color}`]">
             {{ i + 1 }}. {{ item.title }}
-          </div>
-        </template>
-
-        <p class="text-body">
-          {{ item.caption }}
-        </p>
-      </v-timeline-item>
-    </v-timeline>
-
-    <v-timeline class="prereg-timeline prereg-timeline-mobile" direction="vertical">
-      <v-timeline-item
-        v-for="(item, i) in items"
-        :key="`mobile-${i}`"
-        :dot-color="item.color"
-        fill-dot
-        :icon="item.icon"
-      >
-        <div class="text-title mb-2">
-          {{ i + 1 }}. {{ item.title }}
-        </div>
-        <p class="text-body mb-0">
-          {{ item.caption }}
-        </p>
+          </v-card-title>
+          <v-card-text class="bg-white text--primary">
+            <p>{{ item.caption }}</p>
+            <!-- <v-btn
+              :color="item.color"
+              variant="outlined"
+            >
+              Button
+            </v-btn> -->
+          </v-card-text>
+        </v-card>
       </v-timeline-item>
     </v-timeline>
   </v-container>
 </template>
-
-<style scoped>
-  .prereg-timeline-desktop {
-    display: none;
-  }
-
-  .prereg-timeline-mobile {
-    display: block;
-  }
-
-  @media (width >= 960px) {
-    .prereg-timeline-desktop {
-      display: block;
-    }
-
-    .prereg-timeline-mobile {
-      display: none;
-    }
-  }
-</style>

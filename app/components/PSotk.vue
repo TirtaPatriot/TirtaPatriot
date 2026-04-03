@@ -5,10 +5,10 @@
 <template>
   <div class="sotk">
     <div class="container">
-      <h1 class="level-1 rectangle" style="margin-bottom: 20px;">
+      <h1 class="level-1 rectangle mb-5">
         Wali Kota
       </h1>
-      <h1 class="level-1 rectangle" style="margin-bottom: 20px;">
+      <h1 class="level-1 rectangle mb-5">
         Dewas
       </h1>
       <h2 class="level-1 rectangle">

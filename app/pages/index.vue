@@ -73,8 +73,8 @@
         class="w-100"
         cycle
         delimiter-icon="i-mdi:water"
-        hide-delimiter-background
         :height="heroHeight"
+        hide-delimiter-background
         :show-arrows="false"
       >
         <p-carousel-item
@@ -128,12 +128,12 @@
     </div>
 
     <div class="text-white bg-blue py-md-10">
-      <v-container class="border-lg border-surface-light">
-        <v-row justify="center">
-          <v-col class="himbauan-icon" cols="1">
-            <v-icon icon="i-mdi:message-fast-outline" size="86" />
+      <v-container class="himbauan-panel border-lg border-surface-light">
+        <v-row align="center" justify="center">
+          <v-col class="himbauan-icon justify-center" cols="12" md="3">
+            <v-icon icon="i-mdi:message-fast-outline" size="240" />
           </v-col>
-          <v-col cols="auto">
+          <v-col cols="12" md="9">
             <PHimbauan />
           </v-col>
         </v-row>
@@ -148,8 +148,8 @@
       class="d-flex flex-column bg-blue-darken-2 pt-8"
       :elevation="4"
     >
-      <v-row class="w-100" justify="space-evenly" no-gutters>
-        <v-col>
+      <v-row class="w-100 px-4 px-md-0" justify="space-between" no-gutters>
+        <v-col cols="12" md="7">
           <h4 class="text-h5">
             Kantor Pusat
           </h4>
@@ -165,14 +165,13 @@
             </p>
           </div>
         </v-col>
-        <v-spacer />
-        <v-col cols="auto">
+        <v-col cols="12" md="auto">
           <h4 class="text-h5">
             Jam Operasional
           </h4>
           <div class="d-flex flex-column">
-            <div v-for="(h, x) of hours" :key="x" class="d-flex flex-row">
-              <div class="mr-6" style="width: 60px;">
+            <div v-for="(h, x) of hours" :key="x" class="d-flex ga-6">
+              <div class="flex-shrink-0" style="width: 60px;">
                 {{ h.day }}
               </div>
               <div class="text-right">
@@ -199,13 +198,21 @@
 </template>
 
 <style scoped>
+  .himbauan-panel {
+    padding: 28px 20px;
+  }
+
   .himbauan-icon {
     display: none;
   }
 
-  @media (width >= 960px) {
+  @media (width >= 840px) {
+    .himbauan-panel {
+      padding: 40px 32px;
+    }
+
     .himbauan-icon {
-      display: block;
+      display: flex;
     }
   }
 </style>

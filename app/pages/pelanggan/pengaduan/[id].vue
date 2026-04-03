@@ -1,4 +1,5 @@
 <script lang="ts" setup>
   const route = useRoute()
-  await navigateTo(`/pelanggan/pengaduan?tiket=${route.params.id}`, { redirectCode: 301, replace: true })
+  const id = Array.isArray(route.params.id) ? route.params.id[0] : route.params.id
+  await navigateTo(`/pelanggan/pengaduan?tiket=${id ?? ''}`, { replace: true })
 </script>

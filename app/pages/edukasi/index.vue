@@ -39,49 +39,44 @@
         title="Tidak Ada Konten"
         @click:action="() => navigateTo('/perusahaan/kontak')"
       />
-      <div v-else>
-        <v-row density="comfortable">
-          <v-col
-            v-for="item in artikel"
-            :key="item.id"
-            cols="auto"
-            md="4"
-          >
-            <v-card border class="pb-3" flat>
-              <p-img cover :height="200" :src="item.cover" />
+      <v-row v-else>
+        <v-col
+          v-for="item in artikel"
+          :key="item.id"
+          cols="12"
+          sm="6"
+          xl="4"
+        >
+          <v-card border class="pb-3 h-100" flat>
+            <p-img cover :height="200" :src="item.cover" />
 
-              <v-list-item class="mb-2" :subtitle="item.ringkasan">
-                <template #title>
-                  <strong class="text-h6 mb-2">{{ item.judul }}</strong>
-                </template>
-              </v-list-item>
+            <v-list-item class="mb-2" :subtitle="item.ringkasan">
+              <template #title>
+                <strong class="text-h6 mb-2">{{ item.judul }}</strong>
+              </template>
+            </v-list-item>
 
-              <div class="d-flex justify-space-between px-4">
-                <div class="d-flex align-center text-caption text-medium-emphasis me-1">
-                  <v-icon icon="mdi-clock" start />
+            <div class="d-flex justify-space-between px-4">
+              <div class="d-flex align-center text-caption text-medium-emphasis me-1">
+                <v-icon icon="mdi-clock" start />
 
-                  <div class="text-truncate">
-                    {{ formatDate(item.date_created) }}
-                  </div>
+                <div class="text-truncate">
+                  {{ formatDate(item.date_created) }}
                 </div>
-
-                <v-btn
-                  class="text-none"
-                  color="blue"
-                  flat
-                  size="small"
-                  text="Selengkapnya"
-                  :to="item.permalink"
-                />
               </div>
-            </v-card>
-          </v-col>
-        </v-row>
-      </div>
+
+              <v-btn
+                class="text-none"
+                color="blue"
+                flat
+                size="small"
+                text="Selengkapnya"
+                :to="item.permalink"
+              />
+            </div>
+          </v-card>
+        </v-col>
+      </v-row>
     </v-container>
   </v-main>
 </template>
-
-<style>
-
-</style>

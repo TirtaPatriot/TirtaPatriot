@@ -10,7 +10,7 @@
 
     <v-container class="prose">
       <h1>Persyaratan Layanan Aplikasi Tirta Patriot ID</h1>
-      <p style="font-size: small;">
+      <p class="text-caption">
         Tanggal Efektif: 15 Desember 2025
       </p>
 
@@ -110,7 +110,7 @@
         </ul>
       </div>
 
-      <p style="text-align: right; font-size: small;">
+      <p class="text-caption text-right">
         Terakhir Diperbarui: 15 Desember 2025
       </p>
     </v-container>

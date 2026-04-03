@@ -51,23 +51,25 @@
         <v-col
           v-for="d of data || []"
           :key="d.id"
+          class="d-flex justify-center"
           cols="12"
-          sm="6"
-          md="4"
           lg="3"
+          md="4"
+          sm="6"
         >
           <p-img
-            class="direksi-photo text-white text-uppercase w-100 align-end"
-            cover
             :aspect-ratio="3 / 4"
+            class="direksi-photo w-100 align-end overflow-hidden text-white text-uppercase"
+            cover
             provider="directus"
+            rounded="xl"
             :src="d.foto"
           >
-            <div class="direksi-overlay">
-              <h5 class="direksi-name">
+            <div class="direksi-overlay w-100 text-center px-4 pt-5 pb-4">
+              <h5 class="direksi-name mb-0 break-word text-md-h6 text-h6">
                 {{ d.nama }}
               </h5>
-              <h6 class="direksi-role">
+              <h6 class="direksi-role mt-2 mb-0 font-weight-bold break-word text-body-1">
                 {{ d.jabatan }}
               </h6>
             </div>
@@ -138,11 +140,11 @@
     <div id="sotk" class="text-h5 text-center mb-4 mt-6 mx-auto">
       SUSUNAN ORGANISASI & TATA KERJA
     </div>
-    <v-sheet class="pa-4 mx-4" color="white" elevation="2" style="overflow-x: auto;">
+    <v-sheet class="pa-4 mx-4 overflow-x-auto" color="white" elevation="2">
       <PImg
         :aspect-ratio="3292 / 1825"
+        class="sotk-image"
         src="41302BD1-8DB1-47D8-B58E-BAEEE7BF64EB"
-        style="min-width: 700px"
       />
     </v-sheet>
   </v-main>
@@ -150,30 +152,25 @@
 
 <style scoped>
   .direksi-photo {
-    border-radius: 8px;
-    overflow: hidden;
+    max-width: 320px;
     background-color: #1f95db;
   }
 
   .direksi-overlay {
-    width: 100%;
-    padding: 18px 12px 14px;
     background: linear-gradient(to top, rgb(0 0 0 / 72%), rgb(0 0 0 / 8%));
-    text-align: center;
   }
 
   .direksi-name {
-    margin: 0;
-    font-size: 1.05rem;
-    line-height: 1.35;
+    line-height: 1.25;
     text-shadow: 0 2px 6px rgb(0 0 0 / 55%);
   }
 
   .direksi-role {
-    margin: 6px 0 0;
-    font-size: 0.9rem;
     line-height: 1.3;
-    font-weight: 700;
     text-shadow: 0 2px 6px rgb(0 0 0 / 55%);
+  }
+
+  .sotk-image {
+    min-width: 700px;
   }
 </style>
