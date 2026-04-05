@@ -126,7 +126,7 @@
           <v-card-text>
             Pengaduan berhasil terkirim, tiket aduan anda adalah <strong>{{ tiket }}</strong>
 
-            <v-row class="mt-4" dense>
+            <v-row class="mt-4" density="comfortable">
               <v-col cols="12" sm="6">
                 <v-btn block color="blue" :to="`/pelanggan/pengaduan?tiket=${tiket}`" variant="tonal">
                   Lihat Status Pengaduan

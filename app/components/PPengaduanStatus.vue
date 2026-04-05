@@ -230,7 +230,7 @@
     </v-card-text>
   </v-card>
 
-  <v-row class="mt-2" dense>
+  <v-row class="mt-2" density="comfortable">
     <v-col cols="12" md="4" sm="6">
       <v-btn block color="primary" to="/pelanggan/pengaduan" variant="flat">
         Buat Pengaduan Baru

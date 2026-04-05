@@ -1,6 +1,6 @@
 <script setup lang="ts">
   const props = withDefaults(
-    defineProps<{ height?: number, width?: number, src?: string, provider?: string }>(),
+    defineProps<{ height?: number | string, width?: number | string, src?: string, provider?: string }>(),
     {
       src: 'C74BDC20-E6AE-423E-BE27-68F220D0F119',
       provider: 'directus',
@@ -50,8 +50,8 @@
       modifiers: {
         format: 'webp',
         quality: 70,
-        height: props.height ? Number(props.height) : undefined,
-        width: props.width ? Number(props.width) : undefined,
+        height: props.height,
+        width: props.width,
       },
     })
   })

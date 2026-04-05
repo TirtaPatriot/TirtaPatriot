@@ -33,17 +33,15 @@
     if (!icon)
       return undefined
 
-    if (icon.startsWith('i-'))
-      return icon
+    // Dengan Vuetify iconify integration, support berbagai format:
+    // - mdi:home (Iconify format)
+    // - logos:whatsapp-icon (Iconify format)
+    // - mdi-home (legacy MDI format)
+    // - i-mdi:home (UnoCSS format)
+    // Semua format ini akan di-handle oleh Vuetify icon component
 
-    // Backward compatibility for legacy CMS values.
-    if (icon.startsWith('mdi-'))
-      return `i-mdi:${icon.slice('mdi-'.length)}`
-
-    if (/^[a-z0-9-]+:.+/i.test(icon))
-      return `i-${icon}`
-
-    return undefined
+    // Return as is, Vuetify akan handle normalization
+    return icon
   }
 
   const img = useImage()
