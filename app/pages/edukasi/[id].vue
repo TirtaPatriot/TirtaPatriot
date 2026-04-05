@@ -1,26 +1,77 @@
 <script lang="ts" setup>
-  const { getSingletonItem } = useDirectusItems()
+  definePageMeta({
+    key: route => route.fullPath,
+    alias: [
+      '/informasi/edukasi/:id',
+      '/info/edukasi/:id',
+    ],
+  })
+
+  const { getItems } = useDirectusItems()
   const config = useRuntimeConfig()
 
   const route = useRoute()
-  const perma = computed(() => route.path.replace('/informasi', ''))
+  const slug = computed(() => String(route.params.id ?? '').trim())
+  const permaCandidates = computed(() => {
+    if (!slug.value) {
+      return []
+    }
 
-  const { data, error } = await useAsyncData<any>(
-    perma.value,
-    () => getSingletonItem({
-      collection: 'artikel',
-      params: {
-        filter: {
-          permalink: {
-            _eq: perma.value,
+    return [
+      `/edukasi/${slug.value}`,
+      `/informasi/edukasi/${slug.value}`,
+      `/info/edukasi/${slug.value}`,
+    ]
+  })
+
+  async function findArticleByPermalink () {
+    for (const permalink of permaCandidates.value) {
+      const items = await getItems({
+        collection: 'artikel',
+        params: {
+          filter: {
+            status: { _eq: 'published' },
+            jenis: { _eq: 'edukasi' },
+            permalink: { _eq: permalink },
           },
+          limit: 1,
         },
-      },
-    }),
+      })
+
+      if (items?.length) {
+        return items[0]
+      }
+    }
+
+    return null
+  }
+
+  const { data, error, pending } = await useAsyncData<any | null>(
+    () => `edukasi:${slug.value}`,
+    async () => {
+      if (permaCandidates.value.length === 0) {
+        return null
+      }
+
+      return findArticleByPermalink()
+    },
     {
-      transform: i => i?.length ? i[0] : null,
+      watch: [slug],
+      default: () => null,
     },
   )
+
+  const markdownContent = computed(() => {
+    const contentValue = String(data.value?.content ?? '')
+    const directusUrl = String(config.public.directusUrl ?? '').trim().replace(/\/+$/, '')
+
+    if (!directusUrl) {
+      return contentValue
+    }
+
+    const escaped = directusUrl.replace(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`)
+    return contentValue.replace(new RegExp(`${escaped}/assets/`, 'g'), '')
+  })
 
   const siteName = 'Perumda Tirta Patriot'
 
@@ -49,16 +100,10 @@
     return plainText.slice(0, 160) || 'Konten edukasi dari Perumda Tirta Patriot.'
   })
 
-  const normalizedContent = computed(() => {
-    const content = String(data.value?.content ?? '')
-    const directusUrl = String(config.public.directusUrl ?? '').trim().replace(/\/+$/, '')
-
-    if (!directusUrl) {
-      return content
-    }
-
-    const escaped = directusUrl.replace(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`)
-    return content.replace(new RegExp(`${escaped}/assets/`, 'g'), '')
+  const contentRenderKey = computed(() => {
+    const articleId = String(data.value?.id ?? '')
+    const articleStamp = String(data.value?.date_updated ?? data.value?.date_created ?? '')
+    return `${slug.value}:${articleId}:${articleStamp}`
   })
 
   useSeoMeta({
@@ -81,15 +126,31 @@
         title="Terjadi kesalahan tak terduga."
       />
 
-      <template v-else>
-        <h1 class="text-h6">
+      <v-skeleton-loader
+        v-else-if="pending"
+        type="heading, article"
+      />
+
+      <v-empty-state
+        v-else-if="!data"
+        icon="mdi:file-search-outline"
+        text="Konten edukasi tidak ditemukan atau belum tersedia."
+        title="Konten Tidak Ditemukan"
+      />
+
+      <div v-else :key="contentRenderKey">
+        <h1 class="text-headline-small">
           {{ data?.judul }}
         </h1>
-        <MDC :value="normalizedContent" />
-        <div class="text-caption text-right mx-4">
+        <MDC
+          v-if="markdownContent"
+          :key="contentRenderKey"
+          :value="markdownContent"
+        />
+        <div class="text-body-small text-right mx-4">
           {{ useDatetimeFormat(data?.dipublikasi) }}
         </div>
-      </template>
+      </div>
     </v-container>
   </v-main>
 </template>

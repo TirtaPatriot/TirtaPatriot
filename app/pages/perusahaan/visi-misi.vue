@@ -15,17 +15,17 @@
   <v-main>
     <PageHeader title="Visi dan Misi" />
     <v-container class="prose">
-      <!-- <h2 class="text-h4 font-weight-light my-4">
+      <!-- <h2 class="text-headline-large font-weight-light my-4">
         Visi
       </h2>
       <blockquote class="blockquote">
         Menjadi perusahaan yang menyediakan pelayanan air bersih yang sehat dan aman bagi masyarakat Kota Bekasi melalui jaringan perpipaan Perumda Tirta Patriot Kota Bekasi
       </blockquote>
-      <h2 class="text-h4 font-weight-light my-4">
+      <h2 class="text-headline-large font-weight-light my-4">
         Misi
       </h2> -->
       <article v-html="data?.isi" />
-      <!-- <div class="text-body-1 font-weight-light ml-6">
+      <!-- <div class="text-body-large font-weight-light ml-6">
         <ul>
           <li>Melakukan Optimalisasi Pelayanan Eksisting dalam rangka Peningkatan Kualitas, Kuantitas, Kontinuitas dan Tekanan Air demi tercapainya Kepuasan Pelanggan;</li>
           <li>⁠⁠Melakukan Perluasan dan Pengembangan Pelayanan Air Minum di Wilayah Baru yang Belum Ada Jaringan Perpipaan Perumda, Belum Terlayani Namun Sudah Ada Jaringan Perpipaan Perumda dan Demand Masyarakat untuk Menjadi Pelanggan Perumda Tergolong Agresif/Tinggi;</li>

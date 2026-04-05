@@ -25,9 +25,7 @@
 
   const { data } = await useAsyncData<any[]>(
     'kontak',
-    () => Promise.all([
-      getItems({ collection: 'kantor' }),
-    ]),
+    () => getItems({ collection: 'kantor' }),
   )
 </script>
 
@@ -43,7 +41,7 @@
                 Unit Pelayanan Langsung
               </v-list-subheader>
               <v-list-item
-                v-for="o of data[0]"
+                v-for="o of data"
                 :key="o.id"
                 append-icon="i-mdi:directions"
                 :href="`https://www.google.com/maps?saddr=My+Location&daddr=${o.latitude},${o.longitude}`"

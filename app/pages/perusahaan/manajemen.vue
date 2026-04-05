@@ -36,7 +36,7 @@
     <v-container>
       <!-- <p-img cover src="/bg_slide-1.jpg" aspect-ratio="1">
       <div class="d-flex flex-column fill-height align-center justify-center text-white">
-        <h1 class="text-h4 font-weight-thin mb-4">
+        <h1 class="text-headline-large font-weight-thin mb-4">
           Perumda Tirta Patriot
         </h1>
         <h4 class="subheading">
@@ -44,7 +44,7 @@
         </h4>
       </div>
     </p-img> -->
-      <div id="direksi" class="text-center text-h5 my-6">
+      <div id="direksi" class="text-center text-headline-medium my-6">
         JAJARAN <strong>DIREKSI</strong>
       </div>
       <v-row justify="center">
@@ -60,17 +60,18 @@
         >
           <p-img
             :aspect-ratio="3 / 4"
-            class="direksi-photo w-100 align-end overflow-hidden text-white text-uppercase"
+            class="w-100 align-end overflow-hidden text-white text-uppercase bg-light-blue-darken-1"
             cover
+            max-width="320"
             provider="directus"
             rounded="xl"
             :src="d.foto"
           >
             <div class="direksi-overlay w-100 text-center px-4 pt-5 pb-4">
-              <h5 class="direksi-name mb-0 break-word text-md-h6 text-h6">
+              <h5 class="mb-0 break-word text-body-large text-md-headline-small text-lg-body-large">
                 {{ d.nama }}
               </h5>
-              <h6 class="direksi-role mt-2 mb-0 font-weight-bold break-word text-body-1">
+              <h6 class="mt-2 mb-0 font-weight-bold break-word text-body-small">
                 {{ d.jabatan }}
               </h6>
             </div>
@@ -78,7 +79,7 @@
         </v-col>
       </v-row>
 
-      <!-- <div class="text-h5 mt-12 text-center">
+      <!-- <div class="text-headline-medium mt-12 text-center">
         JAJARAN <strong>MANAJER</strong>
       </div>
       <v-row justify="center">
@@ -88,7 +89,7 @@
               <div class="text-title">
                 {{ m.nama }}
               </div>
-              <div class="text-caption">
+              <div class="text-body-small">
                 {{ m.bagian }}
               </div>
             </div>
@@ -102,7 +103,7 @@
               <div class="text-title">
                 {{ m.nama }}
               </div>
-              <div class="text-caption">
+              <div class="text-body-small">
                 {{ m.bagian }}
               </div>
             </div>
@@ -116,7 +117,7 @@
               <div class="text-title">
                 {{ m.nama }}
               </div>
-              <div class="text-caption">
+              <div class="text-body-small">
                 {{ m.bagian }}
               </div>
             </div>
@@ -130,7 +131,7 @@
               <div class="text-title">
                 {{ m.nama }}
               </div>
-              <div class="text-caption">
+              <div class="text-body-small">
                 {{ m.bagian }}
               </div>
             </div>
@@ -138,7 +139,7 @@
         </v-col>
       </v-row> -->
     </v-container>
-    <div id="sotk" class="text-h5 text-center mb-4 mt-6 mx-auto">
+    <div id="sotk" class="text-headline-medium text-center mb-4 mt-6 mx-auto">
       SUSUNAN ORGANISASI & TATA KERJA
     </div>
     <v-sheet class="pa-4 mx-4 overflow-x-auto" color="white" elevation="2">
@@ -152,23 +153,8 @@
 </template>
 
 <style scoped>
-  .direksi-photo {
-    max-width: 320px;
-    background-color: #1f95db;
-  }
-
   .direksi-overlay {
     background: linear-gradient(to top, rgb(0 0 0 / 72%), rgb(0 0 0 / 8%));
-  }
-
-  .direksi-name {
-    line-height: 1.25;
-    text-shadow: 0 2px 6px rgb(0 0 0 / 55%);
-  }
-
-  .direksi-role {
-    line-height: 1.3;
-    text-shadow: 0 2px 6px rgb(0 0 0 / 55%);
   }
 
   .sotk-image {

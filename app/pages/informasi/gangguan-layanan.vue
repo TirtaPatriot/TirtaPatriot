@@ -47,7 +47,7 @@
             {{ x.subtitle }}
           </v-card-subtitle>
           <v-card-text>
-            <v-container class="prose" fluid v-html="x.content" />
+            <div class="prose" v-html="x.content" />
           </v-card-text>
           <v-card-actions class="mx-2">
             <div>{{ formatDate(x.waktu_mulai) }}</div>

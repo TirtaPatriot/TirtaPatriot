@@ -10,7 +10,7 @@
 
     <v-container class="prose">
       <h1>Kebijakan Privasi Aplikasi Tirta Patriot ID</h1>
-      <p class="text-caption">
+      <p class="text-body-small">
         Tanggal Efektif: 15 Desember 2025
       </p>
 
@@ -105,7 +105,7 @@
         </ul>
       </div>
 
-      <p class="text-caption text-right">
+      <p class="text-body-small text-right">
         Terakhir Diperbarui: 15 Desember 2025
       </p>
     </v-container>

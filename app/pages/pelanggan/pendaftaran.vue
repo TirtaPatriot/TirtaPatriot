@@ -38,7 +38,7 @@
           <SocialButtons />
         </v-card-actions>
       </v-card>
-      <!-- <v-banner class="text-body-1" icon="$info" color="blue">
+      <!-- <v-banner class="text-body-large" icon="$info" color="blue">
         <v-banner-text>
           <p>Mohon maaf, pendaftaran online sedang dalam pengembangan.</p>
           <p class="caption">

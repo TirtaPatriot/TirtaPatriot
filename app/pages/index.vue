@@ -98,7 +98,7 @@
     />
     <div class="grad-1">
       <div class="text-white d-flex justify-center flex-column align-center py-10">
-        <div class="text-h5 pa-4">
+        <div class="text-headline-medium pa-4">
           Dapatkan kabar dan informasi terbaru tentang kami di WhatsApp dan Telegram
         </div>
         <div>
@@ -150,10 +150,10 @@
     >
       <v-row class="w-100 px-4 px-md-0 justify-space-between">
         <v-col cols="1/1" md="7/12">
-          <h4 class="text-h5">
+          <h4 class="text-headline-medium">
             Kantor Pusat
           </h4>
-          <div class="text-body-2">
+          <div class="text-body-medium">
             <p>
               Jl. Perjuangan  No.99, RT.003/RW.011, Marga Mulya,<br> Kec. Bekasi Utara, Kota Bekasi, Jawa Barat 17142
             </p>
@@ -166,7 +166,7 @@
           </div>
         </v-col>
         <v-col cols="1/1" md="auto">
-          <h4 class="text-h5">
+          <h4 class="text-headline-medium">
             Jam Operasional
           </h4>
           <div class="d-flex flex-column">

@@ -18,7 +18,7 @@
 
 <template>
   <v-container>
-    <h3 class="text-white text-center text-h6">
+    <h3 class="text-white text-center text-headline-small">
       Statistik Terakhir
     </h3>
     <v-divider />
@@ -32,10 +32,10 @@
         xl="auto"
       >
         <v-card min-width="120" rounded variant="text">
-          <v-card-title class="text-center text-white text-overline">
+          <v-card-title class="text-center text-white text-label-small">
             {{ s.name }}
 
-            <div class="font-weight-bold text-h5">
+            <div class="font-weight-bold text-headline-medium">
               {{ formatValue(s.value) }}
             </div>
           </v-card-title>

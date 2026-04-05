@@ -127,12 +127,12 @@
             Pengaduan berhasil terkirim, tiket aduan anda adalah <strong>{{ tiket }}</strong>
 
             <v-row class="mt-4" density="comfortable">
-                <v-col cols="1/1" sm="1/2">
+              <v-col cols="1/1" sm="1/2">
                 <v-btn block color="blue" :to="`/pelanggan/pengaduan?tiket=${tiket}`" variant="tonal">
                   Lihat Status Pengaduan
                 </v-btn>
               </v-col>
-                <v-col cols="1/1" sm="1/2">
+              <v-col cols="1/1" sm="1/2">
                 <v-btn block to="/" variant="outlined">
                   Kembali
                 </v-btn>

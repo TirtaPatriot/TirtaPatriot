@@ -104,7 +104,7 @@
 </script>
 
 <template>
-  <h3 class="text-h5 font-weight-bold text-uppercase mb-4 text-center">
+  <h3 class="text-headline-medium font-weight-bold text-uppercase mb-4 text-center">
     Status Pengaduan #{{ tiketId }}
   </h3>
 
@@ -167,7 +167,7 @@
             rounded
           />
 
-          <div class="text-caption mt-2">
+          <div class="text-body-small mt-2">
             {{ completedSteps }} / {{ timelineStatus.length }} tahapan selesai
           </div>
 
@@ -215,11 +215,11 @@
                 </v-chip>
               </div>
 
-              <div class="text-body-2 mt-1">
+              <div class="text-body-medium mt-1">
                 {{ stage.description }}
               </div>
 
-              <div v-if="stage.done && stage.date" class="text-caption mt-1">
+              <div v-if="stage.done && stage.date" class="text-body-small mt-1">
                 {{ fdate(stage.date) }}
                 <span v-if="stage.number">• {{ stage.number }}</span>
               </div>

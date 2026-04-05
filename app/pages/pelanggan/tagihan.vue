@@ -76,7 +76,7 @@
 
       <div v-if="data">
         <v-sheet class="py-4" elevation="2">
-          <h2 class="text-h5 px-2 pt-3">
+          <h2 class="text-headline-medium px-2 pt-3">
             Pelanggan
           </h2>
           <v-table class="bg-transparent">
@@ -116,7 +116,7 @@
         </v-sheet>
 
         <v-sheet class="my-4 mt-2" elevation="2">
-          <h2 class="text-h5 pt-4 px-3">
+          <h2 class="text-headline-medium pt-4 px-3">
             Tagihan
           </h2>
           <v-table class="">

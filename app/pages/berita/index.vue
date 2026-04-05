@@ -11,13 +11,17 @@
   const perPage = 12
   const page = ref(1)
 
-  const { data, pending } = await useAsyncData(
-    'berita',
-    () => getItems<any>({
+  const artikel = ref<any[]>([])
+  const hasNext = ref(false)
+  const isLoadingMore = ref(false)
+  const loadSentinel = ref<HTMLElement | null>(null)
+
+  async function fetchPage (targetPage: number) {
+    const rows = await getItems<any>({
       collection: 'artikel',
       params: {
         limit: perPage + 1,
-        offset: (page.value - 1) * perPage,
+        offset: (targetPage - 1) * perPage,
         sort: ['-date_created'],
         fields: ['id', 'judul', 'ringkasan', 'cover', 'date_created', 'permalink'],
         filter: {
@@ -25,17 +29,85 @@
           jenis: { _eq: 'berita' },
         },
       },
-    }),
-    { watch: [page] },
+    })
+
+    return rows ?? []
+  }
+
+  const { data: initialRows, pending } = await useAsyncData<any[]>(
+    'berita-initial',
+    () => fetchPage(1),
+    {
+      default: () => [],
+    },
   )
 
-  const artikel = computed(() => data.value?.slice(0, perPage) ?? [])
-  const hasNext = computed(() => (data.value?.length ?? 0) > perPage)
+  watch(
+    initialRows,
+    rows => {
+      // Initialize from SSR payload (or first CSR fetch) exactly once for page 1.
+      if (page.value === 1 && artikel.value.length === 0) {
+        hasNext.value = rows.length > perPage
+        artikel.value = rows.slice(0, perPage)
+      }
+    },
+    { immediate: true },
+  )
 
-  function changePage (delta: number) {
-    page.value += delta
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+  const skeletonCount = 8
+  const isInitialLoading = computed(() => pending.value && artikel.value.length === 0)
+
+  async function loadMore () {
+    if (!hasNext.value || isLoadingMore.value || pending.value) {
+      return
+    }
+
+    isLoadingMore.value = true
+    try {
+      const nextPage = page.value + 1
+      const rows = await fetchPage(nextPage)
+      hasNext.value = rows.length > perPage
+      page.value = nextPage
+
+      const nextItems = rows.slice(0, perPage)
+      const merged = [...artikel.value, ...nextItems]
+      artikel.value = Array.from(new Map(merged.map(item => [item.id, item])).values())
+    } finally {
+      isLoadingMore.value = false
+    }
   }
+
+  let observer: IntersectionObserver | null = null
+
+  function setupInfiniteObserver () {
+    observer?.disconnect()
+    if (!loadSentinel.value || !import.meta.client) {
+      return
+    }
+
+    observer = new IntersectionObserver(
+      entries => {
+        if (entries.some(entry => entry.isIntersecting)) {
+          void loadMore()
+        }
+      },
+      { rootMargin: '320px 0px' },
+    )
+
+    observer.observe(loadSentinel.value)
+  }
+
+  onMounted(() => {
+    setupInfiniteObserver()
+  })
+
+  watch(loadSentinel, () => {
+    setupInfiniteObserver()
+  })
+
+  onBeforeUnmount(() => {
+    observer?.disconnect()
+  })
 
   function formatDate (date: string) {
     return useDatetimeFormat(date)
@@ -46,9 +118,36 @@
   <v-main>
     <PageHeader title="Berita" />
     <v-container>
+      <v-row v-if="isInitialLoading">
+        <v-col
+          v-for="i in skeletonCount"
+          :key="`berita-skeleton-${i}`"
+          cols="1/1"
+          md="1/3"
+          sm="1/2"
+          xl="1/4"
+        >
+          <v-card class="berita-card h-100" loading rounded="xl" variant="outlined">
+            <template #loader>
+              <v-progress-linear color="primary" height="3" indeterminate />
+            </template>
+
+            <v-skeleton-loader type="image" />
+            <v-card-item>
+              <v-skeleton-loader type="heading" />
+              <v-skeleton-loader type="text" />
+            </v-card-item>
+            <v-card-actions class="px-4 pb-4">
+              <v-skeleton-loader class="w-100" type="button" />
+            </v-card-actions>
+          </v-card>
+        </v-col>
+      </v-row>
+
       <v-empty-state
-        v-if="!artikel?.length"
+        v-else-if="!artikel?.length"
         action-text="Hubungi"
+        class="berita-empty mx-auto"
         icon="mdi:newspaper"
         text="Belum ada konten berita, jika anda memerlukan informasi lebih lanjut mohon hubungi kami"
         title="Tidak Ada Konten"
@@ -64,66 +163,80 @@
             sm="1/2"
             xl="1/4"
           >
-            <v-card border class="pb-3 h-100" flat>
-              <p-img cover :height="200" :src="item.cover" />
+            <v-card class="berita-card h-100 d-flex flex-column" rounded="xl" variant="outlined">
 
-              <v-list-item class="mb-2" :subtitle="item.ringkasan">
-                <template #title>
-                  <strong class="text-h6 mb-2">{{ item.judul }}</strong>
+              <p-img class="berita-cover" cover :height="210" :src="item.cover" />
+
+              <v-card-item class="pb-1 px-4 pt-4">
+                <v-card-title class="berita-title text-headline-small px-0">
+                  {{ item.judul }}
+                </v-card-title>
+                <template #subtitle>
+                  <div class="berita-date mt-2">
+                    <v-icon class="berita-date-icon" icon="mdi-clock-outline" size="18" />
+                    <span class="berita-date-text">{{ formatDate(item.date_created) }}</span>
+                  </div>
                 </template>
-              </v-list-item>
+              </v-card-item>
 
-              <div class="berita-meta">
-                <div class="berita-date">
-                  <v-icon class="berita-date-icon" icon="mdi-clock" />
+              <v-card-text class="berita-summary px-4 pt-2 text-body-medium text-medium-emphasis">
+                {{ item.ringkasan || 'Ringkasan belum tersedia.' }}
+              </v-card-text>
 
-                  <span class="berita-date-text">
-                    {{ formatDate(item.date_created) }}
-                  </span>
-                </div>
-
+              <v-card-actions class="px-4 pb-4 mt-auto">
                 <v-btn
-                  class="berita-link"
-                  color="blue"
-                  flat
-                  size="small"
-                  text="Selengkapnya"
+                  append-icon="mdi-arrow-right"
+                  block
+                  class="text-none"
+                  color="primary"
                   :to="item.permalink"
-                />
-              </div>
+                  variant="tonal"
+                >
+                  Baca Selengkapnya
+                </v-btn>
+              </v-card-actions>
             </v-card>
           </v-col>
         </v-row>
 
-        <v-row v-if="page > 1 || hasNext" class="my-6 justify-center">
-          <v-btn
-            :disabled="page === 1 || pending"
-            prepend-icon="mdi-chevron-left"
-            text="Sebelumnya"
-            variant="outlined"
-            @click="changePage(-1)"
+        <div ref="loadSentinel" class="py-6 d-flex flex-column align-center ga-3">
+          <v-progress-circular
+            v-if="isLoadingMore"
+            color="primary"
+            indeterminate
+            size="30"
+            width="3"
           />
-          <v-btn
-            append-icon="mdi-chevron-right"
-            class="mx-2"
-            :disabled="!hasNext || pending"
-            text="Berikutnya"
-            variant="outlined"
-            @click="changePage(1)"
-          />
-        </v-row>
+          <div v-else-if="!hasNext" class="text-body-medium text-medium-emphasis">
+            Semua berita sudah ditampilkan.
+          </div>
+        </div>
       </div>
     </v-container>
   </v-main>
 </template>
 
 <style scoped>
-  .berita-meta {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-    padding-inline: 16px;
+  .berita-card {
+    transition: transform 200ms ease, box-shadow 200ms ease;
+  }
+
+  .berita-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 28px rgb(0 0 0 / 10%);
+  }
+
+  .berita-cover {
+    border-bottom: 1px solid rgb(var(--v-theme-outline-variant));
+  }
+
+  .berita-title {
+    line-height: 1.3;
+    overflow: hidden;
+    display: -webkit-box;
+    line-clamp: 2;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
   }
 
   .berita-date {
@@ -145,8 +258,21 @@
     white-space: nowrap;
   }
 
-  .berita-link {
-    flex-shrink: 0;
-    text-transform: none;
+  .berita-summary {
+    overflow: hidden;
+    display: -webkit-box;
+    line-clamp: 3;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+  }
+
+  .berita-empty {
+    max-width: 760px;
+  }
+
+  .berita-empty :deep(.v-empty-state__content),
+  .berita-empty :deep(.v-empty-state__actions) {
+    justify-content: center;
+    text-align: center;
   }
 </style>
