@@ -122,10 +122,10 @@
         <v-col
           v-for="i in skeletonCount"
           :key="`berita-skeleton-${i}`"
-          cols="1/1"
-          md="1/3"
-          sm="1/2"
-          xl="1/4"
+          cols="12/12"
+          md="4/12"
+          sm="6/12"
+          xl="3/12"
         >
           <v-card class="berita-card h-100" loading rounded="xl" variant="outlined">
             <template #loader>
@@ -158,10 +158,10 @@
           <v-col
             v-for="item in artikel"
             :key="item.id"
-            cols="1/1"
-            md="1/3"
-            sm="1/2"
-            xl="1/4"
+            cols="12/12"
+            md="4/12"
+            sm="6/12"
+            xl="3/12"
           >
             <v-card class="berita-card h-100 d-flex flex-column" rounded="xl" variant="outlined">
 
