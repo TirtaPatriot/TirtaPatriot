@@ -158,10 +158,9 @@
           <v-col
             v-for="item in artikel"
             :key="item.id"
-            cols="12/12"
-            md="4/12"
-            sm="6/12"
-            xl="3/12"
+            cols="1/1"
+            sm="1/2"
+            xl="1/3"
           >
             <v-card class="berita-card h-100 d-flex flex-column" rounded="xl" variant="outlined">
 
