@@ -52,10 +52,11 @@
           v-for="d of data || []"
           :key="d.id"
           class="d-flex justify-center"
-          cols="12"
-          lg="3"
-          md="4"
-          sm="6"
+          cols="1/1"
+          lg="1/4"
+          md="1/3"
+          sm="1/2"
+          xs="1/1"
         >
           <p-img
             :aspect-ratio="3 / 4"

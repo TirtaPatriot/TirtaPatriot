@@ -59,10 +59,10 @@
           <v-col
             v-for="item in artikel"
             :key="item.id"
-            cols="12"
-            md="4"
-            sm="6"
-            xl="3"
+            cols="1/1"
+            md="1/3"
+            sm="1/2"
+            xl="1/4"
           >
             <v-card border class="pb-3 h-100" flat>
               <p-img cover :height="200" :src="item.cover" />
@@ -95,7 +95,7 @@
           </v-col>
         </v-row>
 
-        <v-row v-if="page > 1 || hasNext" class="my-6" justify="center">
+        <v-row v-if="page > 1 || hasNext" class="my-6 justify-center">
           <v-btn
             :disabled="page === 1 || pending"
             prepend-icon="mdi-chevron-left"

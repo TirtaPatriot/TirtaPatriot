@@ -14,7 +14,7 @@
       </div>
 
       <v-row>
-        <v-col cols="12">
+        <v-col cols="1/1">
           <v-card
             class="py-4"
             color="surface-variant"
@@ -42,7 +42,7 @@
           </v-card>
         </v-col>
 
-        <v-col v-for="link in links" :key="link.href" cols="6">
+        <v-col v-for="link in links" :key="link.href" cols="1/2">
           <v-card
             append-icon="i-mdi:open-in-new"
             class="py-4"

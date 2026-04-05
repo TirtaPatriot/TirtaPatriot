@@ -119,7 +119,7 @@
   />
 
   <v-row class="ga-4">
-    <v-col cols="12" md="8">
+    <v-col cols="1/1" md="2/3">
       <v-card elevation="2" rounded="lg">
         <v-card-title>
           Detail Aduan
@@ -143,7 +143,7 @@
       </v-card>
     </v-col>
 
-    <v-col cols="12" md="4">
+    <v-col cols="1/1" md="1/3">
       <v-card elevation="2" rounded="lg">
         <v-card-title>
           Progres
@@ -231,12 +231,12 @@
   </v-card>
 
   <v-row class="mt-2" density="comfortable">
-    <v-col cols="12" md="4" sm="6">
+    <v-col cols="1/1" md="1/3" sm="1/2">
       <v-btn block color="primary" to="/pelanggan/pengaduan" variant="flat">
         Buat Pengaduan Baru
       </v-btn>
     </v-col>
-    <v-col cols="12" md="4" sm="6">
+    <v-col cols="1/1" md="1/3" sm="1/2">
       <v-btn block :to="`/pelanggan/pengaduan?tiket=${tiketId}`" variant="outlined">
         Muat Ulang Status
       </v-btn>

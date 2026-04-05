@@ -7,30 +7,54 @@
     isPro: { type: Boolean, required: false },
   })
   const themeColor = computed(() => props.isPro ? '124, 58, 237' : '34, 197, 94')
+  const accentColor = computed(() => props.isPro ? '#8b5cf6' : '#22c55e')
 </script>
 
 <template>
   <div
-    class="w-full h-full justify-center items-center relative p-10 lg:p-[60px] bg-white text-neutral-900 dark:bg-neutral-900 dark:text-neutral-50"
+    :style="{
+      width: '100%',
+      height: '100%',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      position: 'relative',
+      padding: '40px',
+      backgroundColor: colorMode === 'dark' ? '#171717' : '#ffffff',
+      color: colorMode === 'dark' ? '#fafafa' : '#171717',
+    }"
   >
     <!-- Gradient background -->
     <div
-      class="absolute top-0 left-0 right-0 bottom-0"
       :style="{
+        position: 'absolute',
+        inset: '0',
         backgroundImage: `radial-gradient(ellipse 100% 100% at 100% 100%, rgba(${themeColor}, 0.15) 0%, transparent 60%)`
       }"
     />
     <div
-      class="absolute top-0 left-0 right-0 bottom-0"
       :style="{
+        position: 'absolute',
+        inset: '0',
         backgroundImage: `radial-gradient(ellipse 100% 100% at 0.1% 0.1%, rgba(${themeColor}, 0.1) 0%, transparent 50%)`
       }"
     />
 
-    <div class="w-full flex-col justify-center relative items-center text-center gap-5 lg:gap-8">
+    <div
+      :style="{
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        position: 'relative',
+        textAlign: 'center',
+        gap: '20px',
+      }"
+    >
       <!-- Logo -->
-      <div class="flex items-center gap-1">
-        <svg class="w-10 h-10 lg:w-16 lg:h-16" viewBox="0 0 64 64">
+      <div :style="{ display: 'flex', alignItems: 'center', gap: '4px' }">
+        <svg :style="{ width: '40px', height: '40px' }" viewBox="0 0 64 64">
           <defs>
             <linearGradient
               :id="isPro ? 'nsLine2' : 'nsLine1'"
@@ -63,21 +87,43 @@
           />
           <circle cx="56" cy="12" :fill="`url(#${isPro ? 'nsLine2' : 'nsLine1'})`" r="6" />
         </svg>
-        <span class="text-[32px] lg:text-[42px] font-bold tracking-tight">
-          Nuxt<span class="ml-1" :class="isPro ? 'text-violet-500' : 'text-green-500'">SEO{{ isPro ? " Pro" : "" }}</span>
+        <span :style="{ fontSize: '32px', fontWeight: '700', letterSpacing: '-0.025em' }">
+          Nuxt<span :style="{ marginLeft: '4px', color: accentColor }">SEO{{ isPro ? " Pro" : "" }}</span>
         </span>
       </div>
 
       <!-- Title -->
       <h1
-        class="w-full justify-center text-center text-[48px] lg:text-[80px] font-bold m-0 leading-tight max-w-[700px] lg:max-w-[1000px]"
-        style="display: block; line-clamp: 3; text-overflow: ellipsis; text-wrap: balance;"
+        :style="{
+          width: '100%',
+          textAlign: 'center',
+          fontSize: '48px',
+          fontWeight: '700',
+          margin: '0',
+          lineHeight: '1.1',
+          maxWidth: '700px',
+          display: 'block',
+          lineClamp: 3,
+          textOverflow: 'ellipsis',
+          textWrap: 'balance',
+        }"
       >
         {{ title }}
       </h1>
 
       <!-- Description -->
-      <p v-if="description" class="text-[24px] lg:text-[32px] opacity-70 max-w-[650px] lg:max-w-[900px] leading-relaxed" style="display: block; line-clamp: 2; text-overflow: ellipsis;">
+      <p
+        v-if="description"
+        :style="{
+          display: 'block',
+          fontSize: '24px',
+          opacity: 0.7,
+          maxWidth: '650px',
+          lineHeight: '1.625',
+          lineClamp: 2,
+          textOverflow: 'ellipsis',
+        }"
+      >
         {{ description }}
       </p>
     </div>

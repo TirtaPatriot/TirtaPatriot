@@ -43,9 +43,9 @@
         <v-col
           v-for="item in artikel"
           :key="item.id"
-          cols="12"
-          sm="6"
-          xl="4"
+          cols="1/1"
+          sm="1/2"
+          xl="1/3"
         >
           <v-card border class="pb-3 h-100" flat>
             <p-img cover :height="200" :src="item.cover" />

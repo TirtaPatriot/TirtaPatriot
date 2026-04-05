@@ -22,13 +22,13 @@
       Statistik Terakhir
     </h3>
     <v-divider />
-    <v-row class="pt-4" justify="center">
+    <v-row class="pt-4 justify-center">
       <v-col
         v-for="(s) of data"
         :key="s.id"
-        cols="6"
-        lg="3"
-        sm="4"
+        cols="1/2"
+        lg="1/4"
+        sm="1/3"
         xl="auto"
       >
         <v-card min-width="120" rounded variant="text">

@@ -130,10 +130,10 @@
     <div class="text-white bg-blue py-md-10">
       <v-container class="himbauan-panel border-lg border-surface-light">
         <v-row align="center" justify="center">
-          <v-col class="himbauan-icon justify-center" cols="12" md="3">
+          <v-col class="himbauan-icon justify-center" cols="1/1" md="1/4">
             <v-icon icon="i-mdi:message-fast-outline" size="240" />
           </v-col>
-          <v-col cols="12" md="9">
+          <v-col cols="1/1" md="3/4">
             <PHimbauan />
           </v-col>
         </v-row>
@@ -148,8 +148,8 @@
       class="d-flex flex-column bg-blue-darken-2 pt-8"
       :elevation="4"
     >
-      <v-row class="w-100 px-4 px-md-0" justify="space-between" no-gutters>
-        <v-col cols="12" md="7">
+      <v-row class="w-100 px-4 px-md-0 justify-space-between">
+        <v-col cols="1/1" md="7/12">
           <h4 class="text-h5">
             Kantor Pusat
           </h4>
@@ -165,7 +165,7 @@
             </p>
           </div>
         </v-col>
-        <v-col cols="12" md="auto">
+        <v-col cols="1/1" md="auto">
           <h4 class="text-h5">
             Jam Operasional
           </h4>

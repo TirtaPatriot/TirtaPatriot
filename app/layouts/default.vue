@@ -33,15 +33,16 @@
     if (!icon)
       return undefined
 
-    // Dengan Vuetify iconify integration, support berbagai format:
-    // - mdi:home (Iconify format)
-    // - logos:whatsapp-icon (Iconify format)
-    // - mdi-home (legacy MDI format)
-    // - i-mdi:home (UnoCSS format)
-    // Semua format ini akan di-handle oleh Vuetify icon component
+    if (icon.startsWith('i-'))
+      return icon
 
-    // Return as is, Vuetify akan handle normalization
-    return icon
+    if (icon.startsWith('mdi-'))
+      return `i-mdi:${icon.slice('mdi-'.length)}`
+
+    if (/^[a-z0-9-]+:.+/i.test(icon))
+      return `i-${icon}`
+
+    return undefined
   }
 
   const img = useImage()
@@ -127,6 +128,10 @@
       return Boolean(menuPath) && currentPath.startsWith(menuPath)
     }))
   })
+
+  function getNavKey (item: NormalizedNavItem, fallback: number): string {
+    return String(item.id ?? item.title ?? fallback)
+  }
 </script>
 
 <template>
@@ -156,12 +161,15 @@
             <v-btn
               v-else
               :active="x === currentMenu"
-              append-icon="i-mdi:chevron-down"
               class="text-capitalize"
               v-bind="m.props"
               rounded="xl"
               variant="text"
             >
+              <template #append>
+                <v-icon class="i-mdi:chevron-down" />
+              </template>
+
               {{ m.title }}
 
               <ClientOnly>
@@ -171,11 +179,14 @@
                       v-for="(item, index) in m.children"
                       :key="String(item.id ?? index)"
                       :href="item.props.href"
-                      :prepend-icon="item.props.prependIcon"
                       :title="item.title"
                       :to="item.props.to"
                       :value="index"
-                    />
+                    >
+                      <template v-if="item.props.prependIcon" #prepend>
+                        <v-icon :class="item.props.prependIcon" />
+                      </template>
+                    </v-list-item>
                   </v-list>
                 </v-menu>
               </ClientOnly>
@@ -196,7 +207,43 @@
         location="right"
         temporary
       >
-        <v-list :items="navigation" />
+        <v-list>
+          <template v-for="(item, index) in navigation" :key="getNavKey(item, index)">
+            <v-list-item
+              v-if="!item.children?.length"
+              :href="item.props.href"
+              :title="item.title"
+              :to="item.props.to"
+            >
+              <template v-if="item.props.prependIcon" #prepend>
+                <v-icon :class="item.props.prependIcon" />
+              </template>
+            </v-list-item>
+
+            <v-list-group v-else>
+              <template #activator="{ props }">
+                <v-list-item v-bind="props" :title="item.title">
+                  <template v-if="item.props.prependIcon" #prepend>
+                    <v-icon :class="item.props.prependIcon" />
+                  </template>
+                </v-list-item>
+              </template>
+
+              <v-list-item
+                v-for="(child, childIndex) in item.children"
+                :key="getNavKey(child, childIndex)
+                "
+                :href="child.props.href"
+                :title="child.title"
+                :to="child.props.to"
+              >
+                <template v-if="child.props.prependIcon" #prepend>
+                  <v-icon :class="child.props.prependIcon" />
+                </template>
+              </v-list-item>
+            </v-list-group>
+          </template>
+        </v-list>
       </v-navigation-drawer>
     </client-only>
 

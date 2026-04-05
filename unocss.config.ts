@@ -1,11 +1,9 @@
 import presetIcons from '@unocss/preset-icons'
-import presetWind from '@unocss/preset-wind'
 import { defineConfig } from 'unocss'
 import { presetVuetify } from 'unocss-preset-vuetify'
 
 export default defineConfig({
   presets: [
-    presetWind(),
     presetIcons({
       prefix: 'i-',
     }),
@@ -60,12 +58,9 @@ export default defineConfig({
     'i-mdi:book-variant',
     'i-mdi:magnify-expand',
     'i-mdi:palette-swatch-outline',
-    // Elevation utilities
-    ...Array.from({ length: 25 }, (_, i) => `elevation-${i}`),
+    // Elevation utilities (Vuetify 4: 0-5 levels max)
+    ...Array.from({ length: 6 }, (_, i) => `elevation-${i}`),
     // Rounded utilities
     ...['', '-0', '-sm', '-lg', '-xl', '-pill', '-circle', '-shaped'].map(suffix => `rounded${suffix}`),
   ],
-  outputToCssLayers: {
-    cssLayerName: layer => layer === 'properties' ? null : `uno-${layer}`,
-  },
 })

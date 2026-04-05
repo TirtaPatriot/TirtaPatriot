@@ -1,4 +1,7 @@
 export default {
+  icons: {
+    defaultSet: 'unocss-mdi',
+  },
   theme: {
     defaultTheme: 'light',
     themes: {
