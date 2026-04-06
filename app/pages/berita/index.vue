@@ -118,31 +118,29 @@
   <v-main>
     <PageHeader title="Berita" />
     <v-container>
-      <v-row v-if="isInitialLoading">
-        <v-col
+      <template v-if="isInitialLoading">
+        <v-row
           v-for="i in skeletonCount"
           :key="`berita-skeleton-${i}`"
-          cols="12/12"
-          md="4/12"
-          sm="6/12"
-          xl="3/12"
         >
-          <v-card class="berita-card h-100" loading rounded="xl" variant="outlined">
-            <template #loader>
-              <v-progress-linear color="primary" height="3" indeterminate />
-            </template>
+          <v-col cols="1/1">
+            <v-card class="berita-card h-100" loading rounded="xl" variant="outlined">
+              <template #loader>
+                <v-progress-linear color="primary" height="3" indeterminate />
+              </template>
 
-            <v-skeleton-loader type="image" />
-            <v-card-item>
-              <v-skeleton-loader type="heading" />
-              <v-skeleton-loader type="text" />
-            </v-card-item>
-            <v-card-actions class="px-4 pb-4">
-              <v-skeleton-loader class="w-100" type="button" />
-            </v-card-actions>
-          </v-card>
-        </v-col>
-      </v-row>
+              <v-skeleton-loader type="image" />
+              <v-card-item>
+                <v-skeleton-loader type="heading" />
+                <v-skeleton-loader type="text" />
+              </v-card-item>
+              <v-card-actions class="px-4 pb-4">
+                <v-skeleton-loader class="w-100" type="button" />
+              </v-card-actions>
+            </v-card>
+          </v-col>
+        </v-row>
+      </template>
 
       <v-empty-state
         v-else-if="!artikel?.length"
@@ -154,14 +152,11 @@
         @click:action="() => navigateTo('/perusahaan/kontak')"
       />
       <div v-else>
-        <v-row>
-          <v-col
-            v-for="item in artikel"
-            :key="item.id"
-            cols="1/1"
-            sm="1/2"
-            xl="1/3"
-          >
+        <v-row
+          v-for="item in artikel"
+          :key="item.id"
+        >
+          <v-col cols="1/1">
             <v-card class="berita-card h-100 d-flex flex-column" rounded="xl" variant="outlined">
 
               <p-img class="berita-cover" cover :height="210" :src="item.cover" />

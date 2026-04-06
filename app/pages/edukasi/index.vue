@@ -118,49 +118,45 @@
   <v-main>
     <PageHeader title="Edukasi" />
     <v-container>
-      <v-row v-if="isInitialLoading">
-        <v-col
+      <template v-if="isInitialLoading">
+        <v-row
           v-for="i in skeletonCount"
           :key="`edukasi-skeleton-${i}`"
-          cols="1/1"
-          sm="1/2"
-          xl="1/3"
         >
-          <v-card class="edukasi-card h-100" loading rounded="xl" variant="outlined">
-            <template #loader>
-              <v-progress-linear color="primary" height="3" indeterminate />
-            </template>
+          <v-col cols="1/1">
+            <v-card class="edukasi-card h-100" loading rounded="xl" variant="outlined">
+              <template #loader>
+                <v-progress-linear color="primary" height="3" indeterminate />
+              </template>
 
-            <v-skeleton-loader type="image" />
-            <v-card-item>
-              <v-skeleton-loader type="heading" />
-              <v-skeleton-loader type="text" />
-            </v-card-item>
-            <v-card-actions class="px-4 pb-4">
-              <v-skeleton-loader class="w-100" type="button" />
-            </v-card-actions>
-          </v-card>
-        </v-col>
-      </v-row>
+              <v-skeleton-loader type="image" />
+              <v-card-item>
+                <v-skeleton-loader type="heading" />
+                <v-skeleton-loader type="text" />
+              </v-card-item>
+              <v-card-actions class="px-4 pb-4">
+                <v-skeleton-loader class="w-100" type="button" />
+              </v-card-actions>
+            </v-card>
+          </v-col>
+        </v-row>
+      </template>
 
       <v-empty-state
         v-else-if="!artikel?.length"
-        class="edukasi-empty mx-auto"
         action-text="Hubungi"
+        class="edukasi-empty mx-auto"
         icon="mdi:account-school-outline"
         text="Belum ada konten edukasi, jika anda memerlukan informasi lebih lanjut mohon hubungi kami"
         title="Tidak Ada Konten"
         @click:action="() => navigateTo('/perusahaan/kontak')"
       />
       <div v-else>
-        <v-row>
-          <v-col
-            v-for="item in artikel"
-            :key="item.id"
-            cols="1/1"
-            sm="1/2"
-            xl="1/3"
-          >
+        <v-row
+          v-for="item in artikel"
+          :key="item.id"
+        >
+          <v-col cols="1/1">
             <v-card class="edukasi-card h-100 d-flex flex-column" rounded="xl" variant="outlined">
               <p-img class="edukasi-cover" cover :height="210" :src="item.cover" />
 
