@@ -146,7 +146,7 @@
       <PImg
         :aspect-ratio="3292 / 1825"
         class="sotk-image"
-        src="41302BD1-8DB1-47D8-B58E-BAEEE7BF64EB"
+        src="8A917A55-EC1A-4166-890A-1FB3AC32E481"
       />
     </v-sheet>
   </v-main>
