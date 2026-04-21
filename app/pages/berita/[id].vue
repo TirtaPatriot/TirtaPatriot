@@ -124,8 +124,9 @@
       return content
     }
 
-    const escaped = directusUrl.replace(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`)
-    return content.replace(new RegExp(`${escaped}/assets/`, 'g'), '')
+    // const escaped = directusUrl.replace(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`)
+    return content
+    // .replace(new RegExp(`${escaped}/assets/`, 'g'), '')
   })
 
   const contentRenderKey = computed(() => {
