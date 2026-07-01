@@ -55,6 +55,7 @@
     params: {
       sort: ['sort', 'id'],
       filter: {
+        active: 1,
         navigasi: {
           pid: {
             _eq: 'main',

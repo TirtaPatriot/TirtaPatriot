@@ -99,29 +99,29 @@
     <div class="grad-1">
       <div class="text-white d-flex justify-center flex-column align-center py-10">
         <div class="text-headline-medium pa-4">
-          Dapatkan kabar dan informasi terbaru tentang kami di WhatsApp dan Telegram
+          Akses informasi lebih cepat dan eksklusif melalui aplikasi kami
         </div>
         <div>
           <v-btn
-            class="ma-2"
-            color="green"
-            href="https://whatsapp.com/channel/0029VaaWmpGId7nRB1BLj52w"
-            prepend-icon="i-logos:whatsapp-icon"
+            class="ma-2 bg-black text-white"
+            href="https://play.google.com/store/apps/details?id=com.tpkb.intipasi"
+            prepend-icon="i-logos:google-play-icon"
             rel="external nofollow"
             rounded="xl"
+            size="large"
           >
-            Ikuti Saluran WhatsApp
+            Dapatkan di Google Play
           </v-btn>
 
           <v-btn
-            class="ma-2"
-            color="blue-darken-1"
-            href="https://t.me/PerumdaTirtaPatriot"
-            prepend-icon="i-mdi:telegram"
+            class="ma-2 bg-black text-white"
+            href="https://apps.apple.com/id/app/tirta-patriot-mobile/id6783699713"
+            prepend-icon="i-logos:apple-app-store"
             rel="external nofollow"
             rounded="xl"
+            size="large"
           >
-            Ikuti Saluran Telegram
+            Download di App Store
           </v-btn>
         </div>
       </div>
@@ -158,7 +158,7 @@
               Jl. Perjuangan  No.99, RT.003/RW.011, Marga Mulya,<br> Kec. Bekasi Utara, Kota Bekasi, Jawa Barat 17142
             </p>
             <p>
-              <v-icon icon="i-mdi:email" size="x-small" /> perumda@tirtapatriot.co.id
+              <v-icon icon="i-mdi:email" size="x-small" /> humas@tirtapatriot.co.id
             </p>
             <p>
               <v-icon icon="i-mdi:phone" size="x-small" /> 021-8896-6161
