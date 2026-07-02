@@ -107,6 +107,7 @@
     }
 
     const rawContent = String(data.value?.content ?? '')
+    console.warn({ rawContent })
     const plainText = rawContent
       .replace(/<[^>]*>/g, ' ')
       .replace(/[^\p{L}\p{N}\s]/gu, ' ')
