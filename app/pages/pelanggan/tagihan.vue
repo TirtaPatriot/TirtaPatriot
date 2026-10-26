@@ -5,12 +5,10 @@
     siteLogo: 'https://tirtapatriot.co.id/logo.png',
     theme: '#0487d2',
   })
-
   useSeoMeta({
     title: 'Cek Tagihan Air - Perumda Tirta Patriot',
     description: 'Layanan informasi rekening dan pengecekan tagihan pemakaian air online pelanggan Perumda Tirta Patriot Kota Bekasi.',
   })
-
   definePageMeta({
     alias: [
       '/info/tagihan',
@@ -25,7 +23,6 @@
     kelurahan?: string
     _nonaktif?: boolean
   }
-
   type ItemTagihan = {
     bulan?: string
     stan_awal?: number | string
@@ -33,10 +30,9 @@
     kubik?: number | string
     air?: number | string
     administrasi?: number | string
-    angsuran?: number | string
+    denda?: number | string
     total?: number | string
   }
-
   type ResponseTagihan = {
     pelanggan?: PelangganData
     tagihan?: ItemTagihan[]
@@ -53,6 +49,13 @@
 
   const { executeRecaptcha } = useGoogleRecaptcha()
   const config = useRuntimeConfig()
+  const { mdAndUp } = useDisplay()
+
+  const jumlahTagihan = computed(() => data.value?.tagihan?.length ?? 0)
+  const alamatLengkap = computed(() => {
+    const p = data.value?.pelanggan
+    return [p?.alamat, p?.kelurahan, p?.kecamatan].filter(Boolean).join(', ') || '-'
+  })
 
   async function submit () {
     if (!body.pelanggan.trim()) {
@@ -85,223 +88,332 @@
   <v-main>
     <PageHeader title="Tagihan" />
 
-    <v-container class="py-6">
-      <div class="text-center mb-6">
-        <h2 class="text-h4 font-weight-bold text-uppercase text-primary mb-2">
-          Cek Tagihan Air
-        </h2>
+    <v-container class="py-8 tagihan-container">
+      <v-card class="hero-card rounded-xl pa-6 pa-sm-8 mb-6" :elevation="6">
+        <div class="d-flex align-center ga-3 mb-2">
+          <v-avatar class="hero-avatar" size="48">
+            <v-icon icon="i-mdi:water-check" size="28" />
+          </v-avatar>
 
-        <p class="text-body-2 text-medium-emphasis">
+          <h2 class="text-h5 text-sm-h4 font-weight-bold">
+            Cek Tagihan Air
+          </h2>
+        </div>
+
+        <p class="text-body-2 text-sm-body-1 mb-5 hero-subtitle">
           Masukkan nomor sambungan langganan (SL) untuk memeriksa rincian rekening tagihan air Anda.
         </p>
-      </div>
 
-      <v-row justify="center">
-        <v-col cols="12" md="8" sm="10">
-          <v-text-field
-            v-model="body.pelanggan"
-            append-inner-icon="i-mdi:magnify"
-            clearable
-            hide-details="auto"
-            inputmode="numeric"
-            label="Nomor Pelanggan"
-            :loading="loading"
-            placeholder="Contoh: 123456"
-            variant="solo"
-            @click:append-inner="submit"
-            @keyup.enter="submit"
-          />
+        <v-text-field
+          v-model="body.pelanggan"
+          append-inner-icon="i-mdi:magnify"
+          clearable
+          hide-details="auto"
+          inputmode="numeric"
+          label="Nomor Pelanggan"
+          :loading="loading"
+          placeholder="Contoh: 010301001045"
+          rounded="lg"
+          variant="solo"
+          @click:append-inner="submit"
+          @keyup.enter="submit"
+        />
 
-          <v-banner
-            v-if="error"
-            class="mt-4 rounded-lg"
-            color="error"
-            icon="i-mdi:alert"
-            lines="two"
-          >
-            <v-banner-text>
-              {{ error }}
-            </v-banner-text>
-          </v-banner>
+        <v-btn
+          block
+          class="mt-4 text-none font-weight-bold"
+          color="white"
+          :loading="loading"
+          prepend-icon="i-mdi:file-search-outline"
+          size="large"
+          variant="flat"
+          @click="submit"
+        >
+          Cek Tagihan
+        </v-btn>
+      </v-card>
 
-          <v-banner
-            v-if="data?.pelanggan?._nonaktif"
-            class="mt-4 rounded-lg"
-            color="warning"
-            icon="i-mdi:warning-outline"
-            lines="two"
-          >
-            <v-banner-text>
-              Status kepelangganan Anda saat ini tidak aktif, namun masih terdapat kewajiban tagihan yang belum terselesaikan.
-            </v-banner-text>
-          </v-banner>
+      <v-alert
+        v-if="error"
+        class="mb-6 rounded-lg"
+        closable
+        color="error"
+        icon="i-mdi:alert-circle-outline"
+        variant="tonal"
+        @click:close="error = ''"
+      >
+        {{ error }}
+      </v-alert>
 
-          <div v-if="data" class="mt-6">
-            <v-card class="mb-6 rounded-lg" :elevation="2">
-              <v-card-item class="bg-surface-variant py-3">
+      <template v-if="data">
+        <v-alert
+          v-if="data.pelanggan?._nonaktif"
+          class="mb-6 rounded-lg"
+          color="warning"
+          icon="i-mdi:alert-outline"
+          variant="tonal"
+        >
+          Status kepelangganan Anda saat ini tidak aktif
+          <template v-if="jumlahTagihan">
+            , namun masih terdapat kewajiban tagihan yang belum terselesaikan
+          </template>.
+        </v-alert>
+
+        <v-row class="mb-2">
+          <v-col cols="12" md="7">
+            <v-card class="rounded-xl h-100" :elevation="2">
+              <v-card-item class="pb-0">
                 <v-card-title class="text-subtitle-1 font-weight-bold">
                   Data Pelanggan
                 </v-card-title>
               </v-card-item>
 
-              <v-table density="comfortable">
-                <tbody>
-                  <tr>
-                    <td class="font-weight-medium text-medium-emphasis" style="width: 180px;">
-                      No. Pelanggan
-                    </td>
+              <v-list class="bg-transparent" density="comfortable" lines="two">
+                <v-list-item
+                  prepend-icon="i-mdi:identifier"
+                  subtitle="No. Pelanggan"
+                  :title="data.pelanggan?.nomor ?? '-'"
+                />
 
-                    <td class="font-weight-bold">
-                      {{ data.pelanggan?.nomor ?? '-' }}
-                    </td>
-                  </tr>
+                <v-list-item
+                  prepend-icon="i-mdi:account-outline"
+                  subtitle="Nama Pelanggan"
+                  :title="data.pelanggan?.nama ?? '-'"
+                />
 
-                  <tr>
-                    <td class="font-weight-medium text-medium-emphasis">
-                      Nama Pelanggan
-                    </td>
-
-                    <td>{{ data.pelanggan?.nama ?? '-' }}</td>
-                  </tr>
-
-                  <tr>
-                    <td class="font-weight-medium text-medium-emphasis">
-                      Alamat
-                    </td>
-
-                    <td>
-                      {{ data.pelanggan?.alamat ?? '-' }}
-                      <span v-if="data.pelanggan?.kelurahan || data.pelanggan?.kecamatan">
-                        , {{ data.pelanggan?.kelurahan }}, {{ data.pelanggan?.kecamatan }}
-                      </span>
-                    </td>
-                  </tr>
-
-                  <tr>
-                    <td class="font-weight-medium text-medium-emphasis">
-                      Total Tagihan
-                    </td>
-
-                    <td class="text-h6 font-weight-bold text-primary">
-                      Rp {{ data.total }}
-                    </td>
-                  </tr>
-                </tbody>
-              </v-table>
+                <v-list-item
+                  prepend-icon="i-mdi:map-marker-outline"
+                  subtitle="Alamat"
+                  :title="alamatLengkap"
+                />
+              </v-list>
             </v-card>
+          </v-col>
 
-            <v-card class="mb-6 rounded-lg" :elevation="2">
-              <v-card-item class="bg-surface-variant py-3">
-                <v-card-title class="text-subtitle-1 font-weight-bold">
-                  Rincian Tagihan Belum Dibayar
-                </v-card-title>
-              </v-card-item>
-
-              <div class="overflow-x-auto">
-                <v-table density="comfortable" hover>
-                  <thead>
-                    <tr>
-                      <th class="text-center" style="width: 48px;">
-                        No.
-                      </th>
-
-                      <th>Periode</th>
-
-                      <th class="text-right">
-                        Stan Awal
-                      </th>
-
-                      <th class="text-right">
-                        Stan Akhir
-                      </th>
-
-                      <th class="text-right">
-                        Pemakaian (m³)
-                      </th>
-
-                      <th class="text-right">
-                        Biaya Air
-                      </th>
-
-                      <th class="text-right">
-                        Biaya Adm.
-                      </th>
-
-                      <th class="text-right">
-                        Angsuran
-                      </th>
-
-                      <th class="text-right">
-                        Total
-                      </th>
-                    </tr>
-                  </thead>
-
-                  <tbody>
-                    <tr v-for="(t, i) in data?.tagihan" :key="t.bulan || i">
-                      <td class="text-center text-medium-emphasis">
-                        {{ i + 1 }}
-                      </td>
-
-                      <td class="font-weight-medium">
-                        {{ t.bulan }}
-                      </td>
-
-                      <td class="text-right font-mono">
-                        {{ t.stan_awal }}
-                      </td>
-
-                      <td class="text-right font-mono">
-                        {{ t.stan_akhir }}
-                      </td>
-
-                      <td class="text-right font-mono font-weight-bold">
-                        {{ t.kubik }}
-                      </td>
-
-                      <td class="text-right font-mono">
-                        {{ t.air }}
-                      </td>
-
-                      <td class="text-right font-mono">
-                        {{ t.administrasi }}
-                      </td>
-
-                      <td class="text-right font-mono">
-                        {{ t.angsuran }}
-                      </td>
-
-                      <td class="text-right font-mono font-weight-bold text-primary">
-                        {{ t.total }}
-                      </td>
-                    </tr>
-                  </tbody>
-                </v-table>
-              </div>
-            </v-card>
-          </div>
-
-          <v-alert
-            class="mt-6 rounded-lg text-body-2"
-            color="info"
-            icon="i-mdi:information"
-            variant="tonal"
-          >
-            Nilai nominal pada struk pembayaran pihak ketiga / mitra merchant mungkin terdapat perbedaan karena penyesuaian biaya administrasi jasa transaksi.
-          </v-alert>
-
-          <div class="d-flex justify-center mt-6">
-            <v-btn
-              color="primary"
-              prepend-icon="i-mdi:wallet-outline"
-              to="/informasi/tempat-pembayaran"
-              variant="text"
+          <v-col cols="12" md="5">
+            <v-card
+              class="rounded-xl h-100 d-flex flex-column justify-center pa-6 total-card"
+              :class="jumlahTagihan ? 'total-due' : 'total-paid'"
+              :elevation="4"
             >
-              Lihat Mitra Loket Pembayaran Resmi
-            </v-btn>
+              <template v-if="jumlahTagihan">
+                <div class="text-overline total-label">
+                  Total Tagihan
+                </div>
+
+                <div class="text-h4 text-sm-h3 font-weight-bold my-1">
+                  Rp {{ data.total }}
+                </div>
+
+                <v-chip
+                  class="mt-2 align-self-start"
+                  color="white"
+                  prepend-icon="i-mdi:calendar-clock-outline"
+                  size="small"
+                  variant="tonal"
+                >
+                  {{ jumlahTagihan }} periode belum dibayar
+                </v-chip>
+              </template>
+
+              <template v-else>
+                <v-icon class="mb-2" icon="i-mdi:check-circle-outline" size="48" />
+
+                <div class="text-h6 font-weight-bold">
+                  Tidak ada tagihan
+                </div>
+
+                <div class="text-body-2 total-label">
+                  Seluruh rekening air Anda sudah terbayar.
+                </div>
+              </template>
+            </v-card>
+          </v-col>
+        </v-row>
+
+        <v-card v-if="jumlahTagihan" class="mt-4 rounded-xl overflow-hidden" :elevation="2">
+          <v-card-item class="py-3">
+            <v-card-title class="text-subtitle-1 font-weight-bold">
+              Rincian Tagihan Belum Dibayar
+            </v-card-title>
+          </v-card-item>
+
+          <v-divider />
+
+          <div v-if="mdAndUp" class="overflow-x-auto">
+            <v-table density="comfortable" hover>
+              <thead>
+                <tr>
+                  <th>Periode</th>
+
+                  <th class="text-right">
+                    Stan Awal
+                  </th>
+
+                  <th class="text-right">
+                    Stan Akhir
+                  </th>
+
+                  <th class="text-right">
+                    Pemakaian (m³)
+                  </th>
+
+                  <th class="text-right">
+                    Biaya Air
+                  </th>
+
+                  <th class="text-right">
+                    Biaya Adm.
+                  </th>
+
+                  <th class="text-right">
+                    Denda
+                  </th>
+
+                  <th class="text-right">
+                    Total
+                  </th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr v-for="(t, i) in data.tagihan" :key="t.bulan || i">
+                  <td class="font-weight-medium">
+                    {{ t.bulan }}
+                  </td>
+
+                  <td class="text-right font-mono">
+                    {{ t.stan_awal }}
+                  </td>
+
+                  <td class="text-right font-mono">
+                    {{ t.stan_akhir }}
+                  </td>
+
+                  <td class="text-right font-mono font-weight-bold">
+                    {{ t.kubik }}
+                  </td>
+
+                  <td class="text-right font-mono">
+                    {{ t.air }}
+                  </td>
+
+                  <td class="text-right font-mono">
+                    {{ t.administrasi }}
+                  </td>
+
+                  <td class="text-right font-mono">
+                    {{ t.denda }}
+                  </td>
+
+                  <td class="text-right font-mono font-weight-bold text-primary">
+                    {{ t.total }}
+                  </td>
+                </tr>
+              </tbody>
+            </v-table>
           </div>
-        </v-col>
-      </v-row>
+
+          <div v-else class="pa-3">
+            <v-card
+              v-for="(t, i) in data.tagihan"
+              :key="t.bulan || i"
+              class="mb-3 rounded-lg"
+              variant="outlined"
+            >
+              <div class="d-flex align-center justify-space-between px-4 pt-3">
+                <span class="font-weight-bold">{{ t.bulan }}</span>
+
+                <span class="font-weight-bold text-primary">Rp {{ t.total }}</span>
+              </div>
+
+              <v-list class="bg-transparent" density="compact">
+                <v-list-item class="text-body-2" title="Stan meter">
+                  <template #append>
+                    {{ t.stan_awal }} → {{ t.stan_akhir }}
+                  </template>
+                </v-list-item>
+
+                <v-list-item class="text-body-2" title="Pemakaian">
+                  <template #append>
+                    {{ t.kubik }} m³
+                  </template>
+                </v-list-item>
+
+                <v-list-item class="text-body-2" title="Biaya air">
+                  <template #append>
+                    {{ t.air }}
+                  </template>
+                </v-list-item>
+
+                <v-list-item class="text-body-2" title="Biaya administrasi">
+                  <template #append>
+                    {{ t.administrasi }}
+                  </template>
+                </v-list-item>
+
+                <v-list-item class="text-body-2" title="Denda">
+                  <template #append>
+                    {{ t.denda }}
+                  </template>
+                </v-list-item>
+              </v-list>
+            </v-card>
+          </div>
+        </v-card>
+      </template>
+
+      <v-alert
+        class="mt-6 rounded-lg text-body-2"
+        color="info"
+        icon="i-mdi:information-outline"
+        variant="tonal"
+      >
+        Nilai nominal pada struk pembayaran pihak ketiga / mitra merchant mungkin terdapat perbedaan karena penyesuaian biaya administrasi jasa transaksi.
+      </v-alert>
+
+      <div class="d-flex justify-center mt-6">
+        <v-btn
+          color="primary"
+          prepend-icon="i-mdi:wallet-outline"
+          to="/informasi/tempat-pembayaran"
+          variant="text"
+        >
+          Lihat Mitra Loket Pembayaran Resmi
+        </v-btn>
+      </div>
     </v-container>
   </v-main>
 </template>
+
+<style scoped>
+  .tagihan-container {
+    max-width: 960px;
+  }
+
+  .hero-card {
+    background: linear-gradient(135deg, #0487d2 0%, #4790ff 100%);
+    color: #fff;
+  }
+
+  .hero-avatar {
+    background: rgb(255 255 255 / 20%);
+  }
+
+  .hero-subtitle,
+  .total-label {
+    opacity: 0.85;
+  }
+
+  .total-card {
+    color: #fff;
+  }
+
+  .total-due {
+    background: linear-gradient(135deg, #0487d2 0%, #4790ff 100%);
+  }
+
+  .total-paid {
+    background: linear-gradient(135deg, #2e9e78 0%, #47b88e 100%);
+  }
+</style>

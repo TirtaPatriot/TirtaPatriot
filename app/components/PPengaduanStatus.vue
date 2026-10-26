@@ -32,12 +32,11 @@
 
   const trackingStages: TrackingStage[] = [
     {
-      key: 'wo',
-      label: 'WO Dibuat',
-      description: 'Petugas ditugaskan untuk menangani aduan.',
+      key: 'diterima',
+      label: 'Pengaduan Diterima',
+      description: 'Aduan Anda sudah tercatat dan diteruskan ke cabang terkait.',
       color: 'blue',
-      dateKey: 'tgl_WO',
-      numberKey: 'wo_no',
+      dateKey: 'tgl_pengaduan',
     },
     {
       key: 'survei',
@@ -47,36 +46,18 @@
       dateKey: 'tgl_survei',
     },
     {
-      key: 'dpb',
-      label: 'DPB',
-      description: 'Permintaan barang keperluan perbaikan diproses.',
+      key: 'material',
+      label: 'Material Disiapkan',
+      description: 'Barang keperluan perbaikan sudah disiapkan.',
       color: 'teal-darken-1',
-      dateKey: 'tgl_DPB',
-      numberKey: 'dpb_no',
+      dateKey: 'tgl_pengeluaran',
     },
     {
-      key: 'dpg',
-      label: 'DPG',
-      description: 'Barang keperluan perbaikan sudah tersedia.',
-      color: 'teal',
-      dateKey: 'tgl_DPG',
-      numberKey: 'dpg_no',
-    },
-    {
-      key: 'spk',
-      label: 'SPK',
-      description: 'Perbaikan sudah diperintahkan.',
-      color: 'indigo-darken-1',
-      dateKey: 'tgl_SPK',
-      numberKey: 'spk_no',
-    },
-    {
-      key: 'bac',
-      label: 'BAC / Selesai',
-      description: 'Perbaikan selesai dan berita acara diterbitkan.',
+      key: 'selesai',
+      label: 'Perbaikan Selesai',
+      description: 'Perbaikan selesai dilakukan oleh petugas.',
       color: 'green-darken-1',
-      dateKey: 'tgl_BA',
-      numberKey: 'bac_no',
+      dateKey: 'tgl_selesai',
     },
   ]
 
@@ -97,6 +78,9 @@
   const currentStatusLabel = computed(() => {
     if (props.tiketData?.selesai)
       return 'Selesai'
+
+    if (props.tiketData?.status)
+      return String(props.tiketData.status)
 
     const nextStep = timelineStatus.value.find(x => !x.done)
     return nextStep ? `Menunggu ${nextStep.label}` : 'Dalam Proses'
