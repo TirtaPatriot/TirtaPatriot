@@ -17,7 +17,7 @@
   const tiketId = computed(() => route.query.tiket as string | undefined)
   const showTicketTracking = ref(false)
 
-  const { data: tiketData, execute: loadTiketData } = useLazyFetch<any>(
+  const { data: tiketData, error: tiketError, execute: loadTiketData } = useLazyFetch<any>(
     () => `${config.public.apiUrl}/pengaduan/${tiketId.value}`,
     {
       server: false,
@@ -155,8 +155,41 @@
     <PageHeader title="Pengaduan" />
 
     <v-container class="py-8" max-width="960">
+      <template v-if="showTicketTracking && tiketError">
+        <PageIntro
+          icon="i-mdi:ticket-confirmation-outline"
+          :subtitle="`Nomor tiket ${tiketId}`"
+          title="Status Pengaduan"
+        />
+
+        <v-alert
+          class="mb-4"
+          color="error"
+          icon="i-mdi:alert-circle-outline"
+          :text="tiketError.statusCode === 404
+            ? 'Nomor tiket tidak ditemukan. Periksa kembali nomor tiket Anda, lalu coba lagi.'
+            : 'Status tiket belum dapat dimuat. Silakan coba lagi beberapa saat lagi.'"
+          title="Tiket tidak ditemukan"
+          variant="tonal"
+        />
+
+        <v-row class="mb-4" density="comfortable">
+          <v-col cols="12" sm="6">
+            <v-btn block color="primary" to="/pelanggan/pengaduan" variant="flat">
+              Buat Pengaduan Baru
+            </v-btn>
+          </v-col>
+
+          <v-col cols="12" sm="6">
+            <v-btn block :to="`/pelanggan/pengaduan?tiket=${tiketId}`" variant="outlined" @click="loadTiketData()">
+              Muat Ulang Status
+            </v-btn>
+          </v-col>
+        </v-row>
+      </template>
+
       <PPengaduanStatus
-        v-if="showTicketTracking"
+        v-else-if="showTicketTracking"
         :tiket-data="tiketData"
         :tiket-id="tiketId"
       />
