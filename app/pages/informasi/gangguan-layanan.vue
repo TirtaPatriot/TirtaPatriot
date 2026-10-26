@@ -20,7 +20,7 @@
   }
 
   function onClickAction () {
-    navigateTo('/perusahaan/kontak')
+    navigateTo('/pelanggan/pengaduan')
   }
 </script>
 
