@@ -86,7 +86,7 @@
         </v-card-subtitle>
 
         <v-card-text>
-          <div class="prose text-body-large" v-html="x.content" />
+          <PContent :value="x.content" />
         </v-card-text>
 
         <v-divider />

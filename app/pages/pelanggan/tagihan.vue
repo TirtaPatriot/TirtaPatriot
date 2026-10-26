@@ -199,7 +199,7 @@
 
           <v-col cols="12" md="5">
             <v-card
-              class="rounded-xl h-100 d-flex flex-column justify-center pa-6 total-card"
+              class="no-glass rounded-xl h-100 d-flex flex-column justify-center pa-6 total-card"
               :class="jumlahTagihan ? 'total-due' : 'total-paid'"
               :elevation="4"
             >
@@ -303,35 +303,35 @@
                     </v-chip>
                   </td>
 
-                  <td class="text-right font-mono">
+                  <td class="text-right num">
                     {{ dash(t, t.stan_awal) }}
                   </td>
 
-                  <td class="text-right font-mono">
+                  <td class="text-right num">
                     {{ dash(t, t.stan_akhir) }}
                   </td>
 
-                  <td class="text-right font-mono font-weight-bold">
+                  <td class="text-right num font-weight-bold">
                     {{ dash(t, t.kubik) }}
                   </td>
 
-                  <td class="text-right font-mono">
+                  <td class="text-right num">
                     {{ dash(t, t.air) }}
                   </td>
 
-                  <td class="text-right font-mono">
+                  <td class="text-right num">
                     {{ dash(t, t.administrasi) }}
                   </td>
 
-                  <td class="text-right font-mono">
+                  <td class="text-right num">
                     {{ dash(t, t.denda) }}
                   </td>
 
-                  <td v-if="adaLainnya" class="text-right font-mono">
+                  <td v-if="adaLainnya" class="text-right num">
                     {{ t.lainnya }}
                   </td>
 
-                  <td class="text-right font-mono font-weight-bold text-primary">
+                  <td class="text-right num font-weight-bold text-primary">
                     {{ t.total }}
                   </td>
                 </tr>
@@ -421,6 +421,10 @@
 </template>
 
 <style scoped>
+  .num {
+    font-variant-numeric: tabular-nums;
+  }
+
   .result-anchor {
     scroll-margin-top: 88px;
   }

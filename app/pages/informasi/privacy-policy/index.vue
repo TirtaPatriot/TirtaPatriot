@@ -62,7 +62,7 @@
   <v-main>
     <PageHeader title="Kebijakan Privasi & Ketentuan Layanan" />
 
-    <v-container class="prose py-8" max-width="1080">
+    <v-container class="py-8" max-width="1080">
       <div class="mb-6">
         <h1 class="text-headline-medium font-weight-bold text-primary mb-2">
           Pusat Kebijakan Privasi &amp; Legalitas

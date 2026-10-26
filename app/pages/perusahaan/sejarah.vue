@@ -28,16 +28,8 @@
       />
 
       <v-card class="pa-5 pa-md-10" rounded="xl" variant="outlined">
-        <article class="prose text-body-large cms-article" v-html="data?.isi" />
+        <PContent format="html" omit-leading-heading size="lg" :value="data?.isi" />
       </v-card>
     </v-container>
   </v-main>
 </template>
-
-<style scoped>
-  /* judul di dalam konten CMS sudah diwakili oleh intro halaman */
-  .cms-article :deep(> :is(h1, h2, h3):first-child),
-  .cms-article :deep(> p:first-child > strong:only-child) {
-    display: none;
-  }
-</style>

@@ -161,9 +161,12 @@
           {{ data?.judul }}
         </h1>
 
-        <div v-if="markdownContent" class="prose text-body-large">
-          <MDC :key="contentRenderKey" :value="markdownContent" />
-        </div>
+        <PContent
+          v-if="markdownContent"
+          :key="contentRenderKey"
+          size="lg"
+          :value="markdownContent"
+        />
 
         <v-divider class="my-6" />
 

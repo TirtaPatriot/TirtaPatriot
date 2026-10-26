@@ -198,9 +198,7 @@
           :src="data?.cover || 'C74BDC20-E6AE-423E-BE27-68F220D0F119'"
         />
 
-        <div class="prose text-body-large">
-          <MDC :key="contentRenderKey" :value="normalizedContent" />
-        </div>
+        <PContent :key="contentRenderKey" size="lg" :value="normalizedContent" />
 
         <v-divider class="my-6" />
 

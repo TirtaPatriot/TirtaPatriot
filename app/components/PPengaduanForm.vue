@@ -35,7 +35,13 @@
     title="Pengaduan Pelanggan"
   />
 
-  <v-stepper v-model="stepper" :elevation="2" :mobile="xs" rounded="xl">
+  <v-stepper
+    v-model="stepper"
+    class="glass"
+    :elevation="2"
+    :mobile="xs"
+    rounded="xl"
+  >
     <v-stepper-header>
       <template
         v-for="(x, n) of steps"
@@ -52,7 +58,7 @@
 
     <v-stepper-window>
       <v-stepper-window-item :value="1">
-        <v-card flat>
+        <v-card class="no-glass" flat>
           <v-card-title class="text-wrap">
             Sambungan Rumah Terkendala
           </v-card-title>
@@ -73,7 +79,7 @@
       </v-stepper-window-item>
 
       <v-stepper-window-item :value="2">
-        <v-card flat>
+        <v-card class="no-glass" flat>
           <v-card-title class="text-wrap">
             Verifikasi Data Sambungan
           </v-card-title>
@@ -96,7 +102,7 @@
       </v-stepper-window-item>
 
       <v-stepper-window-item :value="3">
-        <v-card flat>
+        <v-card class="no-glass" flat>
           <v-card-text>
             <v-text-field
               v-model="formBody.pelapor"
@@ -118,7 +124,7 @@
       </v-stepper-window-item>
 
       <v-stepper-window-item :value="4">
-        <v-card flat>
+        <v-card class="no-glass" flat>
           <v-card-text>
             <v-autocomplete
               v-model="formBody.jenis"
@@ -143,7 +149,7 @@
       </v-stepper-window-item>
 
       <v-stepper-window-item :value="5">
-        <v-card flat>
+        <v-card class="no-glass" flat>
           <v-card-text class="text-center py-6">
             <v-icon color="success" icon="i-mdi:check-circle-outline" size="64" />
 

@@ -22,7 +22,7 @@
   <v-main>
     <PageHeader title="Persyaratan Layanan Integrasi Google" />
 
-    <v-container class="prose py-8" max-width="960">
+    <v-container class="py-8" max-width="960">
       <PLegalHeader
         badge="CRM OCA"
         effective="15 Desember 2025"

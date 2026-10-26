@@ -28,7 +28,7 @@
       />
 
       <v-card class="pa-5 pa-md-10" rounded="xl" variant="outlined">
-        <article class="prose text-body-large" v-html="data?.isi" />
+        <PContent size="lg" :value="data?.isi" />
       </v-card>
     </v-container>
   </v-main>

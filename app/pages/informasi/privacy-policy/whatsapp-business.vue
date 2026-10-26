@@ -21,7 +21,7 @@
   <v-main>
     <PageHeader title="Kebijakan Privasi WhatsApp Business" />
 
-    <v-container class="prose py-8" max-width="960">
+    <v-container class="py-8" max-width="960">
       <div class="d-flex flex-wrap justify-space-between align-center mb-4">
         <div>
           <h1 class="text-headline-medium font-weight-bold text-primary mb-2">

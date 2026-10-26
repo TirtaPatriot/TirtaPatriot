@@ -193,7 +193,7 @@
     </v-container>
 
     <v-container class="pt-10" max-width="1080">
-      <v-card class="app-banner pa-6 pa-md-8" rounded="xl">
+      <v-card class="no-glass app-banner pa-6 pa-md-8" rounded="xl">
         <v-row align="center">
           <v-col cols="1/1" md="7/12">
             <h2 class="text-headline-small text-md-headline-medium font-weight-bold mb-1">
