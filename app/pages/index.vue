@@ -7,39 +7,11 @@
   })
 
   const heroHeight = 'clamp(300px, 46vw, 560px)'
-  const currentYear = useState('site.currentYear', () => new Date().getFullYear())
   const carouselReady = ref(false)
 
   useHead({
     title: 'Beranda',
   })
-
-  const hours = useState('office.hours', () => [
-    {
-      day: 'Senin',
-      time: '08:00 - 15:00',
-    },
-    {
-      day: 'Selasa',
-      time: '08:00 - 15:00',
-    },
-    {
-      day: 'Rabu',
-      time: '08:00 - 15:00',
-    },
-    {
-      day: 'Kamis',
-      time: '08:00 - 15:00',
-    },
-    {
-      day: 'Jum\'at',
-      time: '08:00 - 15:00',
-    },
-    {
-      day: 'Sabtu',
-      time: '08:00 - 15:00',
-    },
-  ])
 
   const { getItems } = useDirectusItems()
 
@@ -269,70 +241,6 @@
     <div class="py-10">
       <PStatistic />
     </div>
-
-    <v-footer class="site-footer d-flex flex-column pt-10 pb-4 px-0">
-      <v-container class="w-100" max-width="1080">
-        <v-row>
-          <v-col cols="1/1" md="5/12">
-            <h3 class="text-title-large font-weight-bold mb-3">
-              Kantor Pusat
-            </h3>
-
-            <p class="text-body-medium mb-3">
-              Jl. Perjuangan No.99, RT.003/RW.011, Marga Mulya, Kec. Bekasi Utara, Kota Bekasi, Jawa Barat 17142
-            </p>
-
-            <p class="text-body-medium mb-1">
-              <v-icon icon="i-mdi:email" size="small" /> humas@tirtapatriot.co.id
-            </p>
-
-            <p class="text-body-medium mb-0">
-              <v-icon icon="i-mdi:phone" size="small" /> 021-8896-6161
-            </p>
-          </v-col>
-
-          <v-col cols="1/1" md="4/12">
-            <h3 class="text-title-large font-weight-bold mb-3">
-              Jam Operasional
-            </h3>
-
-            <div v-for="(h, x) of hours" :key="x" class="d-flex text-body-medium mb-1">
-              <div class="flex-shrink-0" style="width: 72px;">
-                {{ h.day }}
-              </div>
-
-              <div>{{ h.time }}</div>
-            </div>
-          </v-col>
-
-          <v-col cols="1/1" md="3/12">
-            <h3 class="text-title-large font-weight-bold mb-3">
-              Informasi
-            </h3>
-
-            <div class="d-flex flex-column ga-1 text-body-medium">
-              <NuxtLink class="footer-link" to="/informasi/privacy-policy">
-                Kebijakan Privasi &amp; Ketentuan Layanan
-              </NuxtLink>
-
-              <NuxtLink class="footer-link" to="/informasi/tempat-pembayaran">
-                Loket Pembayaran
-              </NuxtLink>
-
-              <NuxtLink class="footer-link" to="/perusahaan/kontak">
-                Kontak
-              </NuxtLink>
-            </div>
-          </v-col>
-        </v-row>
-
-        <v-divider class="my-4 footer-divider" />
-
-        <div class="text-body-small text-center footer-copy">
-          &copy; {{ currentYear }} — <strong>Perusahaan Umum Daerah Air Minum Tirta Patriot</strong>
-        </div>
-      </v-container>
-    </v-footer>
   </v-main>
 </template>
 
@@ -378,27 +286,4 @@
     opacity: 0.9;
   }
 
-  .site-footer {
-    background: #04266d;
-    color: #fff;
-  }
-
-  .footer-link {
-    color: rgb(255 255 255 / 85%);
-    text-decoration: none;
-  }
-
-  .footer-link:hover {
-    color: #fff;
-    text-decoration: underline;
-  }
-
-  .footer-divider {
-    border-color: rgb(255 255 255 / 25%);
-    opacity: 1;
-  }
-
-  .footer-copy {
-    opacity: 0.85;
-  }
 </style>

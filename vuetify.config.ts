@@ -6,7 +6,11 @@ export default {
     defaultTheme: 'light',
     themes: {
       light: {
-        // Keep empty to follow Vuetify default light palette.
+        colors: {
+          // biru brand, kontras 5,3:1 terhadap putih
+          primary: '#0B6FB8',
+          secondary: '#04266D',
+        },
       },
       dark: {
         colors: {

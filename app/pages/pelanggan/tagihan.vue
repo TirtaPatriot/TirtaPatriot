@@ -48,6 +48,7 @@
   const error = ref('')
   const loading = ref(false)
   const data = ref<ResponseTagihan | null>(null)
+  const resultRef = ref<HTMLElement | null>(null)
 
   const { executeRecaptcha } = useGoogleRecaptcha()
   const config = useRuntimeConfig()
@@ -87,6 +88,8 @@
           'g-recaptcha-response': token,
         },
       })
+      await nextTick()
+      resultRef.value?.scrollIntoView({ behavior: 'smooth', block: 'start' })
     } catch (error_: any) {
       data.value = null
       error.value = error_?.data?.message || error_?.message || 'Nomor pelanggan tidak ditemukan atau terjadi kendala saat memproses tagihan.'
@@ -111,6 +114,7 @@
         <v-text-field
           v-model="body.pelanggan"
           append-inner-icon="i-mdi:magnify"
+          autocomplete="off"
           autofocus
           clearable
           hide-details="auto"
@@ -149,7 +153,9 @@
         {{ error }}
       </v-alert>
 
-      <template v-if="data">
+      <v-skeleton-loader v-if="loading" class="mb-6 rounded-xl" type="card, table" />
+
+      <div v-else-if="data" ref="resultRef" class="result-anchor">
         <v-alert
           v-if="data.pelanggan?._nonaktif"
           class="mb-6 rounded-lg"
@@ -398,7 +404,7 @@
             </v-card>
           </div>
         </v-card>
-      </template>
+      </div>
 
       <v-alert
         class="mt-6 rounded-lg text-body-medium"
@@ -415,6 +421,10 @@
 </template>
 
 <style scoped>
+  .result-anchor {
+    scroll-margin-top: 88px;
+  }
+
   .total-label {
     opacity: 0.85;
   }

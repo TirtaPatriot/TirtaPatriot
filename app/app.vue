@@ -1,5 +1,7 @@
 <template>
   <v-app>
+    <NuxtLoadingIndicator color="#0b6fb8" :height="3" />
+
     <nuxt-layout>
       <nuxt-page />
     </nuxt-layout>
@@ -11,6 +13,22 @@
 .v-application .text-medium-emphasis {
   color: rgba(var(--v-theme-on-background), 0.7) !important;
   opacity: 1 !important;
+}
+
+/* fokus keyboard yang jelas untuk semua elemen interaktif */
+:focus-visible {
+  outline: 3px solid #0b6fb8;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 .grads {
