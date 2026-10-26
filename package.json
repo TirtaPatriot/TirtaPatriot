@@ -11,7 +11,8 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "mcp": "ruler apply",
-    "mcp:revert": "ruler revert"
+    "mcp:revert": "ruler revert",
+    "test": "bun test"
   },
   "dependencies": {
     "@nuxt/image": "2.0.0",
@@ -40,6 +41,9 @@
     "@unocss/transformer-directives": "^66.7.5",
     "eslint": "^9.39.5",
     "eslint-config-vuetify": "^4.7.2",
+    "hast-util-from-parse5": "^8.0.3",
+    "hast-util-to-html": "^9.0.5",
+    "parse5": "^8.0.0",
     "sass": "^1.102.0",
     "unocss": "^66.7.5",
     "unocss-preset-vuetify": "^0.2.1"

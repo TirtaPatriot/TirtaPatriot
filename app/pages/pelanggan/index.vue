@@ -46,16 +46,12 @@
   <v-main>
     <PageHeader title="Layanan Pelanggan" />
 
-    <v-container class="py-8">
-      <div class="text-center mb-8">
-        <h2 class="text-h4 font-weight-bold text-primary mb-2">
-          Pusat Layanan Pelanggan
-        </h2>
-
-        <p class="text-body-1 text-medium-emphasis mx-auto" style="max-width: 680px;">
-          Kemudahan akses layanan Perumda Tirta Patriot Kota Bekasi dalam satu pintu untuk kenyamanan dan kepuasan pelanggan kami.
-        </p>
-      </div>
+    <v-container class="py-8" max-width="1080">
+      <PageIntro
+        icon="i-mdi:account-group-outline"
+        subtitle="Kemudahan akses layanan Perumda Tirta Patriot Kota Bekasi dalam satu pintu untuk kenyamanan dan kepuasan pelanggan kami."
+        title="Pusat Layanan Pelanggan"
+      />
 
       <v-row class="mb-6">
         <v-col
@@ -65,9 +61,10 @@
           md="4"
         >
           <v-card
-            class="d-flex flex-column h-100"
+            class="d-flex flex-column h-100 service-card"
             :elevation="2"
             hover
+            rounded="xl"
             :to="service.to"
           >
             <v-card-item class="pb-2">
@@ -82,23 +79,23 @@
                 </v-avatar>
               </template>
 
-              <v-card-title class="text-h6 font-weight-bold">
+              <v-card-title class="text-title-large font-weight-bold text-wrap">
                 {{ service.title }}
               </v-card-title>
 
-              <v-card-subtitle class="text-caption text-uppercase font-weight-medium">
+              <v-card-subtitle class="text-body-small text-uppercase font-weight-medium">
                 {{ service.subtitle }}
               </v-card-subtitle>
             </v-card-item>
 
-            <v-card-text class="flex-grow-1 text-body-2 text-medium-emphasis">
+            <v-card-text class="flex-grow-1 text-body-medium text-medium-emphasis">
               {{ service.description }}
             </v-card-text>
 
             <v-divider />
 
             <v-card-actions class="px-4 py-3">
-              <span class="text-body-2 font-weight-bold text-primary">
+              <span class="text-body-medium font-weight-bold text-primary">
                 {{ service.actionText }}
               </span>
 
@@ -110,49 +107,7 @@
         </v-col>
       </v-row>
 
-      <v-sheet
-        class="pa-6 rounded-lg d-flex flex-column flex-sm-row align-center justify-space-between mt-8"
-        color="surface-variant"
-        :elevation="1"
-      >
-        <div class="d-flex align-center mb-4 mb-sm-0">
-          <v-avatar class="mr-4" color="green" size="44">
-            <v-icon color="white" icon="i-mdi:whatsapp" size="24" />
-          </v-avatar>
-
-          <div>
-            <div class="text-subtitle-1 font-weight-bold">
-              Butuh Bantuan Langsung?
-            </div>
-
-            <div class="text-body-2 text-medium-emphasis">
-              Hubungi Contact Center WhatsApp resmi atau kunjungi kantor pelayanan kami.
-            </div>
-          </div>
-        </div>
-
-        <div class="d-flex ga-2">
-          <v-btn
-            color="green"
-            href="https://wa.me/6287875163845"
-            prepend-icon="i-mdi:whatsapp"
-            rel="noopener noreferrer"
-            target="_blank"
-            variant="flat"
-          >
-            WhatsApp
-          </v-btn>
-
-          <v-btn
-            color="primary"
-            prepend-icon="i-mdi:phone"
-            to="/perusahaan/kontak"
-            variant="tonal"
-          >
-            Kontak UPP
-          </v-btn>
-        </div>
-      </v-sheet>
+      <PBantuan />
     </v-container>
   </v-main>
 </template>

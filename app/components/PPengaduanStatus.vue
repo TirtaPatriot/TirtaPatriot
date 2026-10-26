@@ -32,12 +32,11 @@
 
   const trackingStages: TrackingStage[] = [
     {
-      key: 'wo',
-      label: 'WO Dibuat',
-      description: 'Petugas ditugaskan untuk menangani aduan.',
+      key: 'diterima',
+      label: 'Pengaduan Diterima',
+      description: 'Aduan Anda sudah tercatat dan diteruskan ke cabang terkait.',
       color: 'blue',
-      dateKey: 'tgl_WO',
-      numberKey: 'wo_no',
+      dateKey: 'tgl_pengaduan',
     },
     {
       key: 'survei',
@@ -47,36 +46,18 @@
       dateKey: 'tgl_survei',
     },
     {
-      key: 'dpb',
-      label: 'DPB',
-      description: 'Permintaan barang keperluan perbaikan diproses.',
+      key: 'material',
+      label: 'Material Disiapkan',
+      description: 'Barang keperluan perbaikan sudah disiapkan.',
       color: 'teal-darken-1',
-      dateKey: 'tgl_DPB',
-      numberKey: 'dpb_no',
+      dateKey: 'tgl_pengeluaran',
     },
     {
-      key: 'dpg',
-      label: 'DPG',
-      description: 'Barang keperluan perbaikan sudah tersedia.',
-      color: 'teal',
-      dateKey: 'tgl_DPG',
-      numberKey: 'dpg_no',
-    },
-    {
-      key: 'spk',
-      label: 'SPK',
-      description: 'Perbaikan sudah diperintahkan.',
-      color: 'indigo-darken-1',
-      dateKey: 'tgl_SPK',
-      numberKey: 'spk_no',
-    },
-    {
-      key: 'bac',
-      label: 'BAC / Selesai',
-      description: 'Perbaikan selesai dan berita acara diterbitkan.',
+      key: 'selesai',
+      label: 'Perbaikan Selesai',
+      description: 'Perbaikan selesai dilakukan oleh petugas.',
       color: 'green-darken-1',
-      dateKey: 'tgl_BA',
-      numberKey: 'bac_no',
+      dateKey: 'tgl_selesai',
     },
   ]
 
@@ -87,7 +68,7 @@
       ...stage,
       date: source[stage.dateKey] as string | null | undefined,
       number: stage.numberKey ? source[stage.numberKey] as string | null | undefined : undefined,
-      done: !!source[stage.dateKey],
+      done: !!source[stage.dateKey] || (stage.key === 'selesai' && !!source.selesai),
     }))
   })
 
@@ -98,15 +79,20 @@
     if (props.tiketData?.selesai)
       return 'Selesai'
 
+    if (props.tiketData?.status)
+      return String(props.tiketData.status)
+
     const nextStep = timelineStatus.value.find(x => !x.done)
     return nextStep ? `Menunggu ${nextStep.label}` : 'Dalam Proses'
   })
 </script>
 
 <template>
-  <h3 class="text-headline-medium font-weight-bold text-uppercase mb-4 text-center">
-    Status Pengaduan #{{ tiketId }}
-  </h3>
+  <PageIntro
+    icon="i-mdi:ticket-confirmation-outline"
+    :subtitle="`Nomor tiket ${tiketId}`"
+    title="Status Pengaduan"
+  />
 
   <v-alert
     border="start"
@@ -120,7 +106,7 @@
 
   <v-row class="ga-4">
     <v-col cols="1/1" md="2/3">
-      <v-card elevation="2" rounded="lg">
+      <v-card elevation="2" rounded="xl">
         <v-card-title>
           Detail Aduan
         </v-card-title>
@@ -133,6 +119,12 @@
           <v-list-item subtitle="Perihal" :title="tiketData?.perihal || '-'" />
           <v-list-item subtitle="Masalah" :title="cleanedMasalah" />
           <v-list-item subtitle="Solusi" :title="cleanedSolusi" />
+
+          <v-list-item
+            v-if="tiketData?.estimasi && !tiketData?.selesai"
+            subtitle="Estimasi selesai"
+            :title="fdate(tiketData.estimasi)"
+          />
         </v-list>
 
         <v-card-text>
@@ -144,7 +136,7 @@
     </v-col>
 
     <v-col cols="1/1" md="1/3">
-      <v-card elevation="2" rounded="lg">
+      <v-card elevation="2" rounded="xl">
         <v-card-title>
           Progres
         </v-card-title>
@@ -185,7 +177,7 @@
     </v-col>
   </v-row>
 
-  <v-card class="mt-4" elevation="2" rounded="lg">
+  <v-card class="mt-4" elevation="2" rounded="xl">
     <v-card-title>
       Perjalanan Pengaduan
     </v-card-title>
@@ -202,7 +194,7 @@
           :icon="stage.done ? 'i-mdi:check' : 'i-mdi:clock-outline'"
           size="small"
         >
-          <v-card rounded="lg" :variant="stage.done ? 'elevated' : 'outlined'">
+          <v-card rounded="xl" :variant="stage.done ? 'elevated' : 'outlined'">
             <v-card-text>
               <div class="timeline-row-head">
                 <strong>{{ stage.label }}</strong>

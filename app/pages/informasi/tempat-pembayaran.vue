@@ -4,6 +4,12 @@
       '/tempat-pembayaran',
     ],
   })
+
+  useSeoMeta({
+    title: 'Tempat Pembayaran - Perumda Tirta Patriot',
+    description: 'Daftar mitra pembayaran dan unit pelayanan resmi untuk membayar rekening air Perumda Tirta Patriot Kota Bekasi.',
+  })
+
   const { getItems } = useDirectusItems()
 
   const { data } = await useAsyncData<any[]>(
@@ -19,42 +25,60 @@
   <v-main>
     <PageHeader title="Tempat Pembayaran" />
 
-    <v-container v-if="data?.length">
-      <h2 class="text-headline-large my-4 font-weight-light">
+    <v-container v-if="data?.length" class="py-8" max-width="1080">
+      <PageIntro
+        icon="i-mdi:wallet-outline"
+        subtitle="Bayar rekening air Anda di mitra resmi kami atau datang langsung ke unit pelayanan terdekat."
+        title="Tempat Pembayaran"
+      />
+
+      <h2 class="text-headline-small font-weight-bold mb-4">
         Mitra Pembayaran
       </h2>
 
-      <v-slide-group class="my-4" show-arrows>
-        <v-slide-group-item
+      <v-row>
+        <v-col
           v-for="p of data[0]"
           :key="p.url"
+          cols="1/2"
+          lg="1/6"
+          md="1/4"
+          sm="1/3"
         >
-          <v-sheet class="ma-2" elevation="2" height="200" width="200">
-            <nuxt-link rel="external nofollow" :to="p.url">
-              <p-img :alt="p.name" aspect-ratio="1" class="ma-2" :src="p.logo" />
-            </nuxt-link>
-          </v-sheet>
-        </v-slide-group-item>
-      </v-slide-group>
+          <v-card
+            class="partner-card pa-3 h-100 d-flex align-center justify-center"
+            :href="p.url"
+            rel="noopener noreferrer"
+            rounded="xl"
+            target="_blank"
+            variant="outlined"
+          >
+            <p-img
+              :alt="p.name"
+              :aspect-ratio="1"
+              class="w-100"
+              contain
+              :src="p.logo"
+            />
+          </v-card>
+        </v-col>
+      </v-row>
 
-      <h2 class="text-headline-large font-weight-light mt-8 mb-2">
+      <h2 class="text-headline-small font-weight-bold mt-10 mb-4">
         Unit Pelayanan Langsung
       </h2>
 
-      <v-list class="px-2 bg-transparent" density="compact" variant="text">
-        <v-list-item
-          v-for="o of data[1]"
-          :key="o.id"
-          append-icon="i-mdi:directions"
-          :href="`https://www.google.com/maps?saddr=My+Location&daddr=${o.latitude},${o.longitude}`"
-          lines="three"
-          prepend-icon="i-mdi:office-building"
-          rel="external nofollow"
-          rounded="shaped"
-          :subtitle="o.address"
-          :title="o.name"
-        />
-      </v-list>
+      <POfficeGrid :offices="data[1]" searchable />
     </v-container>
   </v-main>
 </template>
+
+<style scoped>
+  .partner-card {
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .partner-card:hover {
+    transform: translateY(-3px);
+  }
+</style>

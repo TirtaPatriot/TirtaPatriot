@@ -15,6 +15,9 @@ export default defineConfig({
       },
       typography: 'md3',
       elevation: 'md3',
+      // Vuetify 4 sudah punya grid sendiri (ber-layer). Aturan grid preset ini membuat
+      // `.v-col{flex-basis:0}` tak ber-layer yang menimpanya di build produksi.
+      exclude: ['grid'],
     }),
   ],
   safelist: [

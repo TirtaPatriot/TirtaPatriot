@@ -136,8 +136,8 @@
 </script>
 
 <template>
-  <v-layout>
-    <v-app-bar>
+  <v-layout class="layout-column">
+    <v-app-bar border flat>
       <template #prepend>
         <NuxtLink aria-label="Beranda Tirta Patriot" title="Beranda Tirta Patriot" to="/">
           <img
@@ -252,10 +252,14 @@
 
     <slot />
 
+    <SiteFooter />
   </v-layout>
 </template>
 
 <style scoped>
+  .layout-column {
+    flex-direction: column;
+  }
   .desktop-nav {
     display: none;
     align-items: center;

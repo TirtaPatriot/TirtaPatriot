@@ -6,20 +6,36 @@
     theme: '#0487d2',
   })
 
-  const selfService = ref([
+  useSeoMeta({
+    title: 'Kontak - Perumda Tirta Patriot',
+    description: 'Hubungi Perumda Tirta Patriot Kota Bekasi melalui telepon, WhatsApp, email, media sosial, atau kunjungi unit pelayanan terdekat.',
+  })
+
+  const contacts = [
+    { title: 'Telepon', value: '021-8896-6161', icon: 'i-mdi:phone-outline', href: 'tel:+622188966161' },
+    { title: 'WhatsApp Humas', value: '0878-7516-3845', icon: 'i-mdi:whatsapp', href: 'https://wa.me/6287875163845' },
+    { title: 'Email Humas', value: 'humas@tirtapatriot.co.id', icon: 'i-mdi:email-outline', href: 'mailto:humas@tirtapatriot.co.id' },
+    { title: 'Email Sekretariat', value: 'sekretariat@tirtapatriot.co.id', icon: 'i-mdi:email-outline', href: 'mailto:sekretariat@tirtapatriot.co.id' },
+  ]
+
+  const channelGroups = [
     {
-      title: 'WhatsApp',
-      color: 'green',
-      icon: 'i-mdi:whatsapp',
-      href: 'https://wa.me/message/XEQYWXIGCYSYA1',
+      title: 'Layanan Mandiri',
+      description: 'Cek tagihan dan layanan otomatis kapan saja.',
+      items: [
+        { title: 'WhatsApp', icon: 'i-mdi:whatsapp', color: 'green', href: 'https://wa.me/message/XEQYWXIGCYSYA1' },
+        { title: 'Telegram', icon: 'i-mdi:telegram', color: '#0088cc', href: 'https://t.me/TirtaPatriotBot' },
+      ],
     },
     {
-      title: 'Telegram',
-      color: '#0088cc',
-      icon: 'i-mdi:telegram',
-      href: 'https://t.me/TirtaPatriotBot',
+      title: 'Saluran Informasi',
+      description: 'Pengumuman gangguan dan informasi resmi.',
+      items: [
+        { title: 'WhatsApp Channel', icon: 'i-mdi:whatsapp', color: 'green', href: 'https://whatsapp.com/channel/0029VaaWmpGId7nRB1BLj52w' },
+        { title: 'Telegram Channel', icon: 'i-mdi:telegram', color: '#0088cc', href: 'https://t.me/PerumdaTirtaPatriot' },
+      ],
     },
-  ])
+  ]
 
   const { getItems } = useDirectusItems()
 
@@ -33,129 +49,110 @@
   <v-main>
     <PageHeader title="Kontak" />
 
-    <v-container>
+    <v-container class="py-8" max-width="1080">
+      <PageIntro
+        icon="i-mdi:headset"
+        subtitle="Tim Humas dan Layanan Pelanggan siap membantu pada jam operasional, atau gunakan kanal digital kami kapan saja."
+        title="Hubungi Kami"
+      />
+
       <v-row>
-        <v-col>
-          <v-sheet v-if="data?.length" :elevation="2">
-            <v-list class="mx-2">
-              <v-list-subheader class="text-title text-uppercase font-weight-bold">
-                Unit Pelayanan Langsung
-              </v-list-subheader>
+        <v-col
+          v-for="c in contacts"
+          :key="c.title"
+          cols="1/1"
+          md="1/2"
+          sm="1/2"
+        >
+          <v-card
+            class="h-100 pa-4"
+            :href="c.href"
+            rounded="xl"
+            :target="c.href.startsWith('http') ? '_blank' : undefined"
+            variant="outlined"
+          >
+            <v-avatar class="mb-3" color="primary" size="48" variant="tonal">
+              <v-icon :icon="c.icon" size="26" />
+            </v-avatar>
 
-              <v-list-item
-                v-for="o of data"
-                :key="o.id"
-                append-icon="i-mdi:directions"
-                :href="`https://www.google.com/maps?saddr=My+Location&daddr=${o.latitude},${o.longitude}`"
-                lines="three"
-                prepend-icon="i-mdi:office-building"
-                rel="external nofollow"
-                rounded="shaped"
-                :subtitle="o.address"
-                :title="o.name"
-              />
-            </v-list>
-          </v-sheet>
-        </v-col>
+            <div class="text-body-medium text-medium-emphasis">
+              {{ c.title }}
+            </div>
 
-        <v-col>
-          <v-sheet class="my-2" :elevation="2">
-            <v-list class="mx-2">
-              <v-list-subheader class="text-title font-weight-bold text-uppercase">
-                Bisnis
-              </v-list-subheader>
-
-              <v-list-item
-                append-icon="i-mdi:launch"
-                href="mailto:perumda@tirtapatriot.co.id"
-                prepend-icon="i-mdi:email"
-                rounded="shaped"
-                title="sekretariat@tirtapatriot.co.id"
-              />
-
-              <v-list-item
-                append-icon="i-mdi:launch"
-                href="tel:622188966161"
-                prepend-icon="i-mdi:phone"
-                rounded="shaped"
-                title="021-8896-6161"
-              />
-
-              <v-list-subheader class="text-title font-weight-bold text-uppercase">
-                Humas
-              </v-list-subheader>
-
-              <v-list-item
-                append-icon="i-mdi:launch"
-                href="mailto:humas@tirtapatriot.co.id"
-                prepend-icon="i-mdi:email"
-                rounded="shaped"
-                title="humas@tirtapatriot.co.id"
-              />
-
-              <v-list-item
-                append-icon="i-mdi:launch"
-                href="tel:6287875163845"
-                prepend-icon="i-mdi:phone"
-                rounded="shaped"
-                title="0878-7516-3845"
-              />
-            </v-list>
-          </v-sheet>
-
-          <v-sheet elevation="2">
-            <SocialButtons list title="Media Sosial" />
-          </v-sheet>
-
-          <v-sheet class="my-2" elevation="2">
-            <v-list>
-              <v-list-subheader class="text-title font-weight-bold text-uppercase">
-                Layanan Mandiri
-              </v-list-subheader>
-
-              <v-list-item
-                v-for="s of selfService"
-                :key="s.href"
-                append-icon="i-mdi:launch"
-                :href="s.href"
-                :prepend-icon="s.icon"
-                rel="external nofollow"
-                rounded="shaped"
-                :title="s.title"
-              />
-            </v-list>
-          </v-sheet>
-
-          <v-sheet class="my-2" :elevation="2">
-            <v-list class="mx-2">
-              <v-list-subheader class="text-title font-weight-bold text-uppercase">
-                SALURAN
-              </v-list-subheader>
-
-              <v-list-item
-                append-icon="i-mdi:launch"
-                href="https://whatsapp.com/channel/0029VaaWmpGId7nRB1BLj52w"
-                prepend-icon="i-mdi:whatsapp"
-                rel="external nofollow"
-                rounded="shaped"
-                title="WhatsApp"
-              />
-
-              <v-list-item
-                append-icon="i-mdi:launch"
-                href="https://t.me/PerumdaTirtaPatriot"
-                prepend-icon="i-mdi:telegram"
-                rel="external nofollow"
-                title="Telegram"
-              />
-            </v-list>
-          </v-sheet>
+            <div class="text-title-medium font-weight-bold contact-value">
+              {{ c.value }}
+            </div>
+          </v-card>
         </v-col>
       </v-row>
+
+      <h2 class="text-headline-small font-weight-bold mt-10 mb-4">
+        Kanal Digital
+      </h2>
+
+      <v-row>
+        <v-col
+          v-for="g in channelGroups"
+          :key="g.title"
+          cols="1/1"
+          md="1/2"
+        >
+          <v-card class="h-100" rounded="xl" variant="outlined">
+            <v-card-item>
+              <v-card-title class="text-title-large font-weight-bold">
+                {{ g.title }}
+              </v-card-title>
+
+              <v-card-subtitle class="text-wrap">
+                {{ g.description }}
+              </v-card-subtitle>
+            </v-card-item>
+
+            <v-list class="bg-transparent px-2 pb-2">
+              <v-list-item
+                v-for="i in g.items"
+                :key="i.href"
+                append-icon="i-mdi:open-in-new"
+                :href="i.href"
+                rel="noopener noreferrer"
+                rounded="lg"
+                target="_blank"
+                :title="i.title"
+              >
+                <template #prepend>
+                  <v-icon class="mr-3" :color="i.color" :icon="i.icon" />
+                </template>
+              </v-list-item>
+            </v-list>
+          </v-card>
+        </v-col>
+
+        <v-col cols="1/1">
+          <v-card class="pa-4 text-center" rounded="xl" variant="outlined">
+            <div class="text-title-medium font-weight-bold mb-2">
+              Ikuti Media Sosial Kami
+            </div>
+
+            <div class="d-flex justify-center flex-wrap ga-3">
+              <SocialButtons />
+            </div>
+          </v-card>
+        </v-col>
+      </v-row>
+
+      <template v-if="data?.length">
+        <h2 class="text-headline-small font-weight-bold mt-10 mb-4">
+          Unit Pelayanan Langsung
+        </h2>
+
+        <POfficeGrid :offices="data" />
+      </template>
     </v-container>
   </v-main>
 </template>
 
-<style>
-
+<style scoped>
+  .contact-value {
+    overflow-wrap: anywhere;
+  }
 </style>

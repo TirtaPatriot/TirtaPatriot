@@ -17,30 +17,31 @@
 </script>
 
 <template>
-  <v-container>
-    <h3 class="text-white text-center text-headline-small">
-      Statistik Terakhir
+  <v-container max-width="1080">
+    <h3 class="text-headline-small font-weight-bold text-center mb-6">
+      Perumda Tirta Patriot dalam Angka
     </h3>
 
-    <v-divider />
-
-    <v-row class="pt-4 justify-center">
+    <v-row justify="center">
       <v-col
         v-for="(s) of data"
         :key="s.id"
         cols="1/2"
-        lg="1/4"
-        sm="1/3"
-        xl="auto"
+        md="1/4"
       >
-        <v-card min-width="120" rounded variant="text">
-          <v-card-title class="text-center text-white text-label-small">
-            {{ s.name }}
+        <v-card
+          class="text-center py-5 px-2 h-100 d-flex flex-column justify-center"
+          color="primary"
+          rounded="xl"
+          variant="tonal"
+        >
+          <div class="text-headline-medium text-sm-headline-large font-weight-bold">
+            {{ formatValue(s.value) }}
+          </div>
 
-            <div class="font-weight-bold text-headline-medium">
-              {{ formatValue(s.value) }}
-            </div>
-          </v-card-title>
+          <div class="text-body-medium text-medium-emphasis mt-1">
+            {{ s.name }}
+          </div>
         </v-card>
       </v-col>
     </v-row>

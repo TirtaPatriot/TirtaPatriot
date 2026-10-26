@@ -110,7 +110,7 @@
   })
 
   function formatDate (date: string) {
-    return useDatetimeFormat(date)
+    return new Intl.DateTimeFormat('id-ID', { dateStyle: 'long', timeZone: 'Asia/Jakarta' }).format(new Date(date))
   }
 </script>
 
@@ -118,13 +118,16 @@
   <v-main>
     <PageHeader title="Edukasi" />
 
-    <v-container>
+    <v-container class="py-8" max-width="1080">
       <template v-if="isInitialLoading">
-        <v-row
-          v-for="i in skeletonCount"
-          :key="`edukasi-skeleton-${i}`"
-        >
-          <v-col cols="1/1">
+        <v-row>
+          <v-col
+            v-for="i in skeletonCount"
+            :key="`edukasi-skeleton-${i}`"
+            cols="1/1"
+            md="1/3"
+            sm="1/2"
+          >
             <v-card class="edukasi-card h-100" loading rounded="xl" variant="outlined">
               <template #loader>
                 <v-progress-linear color="primary" height="3" indeterminate />
@@ -156,16 +159,19 @@
       />
 
       <div v-else>
-        <v-row
-          v-for="item in artikel"
-          :key="item.id"
-        >
-          <v-col cols="1/1">
+        <v-row>
+          <v-col
+            v-for="item in artikel"
+            :key="item.id"
+            cols="1/1"
+            md="1/3"
+            sm="1/2"
+          >
             <v-card class="edukasi-card h-100 d-flex flex-column" rounded="xl" variant="outlined">
               <p-img class="edukasi-cover" cover :height="210" :src="item.cover" />
 
               <v-card-item class="pb-1 px-4 pt-4">
-                <v-card-title class="edukasi-title text-headline-small px-0">
+                <v-card-title class="edukasi-title text-title-large font-weight-bold px-0">
                   {{ item.judul }}
                 </v-card-title>
 
@@ -177,8 +183,10 @@
                 </template>
               </v-card-item>
 
-              <v-card-text class="edukasi-summary px-4 pt-2 text-body-medium text-medium-emphasis">
-                {{ item.ringkasan || 'Ringkasan belum tersedia.' }}
+              <v-card-text class="px-4 pt-2 text-body-medium text-medium-emphasis">
+                <div class="edukasi-summary">
+                  {{ item.ringkasan || 'Ringkasan belum tersedia.' }}
+                </div>
               </v-card-text>
 
               <v-card-actions class="px-4 pb-4 mt-auto">
@@ -231,6 +239,7 @@
 
   .edukasi-title {
     line-height: 1.3;
+    white-space: normal;
     overflow: hidden;
     display: -webkit-box;
     line-clamp: 2;

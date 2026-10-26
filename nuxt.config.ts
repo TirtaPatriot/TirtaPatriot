@@ -62,6 +62,7 @@ export default defineNuxtConfig({
     'assets/styles/layers.css',
     'vuetify/styles',
     'assets/styles/main.scss',
+    'assets/styles/glass.css',
   ],
 
   runtimeConfig: {
@@ -225,6 +226,12 @@ export default defineNuxtConfig({
   },
   directus: {
     url: process.env.NUXT_PUBLIC_DIRECTUS_URL,
+  },
+  mdc: {
+    // konten dinamis dari CMS disaring dan dibungkus sebelum dirender (lihat app/mdc)
+    rehypePlugins: {
+      'content-guard': { src: '~/mdc/rehype-content-guard' },
+    },
   },
   image: {
     provider: process.env.NUXT_IMAGE_PROVIDER,

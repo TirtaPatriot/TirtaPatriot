@@ -1,4 +1,8 @@
+// Utilitas (text-wrap, kelas responsif seperti pa-md-8) dan palet warna (bg-green-darken-3)
+// dipakai di banyak template dan dibentuk dinamis oleh Vuetify saat runtime (prop `color`).
+// UnoCSS hanya menghasilkan kelas yang tertulis harfiah, jadi jika keduanya dimatikan kelas-kelas
+// ini hilang di build produksi (tampak normal di dev). `$utilities` dibiarkan default (aktif);
+// nilai `true` tidak valid karena Vuetify mengharapkan peta atau `false`.
 @use 'vuetify/settings' with (
-  $color-pack: false,
-  $utilities: false,
+  $color-pack: true
 );

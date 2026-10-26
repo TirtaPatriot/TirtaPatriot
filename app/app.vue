@@ -1,5 +1,7 @@
 <template>
   <v-app>
+    <NuxtLoadingIndicator color="#0b6fb8" :height="3" />
+
     <nuxt-layout>
       <nuxt-page />
     </nuxt-layout>
@@ -7,6 +9,22 @@
 </template>
 
 <style>
+/* transparansi sebelumnya dihitung dua kali (warna + elemen) sehingga kontras hanya ~2,5:1 */
+.v-application .text-medium-emphasis {
+  color: rgba(var(--v-theme-on-background), 0.7) !important;
+  opacity: 1 !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 .grads {
   background: rgb(34, 120, 195);
   background: linear-gradient(0deg, rgb(34, 120, 195) 0%, rgba(255,255,255,1) 100%);
