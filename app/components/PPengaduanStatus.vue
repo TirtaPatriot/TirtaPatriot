@@ -68,7 +68,7 @@
       ...stage,
       date: source[stage.dateKey] as string | null | undefined,
       number: stage.numberKey ? source[stage.numberKey] as string | null | undefined : undefined,
-      done: !!source[stage.dateKey],
+      done: !!source[stage.dateKey] || (stage.key === 'selesai' && !!source.selesai),
     }))
   })
 
@@ -117,6 +117,12 @@
           <v-list-item subtitle="Perihal" :title="tiketData?.perihal || '-'" />
           <v-list-item subtitle="Masalah" :title="cleanedMasalah" />
           <v-list-item subtitle="Solusi" :title="cleanedSolusi" />
+
+          <v-list-item
+            v-if="tiketData?.estimasi && !tiketData?.selesai"
+            subtitle="Estimasi selesai"
+            :title="fdate(tiketData.estimasi)"
+          />
         </v-list>
 
         <v-card-text>
