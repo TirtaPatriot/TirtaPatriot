@@ -107,7 +107,6 @@
     }
 
     const rawContent = String(data.value?.content ?? '')
-    console.warn({ rawContent })
     const plainText = rawContent
       .replace(/<[^>]*>/g, ' ')
       .replace(/[^\p{L}\p{N}\s]/gu, ' ')
@@ -148,8 +147,16 @@
 
 <template>
   <v-main>
-    <!-- <PageHeader :title="data?.judul" :img="data?.head_img" /> -->
-    <v-container class="prose">
+    <v-container class="py-8" max-width="860">
+      <v-btn
+        class="text-none mb-4"
+        prepend-icon="i-mdi:arrow-left"
+        to="/berita"
+        variant="text"
+      >
+        Semua berita
+      </v-btn>
+
       <v-empty-state
         v-if="error"
         icon="$warning"
@@ -169,23 +176,36 @@
         title="Konten Tidak Ditemukan"
       />
 
-      <div v-else :key="contentRenderKey">
-        <p-img cover :height="540" :src="data?.cover || 'C74BDC20-E6AE-423E-BE27-68F220D0F119'" />
+      <article v-else :key="contentRenderKey">
+        <v-chip
+          class="mb-3"
+          color="primary"
+          prepend-icon="i-mdi:calendar-outline"
+          variant="tonal"
+        >
+          {{ useDateOnly(data?.dipublikasi || data?.date_created) }}
+        </v-chip>
 
-        <h1 class="text-headline-small">
+        <h1 class="text-headline-medium text-md-headline-large font-weight-bold mb-5">
           {{ data?.judul }}
         </h1>
 
-        <MDC :key="contentRenderKey" :value="normalizedContent" />
+        <p-img
+          :aspect-ratio="16 / 9"
+          class="mb-6"
+          cover
+          rounded="xl"
+          :src="data?.cover || 'C74BDC20-E6AE-423E-BE27-68F220D0F119'"
+        />
 
-        <div class="text-body-small text-right mx-4">
-          {{ useDatetimeFormat(data?.dipublikasi) }}
+        <div class="prose text-body-large">
+          <MDC :key="contentRenderKey" :value="normalizedContent" />
         </div>
-      </div>
+
+        <v-divider class="my-6" />
+
+        <PShare :title="data?.judul" />
+      </article>
     </v-container>
   </v-main>
 </template>
-
-<style>
-
-</style>

@@ -12,6 +12,10 @@
   })
 
   const { getItems } = useDirectusItems()
+  const config = useRuntimeConfig()
+
+  const sotkId = '8A917A55-EC1A-4166-890A-1FB3AC32E481'
+  const sotkUrl = `${String(config.public.directusUrl ?? '').replace(/\/+$/, '')}/assets/${sotkId}`
 
   const { data } = await useAsyncData(
     'manajemen',
@@ -33,20 +37,13 @@
   <v-main>
     <PageHeader title="Manajemen" />
 
-    <v-container>
-      <!-- <p-img cover src="/bg_slide-1.jpg" aspect-ratio="1">
-      <div class="d-flex flex-column fill-height align-center justify-center text-white">
-        <h1 class="text-headline-large font-weight-thin mb-4">
-          Perumda Tirta Patriot
-        </h1>
-        <h4 class="subheading">
-          Profile Perusahaan
-        </h4>
-      </div>
-    </p-img> -->
-      <div id="direksi" class="text-center text-headline-medium my-6">
-        JAJARAN <strong>DIREKSI</strong>
-      </div>
+    <v-container class="py-8" max-width="1080">
+      <PageIntro
+        id="direksi"
+        icon="i-mdi:account-group-outline"
+        subtitle="Pimpinan Perumda Tirta Patriot Kota Bekasi."
+        title="Jajaran Direksi"
+      />
 
       <v-row justify="center">
         <v-col
@@ -57,108 +54,69 @@
           lg="1/4"
           md="1/3"
           sm="1/2"
-          xs="1/1"
         >
           <p-img
             :aspect-ratio="3 / 4"
-            class="w-100 align-end overflow-hidden text-white text-uppercase bg-light-blue-darken-1"
+            class="w-100 align-end overflow-hidden text-white bg-light-blue-darken-1"
             cover
             max-width="320"
             provider="directus"
             rounded="xl"
             :src="d.foto"
           >
-            <div class="direksi-overlay w-100 text-center px-4 pt-5 pb-4">
-              <h5 class="mb-0 break-word text-body-large text-md-headline-small text-lg-body-large">
+            <div class="direksi-overlay w-100 text-center px-4 pt-8 pb-4">
+              <h3 class="mb-0 break-word text-title-medium font-weight-bold">
                 {{ d.nama }}
-              </h5>
+              </h3>
 
-              <h6 class="mt-2 mb-0 font-weight-bold break-word text-body-small">
+              <div class="mt-1 mb-0 break-word text-body-small text-uppercase direksi-jabatan">
                 {{ d.jabatan }}
-              </h6>
+              </div>
             </div>
           </p-img>
         </v-col>
       </v-row>
 
-      <!-- <div class="text-headline-medium mt-12 text-center">
-        JAJARAN <strong>MANAJER</strong>
-      </div>
-      <v-row justify="center">
-        <v-col v-for="m of dirute" :key="m.id" :cols="xs ? 12 : sm ? 6 : 3">
-          <p-img class="text-center align-end text-dark" :src="m.foto" :height="3512 / 8" :width="2558 / 8">
-            <div class="bg-blue">
-              <div class="text-title">
-                {{ m.nama }}
-              </div>
-              <div class="text-body-small">
-                {{ m.bagian }}
-              </div>
-            </div>
-          </p-img>
-        </v-col>
-      </v-row>
-      <v-row justify="center">
-        <v-col v-for="m of dirume" :key="m.id" :cols="xs ? 12 : sm ? 6 : 3">
-          <p-img class="text-center align-end text-dark" :src="m.foto" :height="3512 / 8" :width="2558 / 8" contain>
-            <div class="bg-blue">
-              <div class="text-title">
-                {{ m.nama }}
-              </div>
-              <div class="text-body-small">
-                {{ m.bagian }}
-              </div>
-            </div>
-          </p-img>
-        </v-col>
-      </v-row>
-      <v-row justify="center">
-        <v-col v-for="m of dirteke" :key="m.id" :cols="xs ? 12 : sm ? 6 : 3">
-          <p-img class="text-center align-end text-dark" :src="m.foto" :height="3512 / 8" :width="2558 / 8" contain>
-            <div class="bg-blue">
-              <div class="text-title">
-                {{ m.nama }}
-              </div>
-              <div class="text-body-small">
-                {{ m.bagian }}
-              </div>
-            </div>
-          </p-img>
-        </v-col>
-      </v-row>
-      <v-row justify="center">
-        <v-col v-for="m of diruse" :key="m.id" :cols="xs ? 12 : sm ? 6 : 3">
-          <p-img class="text-center align-end text-dark" :src="m.foto" :height="3512 / 8" :width="2558 / 8" contain>
-            <div class="bg-blue">
-              <div class="text-title">
-                {{ m.nama }}
-              </div>
-              <div class="text-body-small">
-                {{ m.bagian }}
-              </div>
-            </div>
-          </p-img>
-        </v-col>
-      </v-row> -->
-    </v-container>
-
-    <div id="sotk" class="text-headline-medium text-center mb-4 mt-6 mx-auto">
-      SUSUNAN ORGANISASI & TATA KERJA
-    </div>
-
-    <v-sheet class="pa-4 mx-4 overflow-x-auto" color="white" elevation="2">
-      <PImg
-        :aspect-ratio="3292 / 1825"
-        class="sotk-image"
-        src="8A917A55-EC1A-4166-890A-1FB3AC32E481"
+      <PageIntro
+        id="sotk"
+        class="mt-12"
+        icon="i-mdi:sitemap-outline"
+        subtitle="Geser untuk melihat bagan lengkap, atau buka gambar ukuran penuh."
+        title="Susunan Organisasi & Tata Kerja"
       />
-    </v-sheet>
+
+      <v-card class="pa-3 overflow-x-auto" rounded="xl" variant="outlined">
+        <PImg
+          :aspect-ratio="3292 / 1825"
+          class="sotk-image"
+          src="8A917A55-EC1A-4166-890A-1FB3AC32E481"
+        />
+      </v-card>
+
+      <div class="text-center mt-4">
+        <v-btn
+          class="text-none"
+          color="primary"
+          :href="sotkUrl"
+          prepend-icon="i-mdi:open-in-new"
+          rel="noopener noreferrer"
+          target="_blank"
+          variant="tonal"
+        >
+          Buka gambar ukuran penuh
+        </v-btn>
+      </div>
+    </v-container>
   </v-main>
 </template>
 
 <style scoped>
   .direksi-overlay {
-    background: linear-gradient(to top, rgb(0 0 0 / 72%), rgb(0 0 0 / 8%));
+    background: linear-gradient(to top, rgb(0 0 0 / 80%), rgb(0 0 0 / 0%));
+  }
+
+  .direksi-jabatan {
+    opacity: 0.9;
   }
 
   .sotk-image {

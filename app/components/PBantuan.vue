@@ -6,7 +6,7 @@
     variant="tonal"
   >
     <div class="bantuan-info">
-      <v-avatar color="green" size="48">
+      <v-avatar color="green-darken-3" size="48">
         <v-icon color="white" icon="i-mdi:whatsapp" size="26" />
       </v-avatar>
 
@@ -24,7 +24,7 @@
     <div class="bantuan-actions">
       <v-btn
         class="text-none"
-        color="green"
+        color="green-darken-3"
         href="https://wa.me/6287875163845"
         prepend-icon="i-mdi:whatsapp"
         rel="noopener noreferrer"

@@ -434,10 +434,10 @@
   }
 
   .total-due {
-    background: linear-gradient(135deg, #0487d2 0%, #4790ff 100%);
+    background: linear-gradient(135deg, #04266d 0%, #0b6fb8 100%);
   }
 
   .total-paid {
-    background: linear-gradient(135deg, #2e9e78 0%, #47b88e 100%);
+    background: linear-gradient(135deg, #14594a 0%, #1f7a5a 100%);
   }
 </style>

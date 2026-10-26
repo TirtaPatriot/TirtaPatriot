@@ -118,7 +118,16 @@
 
 <template>
   <v-main>
-    <v-container class="prose">
+    <v-container class="py-8" max-width="860">
+      <v-btn
+        class="text-none mb-4"
+        prepend-icon="i-mdi:arrow-left"
+        to="/edukasi"
+        variant="text"
+      >
+        Semua edukasi
+      </v-btn>
+
       <v-empty-state
         v-if="error"
         icon="$warning"
@@ -138,25 +147,28 @@
         title="Konten Tidak Ditemukan"
       />
 
-      <div v-else :key="contentRenderKey">
-        <h1 class="text-headline-small">
+      <article v-else :key="contentRenderKey">
+        <v-chip
+          class="mb-3"
+          color="primary"
+          prepend-icon="i-mdi:calendar-outline"
+          variant="tonal"
+        >
+          {{ useDateOnly(data?.dipublikasi || data?.date_created) }}
+        </v-chip>
+
+        <h1 class="text-headline-medium text-md-headline-large font-weight-bold mb-5">
           {{ data?.judul }}
         </h1>
 
-        <MDC
-          v-if="markdownContent"
-          :key="contentRenderKey"
-          :value="markdownContent"
-        />
-
-        <div class="text-body-small text-right mx-4">
-          {{ useDatetimeFormat(data?.dipublikasi) }}
+        <div v-if="markdownContent" class="prose text-body-large">
+          <MDC :key="contentRenderKey" :value="markdownContent" />
         </div>
-      </div>
+
+        <v-divider class="my-6" />
+
+        <PShare :title="data?.judul" />
+      </article>
     </v-container>
   </v-main>
 </template>
-
-<style>
-
-</style>
