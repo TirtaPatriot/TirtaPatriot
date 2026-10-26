@@ -1,6 +1,7 @@
 <script lang="ts" setup>
   const step = defineModel<number>('step', { default: 0 })
   const nama = defineModel<string>('nama', { default: '' })
+  const error = defineModel<string>('error', { default: '' })
   const formBody = defineModel<Record<string, any>>('body', { required: true })
 
   defineProps<{
@@ -11,6 +12,7 @@
     }
     data: any
     tiket: string
+    masked?: string
   }>()
 
   const emit = defineEmits<{
@@ -85,16 +87,19 @@
           </v-card-title>
 
           <v-card-subtitle class="text-wrap">
-            Harap verifikasi dengan mengisi nama terdaftar untuk No. Pelanggan {{ formBody.nomor }}
+            Nama terdaftar untuk No. Pelanggan {{ formBody.nomor }} ditampilkan tersamar:
+            <strong>{{ masked }}</strong>
           </v-card-subtitle>
 
           <v-card-text>
             <v-text-field
               v-model="nama"
-              label="Atas Nama"
+              autocomplete="off"
+              hint="Isi dengan nama lengkap sesuai rekening air (tanpa tanda bintang)"
+              label="Nama Lengkap Pelanggan"
               :loading="loading.step2"
+              persistent-hint
               variant="outlined"
-              @click:append-inner="emit('navigate', 'next')"
               @keyup.enter="emit('navigate', 'next')"
             />
           </v-card-text>
@@ -178,6 +183,18 @@
         </v-card>
       </v-stepper-window-item>
     </v-stepper-window>
+
+    <v-alert
+      v-if="error"
+      class="mx-6 mb-2"
+      closable
+      color="error"
+      icon="i-mdi:alert-circle-outline"
+      variant="tonal"
+      @click:close="error = ''"
+    >
+      {{ error }}
+    </v-alert>
 
     <v-stepper-actions
       color="primary"

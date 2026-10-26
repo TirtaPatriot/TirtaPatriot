@@ -54,12 +54,15 @@
   })
 
   const nama = ref('')
+  const masked = ref('')
+  const verifiedNama = ref('')
   const tiket = ref('')
   const step = ref(0)
+  const errorMsg = ref('')
 
   const stepDefs = [
-    { title: 'No. Pelanggan', rules: [() => !!body.id || false] },
-    { title: 'Verifikasi', rules: [() => !nama.value.includes('*') || false] },
+    { title: 'No. Pelanggan', rules: [() => !!masked.value || false] },
+    { title: 'Verifikasi', rules: [() => !!body.id || false] },
     { title: 'Pelapor' },
     { title: 'Kendala', rules: [() => !!tiket.value || false] },
     { title: 'Selesai' },
@@ -68,42 +71,75 @@
   // validasi hanya ditampilkan untuk langkah yang sudah dilewati, bukan sejak awal
   const steps = computed(() => stepDefs.map((s, i) => ({ ...s, rules: i < step.value ? s.rules : undefined })))
 
+  // mengganti nomor pelanggan membatalkan verifikasi sebelumnya
+  watch(() => body.nomor, () => {
+    body.id = ''
+    masked.value = ''
+    nama.value = ''
+    verifiedNama.value = ''
+  })
+
   const { executeRecaptcha } = useGoogleRecaptcha()
 
+  function messageOf (e: any, fallback: string) {
+    if (e?.statusCode === 404 || e?.status === 404)
+      return 'Nomor pelanggan tidak ditemukan. Periksa kembali nomor pada rekening air Anda.'
+    return e?.data?.message || fallback
+  }
+
   async function getMe () {
+    if (!body.nomor?.trim())
+      throw new Error('Silakan masukkan nomor pelanggan terlebih dahulu.')
+
+    // data tersamar sudah dimuat untuk nomor yang sama
+    if (masked.value)
+      return
+
     try {
       loading.step1 = true
       const { token } = await executeRecaptcha('aduan')
       const result = await $fetch<any>(`${config.public.apiUrl}/pelanggan`, {
         method: 'POST',
-        body: { ...body, 'g-recaptcha-response': token },
+        body: { 'nomor': body.nomor.trim(), 'g-recaptcha-response': token },
       })
 
-      body.id = result?.id ?? ''
-      nama.value = result?.nama ?? ''
+      masked.value = result?.nama ?? ''
+    } catch (error: any) {
+      throw new Error(messageOf(error, 'Data pelanggan belum dapat dimuat. Silakan coba lagi.'), { cause: error })
     } finally {
       loading.step1 = false
     }
   }
 
-  async function unlock (b: any) {
-    const { token } = await executeRecaptcha('aduan')
+  async function unlock () {
+    const typed = nama.value.trim()
+    if (!typed)
+      throw new Error('Silakan isi nama sesuai data sambungan Anda.')
 
-    if (body.id || nama.value.includes('＊'))
+    // nama yang sama sudah terverifikasi
+    if (body.id && verifiedNama.value === typed)
       return
 
     try {
       loading.step2 = true
+      const { token } = await executeRecaptcha('aduan')
       const result = await $fetch<any>(`${config.public.apiUrl}/pelanggan`, {
         method: 'POST',
         body: {
-          'nomor': body.nomor,
-          ...b,
+          'nomor': body.nomor.trim(),
+          'nama': typed,
           'g-recaptcha-response': token,
         },
       })
-      nama.value = result?.nama ?? ''
+
       body.id = result?.id ?? ''
+      verifiedNama.value = typed
+    } catch (error: any) {
+      body.id = ''
+      verifiedNama.value = ''
+      throw new Error(error?.data?.code === 'CN403'
+        ? 'Nama tidak sesuai dengan data sambungan. Isi nama lengkap sesuai rekening air, tanpa tanda bintang.'
+        : messageOf(error, 'Verifikasi belum berhasil. Silakan coba lagi.'), { cause: error })
     } finally {
       loading.step2 = false
     }
@@ -113,33 +149,45 @@
     const { token } = await executeRecaptcha('aduan')
 
     tiket.value = ''
-    const result = await $fetch<any>(`${config.public.apiUrl}/pengaduan`, {
-      method: 'POST',
-      body: {
-        ...body,
-        'g-recaptcha-response': token,
-      },
-    })
+    try {
+      const result = await $fetch<any>(`${config.public.apiUrl}/pengaduan`, {
+        method: 'POST',
+        body: {
+          ...body,
+          'nama': verifiedNama.value,
+          'g-recaptcha-response': token,
+        },
+      })
 
-    tiket.value = result
+      tiket.value = result
+    } catch (error: any) {
+      throw new Error(messageOf(error, 'Pengaduan belum dapat dikirim. Silakan coba lagi.'), { cause: error })
+    }
   }
 
   async function actions (dir: 'next' | 'prev') {
-    if (step.value === 3 && dir === 'next') {
-      await complain()
-      step.value = 4
-      return
-    }
+    errorMsg.value = ''
 
-    if (step.value === 0 && dir === 'next') {
-      await getMe()
-      step.value = 1
-      return
-    }
+    try {
+      if (dir === 'next' && step.value === 3) {
+        await complain()
+        step.value = 4
+        return
+      }
 
-    if (step.value === 1 && dir === 'next') {
-      await unlock({ nama: nama.value })
-      step.value = 2
+      if (dir === 'next' && step.value === 0) {
+        await getMe()
+        step.value = 1
+        return
+      }
+
+      if (dir === 'next' && step.value === 1) {
+        await unlock()
+        step.value = 2
+        return
+      }
+    } catch (error: any) {
+      errorMsg.value = error?.message || 'Terjadi kendala. Silakan coba lagi.'
       return
     }
 
@@ -197,10 +245,12 @@
       <PPengaduanForm
         v-else
         v-model:body="body"
+        v-model:error="errorMsg"
         v-model:nama="nama"
         v-model:step="step"
         :data="data"
         :loading="loading"
+        :masked="masked"
         :steps="steps"
         :tiket="tiket"
         @navigate="actions"
