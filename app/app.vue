@@ -7,6 +7,12 @@
 </template>
 
 <style>
+/* transparansi sebelumnya dihitung dua kali (warna + elemen) sehingga kontras hanya ~2,5:1 */
+.v-application .text-medium-emphasis {
+  color: rgba(var(--v-theme-on-background), 0.7) !important;
+  opacity: 1 !important;
+}
+
 .grads {
   background: rgb(34, 120, 195);
   background: linear-gradient(0deg, rgb(34, 120, 195) 0%, rgba(255,255,255,1) 100%);

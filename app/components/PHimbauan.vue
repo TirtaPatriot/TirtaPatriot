@@ -1,42 +1,42 @@
 <script lang="ts" setup>
-
+  const items = [
+    'Periksalah fasilitas air bersih yang terpasang di rumah, sebab kebocoran akan mempengaruhi besarnya rekening air setiap bulan',
+    'Tempatkan meter air di lokasi yang aman dan mudah dibaca oleh petugas catat meter Perumda Tirta Patriot',
+    'Sampaikanlah laporan jika terjadi kebocoran instalasi jaringan',
+    'Penuhi kewajiban Anda sebagai pelanggan',
+    'Mintalah bukti-bukti administrasi',
+    'Untuk menghindari tagihan air yang melonjak, biarkan petugas kami membaca langsung meter air Anda',
+  ]
 </script>
 
 <template>
-  <div class="himbauan-content">
-    <h2 class="himbauan-title text-headline-medium text-md-headline-large font-weight-bold text-center mb-4">
-      HIMBAUAN
-    </h2>
+  <div>
+    <div class="d-flex align-center ga-3 mb-3">
+      <v-avatar color="primary" size="40" variant="tonal">
+        <v-icon icon="i-mdi:bullhorn-outline" size="22" />
+      </v-avatar>
 
-    <ol class="himbauan-list text-body-large text-md-headline-small">
-      <li>Periksalah fasilitas air bersih yang terpasang di rumah, sebab kebocoran akan mempengaruhi besarnya rekening air setiap bulan</li>
-      <li>Tempatkan meter air di lokasi yang aman dan mudah dibaca oleh petugas catat meter Perumda Tirta Patriot</li>
-      <li>Sampaikanlah laporan jika terjadi kebocoran instalasi jaringan</li>
-      <li>Penuhi kewajiban Anda sebagai pelanggan</li>
-      <li>Mintalah bukti-bukti administrasi</li>
-      <li>Untuk menghindari tagihan air yang melonjak, biarkan petugas kami membaca langsung meter air Anda</li>
-    </ol>
+      <h2 class="text-title-large font-weight-bold">
+        Himbauan untuk Pelanggan
+      </h2>
+    </div>
+
+    <v-list bg-color="transparent" density="comfortable" lines="two">
+      <v-list-item
+        v-for="(item, i) in items"
+        :key="i"
+        class="px-0"
+      >
+        <template #prepend>
+          <v-avatar class="mr-3" color="primary" size="28" variant="flat">
+            <span class="text-body-small font-weight-bold">{{ i + 1 }}</span>
+          </v-avatar>
+        </template>
+
+        <v-list-item-title class="text-body-large text-wrap">
+          {{ item }}
+        </v-list-item-title>
+      </v-list-item>
+    </v-list>
   </div>
 </template>
-
-<style scoped>
-  .himbauan-content {
-    color: inherit;
-  }
-
-  .himbauan-list {
-    margin: 0;
-    padding-inline-start: 28px;
-    line-height: 1.45;
-  }
-
-  .himbauan-list li + li {
-    margin-top: 6px;
-  }
-
-  @media (width >= 840px) {
-    .himbauan-list {
-      line-height: 1.5;
-    }
-  }
-</style>

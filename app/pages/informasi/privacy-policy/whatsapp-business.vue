@@ -21,14 +21,14 @@
   <v-main>
     <PageHeader title="Kebijakan Privasi WhatsApp Business" />
 
-    <v-container class="prose py-8">
+    <v-container class="prose py-8" max-width="960">
       <div class="d-flex flex-wrap justify-space-between align-center mb-4">
         <div>
-          <h1 class="text-h4 font-weight-bold text-primary mb-2">
+          <h1 class="text-headline-medium font-weight-bold text-primary mb-2">
             Kebijakan Privasi Layanan WhatsApp Business
           </h1>
 
-          <p class="text-subtitle-1 text-medium-emphasis">
+          <p class="text-title-medium text-medium-emphasis">
             Perumda Air Minum Tirta Patriot Kota Bekasi
           </p>
         </div>
@@ -39,15 +39,15 @@
       </div>
 
       <v-card class="mb-6 pa-4 bg-grey-lighten-4" flat rounded="lg">
-        <p class="text-body-2 mb-1">
+        <p class="text-body-medium mb-1">
           <strong>Tanggal Efektif:</strong> 26 Oktober 2026
         </p>
 
-        <p class="text-body-2 mb-1">
+        <p class="text-body-medium mb-1">
           <strong>Pengendali Data:</strong> Perusahaan Umum Daerah Air Minum Tirta Patriot (Perumda Tirta Patriot)
         </p>
 
-        <p class="text-body-2 mb-0">
+        <p class="text-body-medium mb-0">
           <strong>Tautan Terkait:</strong>
 
           <NuxtLink class="text-primary text-decoration-none ml-1 font-weight-medium" to="/informasi/privacy-policy/whatsapp-business-tos">
@@ -63,15 +63,15 @@
       </v-card>
 
       <section id="pendahuluan" class="mb-6">
-        <h2 class="text-h6 font-weight-bold mb-2">
+        <h2 class="text-title-large font-weight-bold mb-2">
           1. Pendahuluan
         </h2>
 
-        <p class="text-body-1 text-justify mb-3">
+        <p class="text-body-large text-justify mb-3">
           Kebijakan Privasi ini mengatur bagaimana <strong>Perusahaan Umum Daerah Air Minum Tirta Patriot</strong> (selanjutnya disebut <strong>"Perumda Tirta Patriot"</strong>, <strong>"Kami"</strong>, atau <strong>"Pengendali Data"</strong>) mengumpulkan, menggunakan, memproses, menyimpan, dan melindungi Data Pribadi pengguna (selanjutnya disebut <strong>"Pengguna"</strong> atau <strong>"Anda"</strong>) saat berinteraksi dengan layanan percakapan resmi kami melalui platform <strong>WhatsApp Business</strong> yang terintegrasi dengan Meta Platforms, Inc. (Facebook App).
         </p>
 
-        <p class="text-body-1 text-justify mb-3">
+        <p class="text-body-large text-justify mb-3">
           Kami berkomitmen penuh untuk menjunjung tinggi integritas privasi dan kerahasiaan informasi Anda sesuai dengan ketentuan perundang-undangan Republik Indonesia, khususnya <strong>Undang-Undang Nomor 27 Tahun 2022 tentang Pelindungan Data Pribadi (UU PDP)</strong> serta kebijakan platform WhatsApp Business dan Meta Developer Policy.
         </p>
       </section>
@@ -79,15 +79,15 @@
       <v-divider class="my-6" />
 
       <section id="data-yang-dikumpulkan" class="mb-6">
-        <h2 class="text-h6 font-weight-bold mb-2">
+        <h2 class="text-title-large font-weight-bold mb-2">
           2. Data Pribadi yang Kami Kumpulkan
         </h2>
 
-        <p class="text-body-1 text-justify mb-3">
+        <p class="text-body-large text-justify mb-3">
           Ketika Anda menghubungi atau berinteraksi dengan akun resmi WhatsApp Business Perumda Tirta Patriot, Kami dapat mengumpulkan jenis data berikut:
         </p>
 
-        <ul class="text-body-1 pl-6 mb-3">
+        <ul class="text-body-large pl-6 mb-3">
           <li class="mb-2">
             <strong>Nomor Telepon:</strong> Nomor telepon seluler aktif yang terdaftar di akun WhatsApp Anda yang digunakan untuk memulai percakapan atau menerima pesan resmi dari Kami.
           </li>
@@ -113,15 +113,15 @@
       <v-divider class="my-6" />
 
       <section id="tujuan-pemrosesan" class="mb-6">
-        <h2 class="text-h6 font-weight-bold mb-2">
+        <h2 class="text-title-large font-weight-bold mb-2">
           3. Tujuan dan Dasar Hukum Pemrosesan Data
         </h2>
 
-        <p class="text-body-1 text-justify mb-3">
+        <p class="text-body-large text-justify mb-3">
           Kami mengolah data pribadi Anda semata-mata untuk tujuan pelayanan publik dan administrasi kepelangganan air minum yang sah, mencakup:
         </p>
 
-        <ul class="text-body-1 pl-6 mb-3">
+        <ul class="text-body-large pl-6 mb-3">
           <li class="mb-2">
             <strong>Layanan Mandiri Pelanggan (Self-Service):</strong> Memberikan respons otomatis atas permohonan pengecekan tagihan rekening air berjalan, tunggakan, dan estimasi pemakaian air melalui chatbot WhatsApp.
           </li>
@@ -147,15 +147,15 @@
       <v-divider class="my-6" />
 
       <section id="pihak-ketiga" class="mb-6">
-        <h2 class="text-h6 font-weight-bold mb-2">
+        <h2 class="text-title-large font-weight-bold mb-2">
           4. Integrasi Pihak Ketiga dan Pengungkapan Data
         </h2>
 
-        <p class="text-body-1 text-justify mb-3">
+        <p class="text-body-large text-justify mb-3">
           Untuk mengoperasikan saluran komunikasi WhatsApp Business, Kami bekerja sama dengan penyedia teknologi pihak ketiga yang tepercaya:
         </p>
 
-        <ul class="text-body-1 pl-6 mb-3">
+        <ul class="text-body-large pl-6 mb-3">
           <li class="mb-2">
             <strong>Meta Platforms, Inc. / WhatsApp LLC:</strong> Sebagai penyedia infrastruktur WhatsApp Business Platform (Cloud API/On-Premises API). Pemrosesan pesan melalui jaringan WhatsApp tunduk pada
             <a class="text-primary" href="https://www.whatsapp.com/legal/privacy-policy" rel="noopener noreferrer" target="_blank">Kebijakan Privasi WhatsApp</a> dan
@@ -175,15 +175,15 @@
       <v-divider class="my-6" />
 
       <section id="keamanan-dan-retensi" class="mb-6">
-        <h2 class="text-h6 font-weight-bold mb-2">
+        <h2 class="text-title-large font-weight-bold mb-2">
           5. Keamanan dan Masa Retensi Data
         </h2>
 
-        <p class="text-body-1 text-justify mb-3">
+        <p class="text-body-large text-justify mb-3">
           Kami menerapkan pengamanan teknis, organisasional, dan manajerial berstandar tinggi untuk mencegah akses tanpa hak, pengungkapan, modifikasi, atau perusakan data pribadi Pengguna:
         </p>
 
-        <ul class="text-body-1 pl-6 mb-3">
+        <ul class="text-body-large pl-6 mb-3">
           <li class="mb-2">
             <strong>Enkripsi:</strong> Seluruh komunikasi antara sistem WhatsApp dengan server webhook aplikasi Kami menggunakan protokol transmisi aman terenkripsi (HTTPS / TLS 1.3).
           </li>
@@ -201,15 +201,15 @@
       <v-divider class="my-6" />
 
       <section id="hak-pengguna" class="mb-6">
-        <h2 class="text-h6 font-weight-bold mb-2">
+        <h2 class="text-title-large font-weight-bold mb-2">
           6. Hak-Hak Pengguna (UU PDP)
         </h2>
 
-        <p class="text-body-1 text-justify mb-3">
+        <p class="text-body-large text-justify mb-3">
           Sesuai dengan ketentuan Undang-Undang Pelindungan Data Pribadi, Anda memiliki hak-hak sebagai berikut:
         </p>
 
-        <ul class="text-body-1 pl-6 mb-3">
+        <ul class="text-body-large pl-6 mb-3">
           <li class="mb-2">
             <strong>Hak Mengakses dan Mendapatkan Salinan:</strong> Anda berhak menanyakan data apa saja yang tercatat dalam sistem layanan pelanggan Kami.
           </li>
@@ -231,16 +231,16 @@
       <v-divider class="my-6" />
 
       <section id="instruksi-penghapusan-data" class="mb-6">
-        <h2 class="text-h6 font-weight-bold mb-2">
+        <h2 class="text-title-large font-weight-bold mb-2">
           7. Instruksi Penghapusan Data Pengguna (Data Deletion Instructions)
         </h2>
 
-        <p class="text-body-1 text-justify mb-3">
+        <p class="text-body-large text-justify mb-3">
           Untuk memenuhi standar kepatuhan <em>Facebook Platform Data Deletion Policy</em>, pengguna yang ingin meminta penghapusan data interaksi WhatsApp Business dapat melakukan langkah berikut:
         </p>
 
         <v-card class="pa-4 bg-grey-lighten-4 mb-3" flat rounded="lg">
-          <ol class="text-body-1 pl-4 mb-0">
+          <ol class="text-body-large pl-4 mb-0">
             <li class="mb-2">
               Kirimkan pesan WhatsApp ke nomor resmi Kami dengan teks: <strong>HAPUS DATA SAYA</strong> disertai dengan Nomor Pelanggan jika terdaftar.
             </li>
@@ -258,7 +258,7 @@
           </ol>
         </v-card>
 
-        <p class="text-body-2 text-medium-emphasis">
+        <p class="text-body-medium text-medium-emphasis">
           Untuk panduan interaktif dan pemantauan status penghapusan, Anda juga dapat membaca halaman khusus
           <NuxtLink class="text-primary" to="/informasi/privacy-policy/whatsapp-business-deletion">
             Instruksi Penghapusan Data Pengguna
@@ -269,11 +269,11 @@
       <v-divider class="my-6" />
 
       <section id="perubahan-kebijakan" class="mb-6">
-        <h2 class="text-h6 font-weight-bold mb-2">
+        <h2 class="text-title-large font-weight-bold mb-2">
           8. Perubahan Kebijakan Privasi
         </h2>
 
-        <p class="text-body-1 text-justify mb-3">
+        <p class="text-body-large text-justify mb-3">
           Perumda Tirta Patriot berhak memperbarui atau memodifikasi Kebijakan Privasi ini sewaktu-waktu guna menyesuaikan dengan perkembangan regulasi, peningkatan fitur teknologi, atau kebijakan Meta Platforms. Pembaruan terkini akan selalu diumumkan pada laman ini dengan memperbarui tanggal efektif di bagian atas dokumen. Kami menyarankan Anda memeriksa halaman ini secara berkala.
         </p>
       </section>
@@ -281,11 +281,11 @@
       <v-divider class="my-6" />
 
       <section id="kontak-kami" class="mb-6">
-        <h2 class="text-h6 font-weight-bold mb-2">
+        <h2 class="text-title-large font-weight-bold mb-2">
           9. Kontak dan Layanan Bantuan
         </h2>
 
-        <p class="text-body-1 text-justify mb-3">
+        <p class="text-body-large text-justify mb-3">
           Apabila Anda memiliki pertanyaan, keberatan, atau ingin menggunakan hak-hak perlindungan data pribadi Anda sehubungan dengan layanan WhatsApp Business ini, silakan hubungi kami melalui kanal resmi berikut:
         </p>
 
@@ -354,7 +354,7 @@
         </v-card>
       </section>
 
-      <p class="text-caption text-right text-medium-emphasis mt-6">
+      <p class="text-body-small text-right text-medium-emphasis mt-6">
         Dokumen ini diterbitkan oleh Perumda Tirta Patriot Kota Bekasi untuk pemenuhan verifikasi Meta Facebook App &amp; WhatsApp Business API.
       </p>
     </v-container>

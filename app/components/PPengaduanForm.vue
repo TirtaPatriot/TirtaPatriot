@@ -16,14 +16,26 @@
   const emit = defineEmits<{
     navigate: [dir: 'next' | 'prev']
   }>()
+
+  const { xs } = useDisplay()
+
+  // stepper tampil 1-based, logika halaman tetap 0-based
+  const stepper = computed({
+    get: () => step.value + 1,
+    set: (value: number) => {
+      step.value = value - 1
+    },
+  })
 </script>
 
 <template>
-  <h3 class="text-title text-uppercase mb-4 text-center">
-    Pengaduan Pelanggan
-  </h3>
+  <PageIntro
+    icon="i-mdi:ticket-confirmation-outline"
+    subtitle="Laporkan kendala sambungan rumah Anda. Tim kami akan menindaklanjuti dan Anda dapat memantau progresnya dengan nomor tiket."
+    title="Pengaduan Pelanggan"
+  />
 
-  <v-stepper v-model="step">
+  <v-stepper v-model="stepper" :elevation="2" :mobile="xs" rounded="xl">
     <v-stepper-header>
       <template
         v-for="(x, n) of steps"
@@ -31,7 +43,7 @@
       >
         <v-stepper-item
           v-bind="x"
-          :value="n"
+          :value="n + 1"
         />
 
         <v-divider v-if="n < steps.length - 1" />
@@ -39,18 +51,20 @@
     </v-stepper-header>
 
     <v-stepper-window>
-      <v-stepper-window-item :value="0">
-        <v-card height="200">
-          <v-card-title>
+      <v-stepper-window-item :value="1">
+        <v-card flat>
+          <v-card-title class="text-wrap">
             Sambungan Rumah Terkendala
           </v-card-title>
 
           <v-card-text>
             <v-text-field
               v-model="formBody.nomor"
+              hint="Nomor pelanggan tertera pada rekening air Anda"
               inputmode="numeric"
               label="No. Pelanggan"
               :loading="loading.step1"
+              persistent-hint
               variant="outlined"
               @keyup.enter="emit('navigate', 'next')"
             />
@@ -58,13 +72,13 @@
         </v-card>
       </v-stepper-window-item>
 
-      <v-stepper-window-item :value="1">
-        <v-card height="200">
-          <v-card-title>
+      <v-stepper-window-item :value="2">
+        <v-card flat>
+          <v-card-title class="text-wrap">
             Verifikasi Data Sambungan
           </v-card-title>
 
-          <v-card-subtitle>
+          <v-card-subtitle class="text-wrap">
             Harap verifikasi dengan mengisi nama terdaftar untuk No. Pelanggan {{ formBody.nomor }}
           </v-card-subtitle>
 
@@ -81,8 +95,8 @@
         </v-card>
       </v-stepper-window-item>
 
-      <v-stepper-window-item :value="2">
-        <v-card min-height="200">
+      <v-stepper-window-item :value="3">
+        <v-card flat>
           <v-card-text>
             <v-text-field
               v-model="formBody.pelapor"
@@ -103,8 +117,8 @@
         </v-card>
       </v-stepper-window-item>
 
-      <v-stepper-window-item :value="3">
-        <v-card min-height="200">
+      <v-stepper-window-item :value="4">
+        <v-card flat>
           <v-card-text>
             <v-autocomplete
               v-model="formBody.jenis"
@@ -128,14 +142,22 @@
         </v-card>
       </v-stepper-window-item>
 
-      <v-stepper-window-item :value="4">
-        <v-card min-height="200">
-          <v-card-text>
-            Pengaduan berhasil terkirim, tiket aduan anda adalah <strong>{{ tiket }}</strong>
+      <v-stepper-window-item :value="5">
+        <v-card flat>
+          <v-card-text class="text-center py-6">
+            <v-icon color="success" icon="i-mdi:check-circle-outline" size="64" />
 
-            <v-row class="mt-4" density="comfortable">
+            <div class="text-title-large font-weight-bold mt-2">
+              Pengaduan berhasil terkirim
+            </div>
+
+            <div class="text-body-large mt-1">
+              Nomor tiket Anda <strong>{{ tiket }}</strong>
+            </div>
+
+            <v-row class="mt-4" density="comfortable" justify="center">
               <v-col cols="1/1" sm="1/2">
-                <v-btn block color="blue" :to="`/pelanggan/pengaduan?tiket=${tiket}`" variant="tonal">
+                <v-btn block color="primary" :to="`/pelanggan/pengaduan?tiket=${tiket}`" variant="flat">
                   Lihat Status Pengaduan
                 </v-btn>
               </v-col>
@@ -152,6 +174,7 @@
     </v-stepper-window>
 
     <v-stepper-actions
+      color="primary"
       :disabled="step === 4"
       next-text="Selanjutnya"
       prev-text="Sebelumnya"
@@ -160,29 +183,18 @@
     />
   </v-stepper>
 
-  <v-card class="mt-4" icon="$info" tile variant="outlined">
-    <v-card-text>
-      <PHimbauan />
-    </v-card-text>
+  <v-card class="mt-6 pa-5 pa-md-6" rounded="xl" variant="outlined">
+    <PHimbauan />
 
-    <v-card-text>
-      <p>Sebelumnya, kami mohon maaf atas ketidaknyamanan yang anda alami.</p>
-
-      <div class="caption">
-        Jika anda berkenan untuk berkomunikasi langsung, Humas Perumda Tirta Patriot akan sangat senang melayani anda di media sosial kami berikut
-      </div>
-    </v-card-text>
-
-    <v-card-actions class="social-actions">
-      <SocialButtons />
-    </v-card-actions>
+    <p class="text-body-medium text-medium-emphasis mt-4 mb-0">
+      Sebelumnya, kami mohon maaf atas ketidaknyamanan yang Anda alami.
+    </p>
   </v-card>
 </template>
 
 <style scoped>
-  .social-actions {
-    display: flex;
-    justify-content: center;
-    overflow-x: auto;
+  :deep(.v-stepper-actions .v-btn:last-child:not(.v-btn--disabled)) {
+    background: rgb(var(--v-theme-primary));
+    color: rgb(var(--v-theme-on-primary));
   }
 </style>

@@ -21,14 +21,14 @@
   <v-main>
     <PageHeader title="Penghapusan Data Pengguna" />
 
-    <v-container class="prose py-8">
+    <v-container class="prose py-8" max-width="960">
       <div class="d-flex flex-wrap justify-space-between align-center mb-4">
         <div>
-          <h1 class="text-h4 font-weight-bold text-primary mb-2">
+          <h1 class="text-headline-medium font-weight-bold text-primary mb-2">
             Instruksi Penghapusan Data Pengguna (User Data Deletion)
           </h1>
 
-          <p class="text-subtitle-1 text-medium-emphasis">
+          <p class="text-title-medium text-medium-emphasis">
             Saluran Layanan WhatsApp Business Perumda Tirta Patriot Kota Bekasi
           </p>
         </div>
@@ -39,25 +39,25 @@
       </div>
 
       <v-card class="mb-6 pa-4 bg-grey-lighten-4" flat rounded="lg">
-        <p class="text-body-2 mb-1">
+        <p class="text-body-medium mb-1">
           <strong>Kepatuhan Standar:</strong> Meta Facebook Platform User Data Deletion Callback &amp; Instructions Policy
         </p>
 
-        <p class="text-body-2 mb-0">
+        <p class="text-body-medium mb-0">
           Sesuai dengan kebijakan privasi Meta dan Undang-Undang Pelindungan Data Pribadi (UU PDP No. 27/2022), Anda memiliki hak penuh untuk meminta penghapusan informasi pribadi dan riwayat interaksi Anda dari sistem WhatsApp Business Kami.
         </p>
       </v-card>
 
       <section class="mb-6">
-        <h2 class="text-h6 font-weight-bold mb-3">
+        <h2 class="text-title-large font-weight-bold mb-3">
           1. Data Apa Saja yang Dapat Dihapus?
         </h2>
 
-        <p class="text-body-1 text-justify mb-2">
+        <p class="text-body-large text-justify mb-2">
           Permohonan penghapusan data yang diproses meliputi:
         </p>
 
-        <ul class="text-body-1 pl-6 mb-3">
+        <ul class="text-body-large pl-6 mb-3">
           <li>Nomor telepon seluler WhatsApp yang tersimpan dalam sistem pesan bot/CRM kami.</li>
           <li>Log percakapan teks, riwayat interaksi pertanyaan, dan sesi pesan tanya jawab.</li>
           <li>Lampiran multimedia (foto angka meter air, foto keluhan kebocoran pipa, dokumen pendukung) yang Anda kirimkan saat berinteraksi di WhatsApp.</li>
@@ -72,11 +72,11 @@
       <v-divider class="my-6" />
 
       <section class="mb-6">
-        <h2 class="text-h6 font-weight-bold mb-3">
+        <h2 class="text-title-large font-weight-bold mb-3">
           2. Cara Mengajukan Permohonan Penghapusan Data
         </h2>
 
-        <p class="text-body-1 text-justify mb-3">
+        <p class="text-body-large text-justify mb-3">
           Anda dapat memilih salah satu metode mudah di bawah ini untuk mengajukan penghapusan data:
         </p>
 
@@ -86,16 +86,16 @@
               <div class="d-flex align-center mb-2">
                 <v-icon class="mr-2" color="green" icon="i-mdi:whatsapp" size="28" />
 
-                <h3 class="text-subtitle-1 font-weight-bold">
+                <h3 class="text-title-medium font-weight-bold">
                   Metode 1: Melalui Chat WhatsApp Langsung
                 </h3>
               </div>
 
-              <p class="text-body-2 mb-3">
+              <p class="text-body-medium mb-3">
                 Langkah tercepat langsung dari aplikasi WhatsApp Anda:
               </p>
 
-              <ol class="text-body-2 pl-4 mb-3">
+              <ol class="text-body-medium pl-4 mb-3">
                 <li>Buka ruang obrolan resmi WhatsApp Business Perumda Tirta Patriot.</li>
                 <li>Ketik dan kirimkan perintah teks: <code>HAPUS DATA SAYA</code>.</li>
                 <li>Bot akan mengonfirmasi permintaan Anda dan meneruskannya ke petugas data administrator kami.</li>
@@ -120,16 +120,16 @@
               <div class="d-flex align-center mb-2">
                 <v-icon class="mr-2" color="primary" icon="i-mdi:email" size="28" />
 
-                <h3 class="text-subtitle-1 font-weight-bold">
+                <h3 class="text-title-medium font-weight-bold">
                   Metode 2: Melalui Email Resmi
                 </h3>
               </div>
 
-              <p class="text-body-2 mb-3">
+              <p class="text-body-medium mb-3">
                 Kirimkan surat permohonan melalui email terdaftar:
               </p>
 
-              <ul class="text-body-2 pl-4 mb-3">
+              <ul class="text-body-medium pl-4 mb-3">
                 <li><strong>Kepada:</strong> <a class="text-primary" href="mailto:sekretariat@tirtapatriot.co.id">sekretariat@tirtapatriot.co.id</a></li>
                 <li><strong>Tembusan:</strong> <a class="text-primary" href="mailto:humas@tirtapatriot.co.id">humas@tirtapatriot.co.id</a></li>
                 <li><strong>Subjek:</strong> Permohonan Penghapusan Data WhatsApp - [Nomor WhatsApp Anda]</li>
@@ -153,15 +153,15 @@
       <v-divider class="my-6" />
 
       <section class="mb-6">
-        <h2 class="text-h6 font-weight-bold mb-3">
+        <h2 class="text-title-large font-weight-bold mb-3">
           3. Proses dan Waktu Pelaksanaan
         </h2>
 
-        <p class="text-body-1 text-justify mb-2">
+        <p class="text-body-large text-justify mb-2">
           Setelah permohonan diterima:
         </p>
 
-        <ul class="text-body-1 pl-6 mb-3">
+        <ul class="text-body-large pl-6 mb-3">
           <li class="mb-2">
             <strong>Verifikasi Kepemilikan (1-2 hari kerja):</strong> Tim kami memverifikasi bahwa pemohon adalah pemegang nomor telepon yang bersangkutan.
           </li>
@@ -175,7 +175,7 @@
           </li>
         </ul>
 
-        <p class="text-body-2 text-medium-emphasis">
+        <p class="text-body-medium text-medium-emphasis">
           Total waktu pemrosesan penghapusan data maksimal <strong>7 (tujuh) hari kerja</strong> sejak permohonan diverifikasi.
         </p>
       </section>
@@ -183,15 +183,15 @@
       <v-divider class="my-6" />
 
       <section class="mb-6">
-        <h2 class="text-h6 font-weight-bold mb-3">
+        <h2 class="text-title-large font-weight-bold mb-3">
           4. Pertanyaan dan Bantuan
         </h2>
 
-        <p class="text-body-1 mb-3">
+        <p class="text-body-large mb-3">
           Jika Anda memiliki kendala teknis dalam proses penghapusan data atau ingin menanyakan status tiket penghapusan Anda, silakan hubungi kontak resmi kami:
         </p>
 
-        <p class="text-body-2 mb-1">
+        <p class="text-body-medium mb-1">
           <strong>Perumda Tirta Patriot Kota Bekasi</strong><br>
           Jl. Perjuangan No. 99, Marga Mulya, Kec. Bekasi Utara, Kota Bekasi, Jawa Barat 17142<br>
           Telepon: (021) 8896-6161 | WhatsApp Call Center: 0878-7516-3845<br>

@@ -56,6 +56,14 @@
   const jumlahTagihan = computed(() => data.value?.tagihan?.length ?? 0)
   const adaLainnya = computed(() => data.value?.tagihan?.some(t => t.lainnya && String(t.lainnya) !== '0') ?? false)
   const labelKategori: Record<string, string> = { NONAIR: 'Non-Air', CICILAN: 'Cicilan' }
+  const isAir = (t: ItemTagihan) => !t.kategori || t.kategori === 'AIR'
+  const dash = (t: ItemTagihan, value?: number | string) => (isAir(t) ? value : '–')
+  const nonaktifText = computed(() => {
+    const base = 'Status kepelangganan Anda saat ini tidak aktif'
+    return jumlahTagihan.value
+      ? `${base}, namun masih terdapat kewajiban tagihan yang belum terselesaikan.`
+      : `${base}.`
+  })
   const alamatLengkap = computed(() => {
     const p = data.value?.pelanggan
     return [p?.alamat, p?.kelurahan, p?.kecamatan].filter(Boolean).join(', ') || '-'
@@ -92,33 +100,25 @@
   <v-main>
     <PageHeader title="Tagihan" />
 
-    <v-container class="py-8 tagihan-container">
-      <v-card class="hero-card rounded-xl pa-6 pa-sm-8 mb-6" :elevation="6">
-        <div class="d-flex align-center ga-3 mb-2">
-          <v-avatar class="hero-avatar" size="48">
-            <v-icon icon="i-mdi:water-check" size="28" />
-          </v-avatar>
+    <v-container class="py-8" max-width="960">
+      <PageIntro
+        icon="i-mdi:water-check"
+        subtitle="Masukkan nomor sambungan langganan (SL) untuk memeriksa rincian rekening tagihan air Anda."
+        title="Cek Tagihan Air"
+      />
 
-          <h2 class="text-h5 text-sm-h4 font-weight-bold">
-            Cek Tagihan Air
-          </h2>
-        </div>
-
-        <p class="text-body-2 text-sm-body-1 mb-5 hero-subtitle">
-          Masukkan nomor sambungan langganan (SL) untuk memeriksa rincian rekening tagihan air Anda.
-        </p>
-
+      <v-card class="pa-4 pa-sm-6 mb-6" :elevation="2" rounded="xl">
         <v-text-field
           v-model="body.pelanggan"
           append-inner-icon="i-mdi:magnify"
+          autofocus
           clearable
           hide-details="auto"
           inputmode="numeric"
           label="Nomor Pelanggan"
           :loading="loading"
           placeholder="Contoh: 010301001045"
-          rounded="lg"
-          variant="solo"
+          variant="outlined"
           @click:append-inner="submit"
           @keyup.enter="submit"
         />
@@ -126,7 +126,7 @@
         <v-btn
           block
           class="mt-4 text-none font-weight-bold"
-          color="white"
+          color="primary"
           :loading="loading"
           prepend-icon="i-mdi:file-search-outline"
           size="large"
@@ -157,39 +157,36 @@
           icon="i-mdi:alert-outline"
           variant="tonal"
         >
-          Status kepelangganan Anda saat ini tidak aktif
-          <template v-if="jumlahTagihan">
-            , namun masih terdapat kewajiban tagihan yang belum terselesaikan
-          </template>.
+          {{ nonaktifText }}
         </v-alert>
 
         <v-row class="mb-2">
           <v-col cols="12" md="7">
             <v-card class="rounded-xl h-100" :elevation="2">
               <v-card-item class="pb-0">
-                <v-card-title class="text-subtitle-1 font-weight-bold">
+                <v-card-title class="text-title-medium font-weight-bold">
                   Data Pelanggan
                 </v-card-title>
               </v-card-item>
 
               <v-list class="bg-transparent" density="comfortable" lines="two">
-                <v-list-item
-                  prepend-icon="i-mdi:identifier"
-                  subtitle="No. Pelanggan"
-                  :title="data.pelanggan?.nomor ?? '-'"
-                />
+                <v-list-item prepend-icon="i-mdi:identifier" subtitle="No. Pelanggan">
+                  <v-list-item-title class="text-wrap">
+                    {{ data.pelanggan?.nomor ?? '-' }}
+                  </v-list-item-title>
+                </v-list-item>
 
-                <v-list-item
-                  prepend-icon="i-mdi:account-outline"
-                  subtitle="Nama Pelanggan"
-                  :title="data.pelanggan?.nama ?? '-'"
-                />
+                <v-list-item prepend-icon="i-mdi:account-outline" subtitle="Nama Pelanggan">
+                  <v-list-item-title class="text-wrap">
+                    {{ data.pelanggan?.nama ?? '-' }}
+                  </v-list-item-title>
+                </v-list-item>
 
-                <v-list-item
-                  prepend-icon="i-mdi:map-marker-outline"
-                  subtitle="Alamat"
-                  :title="alamatLengkap"
-                />
+                <v-list-item prepend-icon="i-mdi:map-marker-outline" subtitle="Alamat">
+                  <v-list-item-title class="text-wrap">
+                    {{ alamatLengkap }}
+                  </v-list-item-title>
+                </v-list-item>
               </v-list>
             </v-card>
           </v-col>
@@ -201,11 +198,11 @@
               :elevation="4"
             >
               <template v-if="jumlahTagihan">
-                <div class="text-overline total-label">
+                <div class="text-title-medium total-label">
                   Total Tagihan
                 </div>
 
-                <div class="text-h4 text-sm-h3 font-weight-bold my-1">
+                <div class="text-headline-medium text-sm-headline-large font-weight-bold my-1">
                   Rp {{ data.total }}
                 </div>
 
@@ -223,11 +220,11 @@
               <template v-else>
                 <v-icon class="mb-2" icon="i-mdi:check-circle-outline" size="48" />
 
-                <div class="text-h6 font-weight-bold">
+                <div class="text-title-large font-weight-bold">
                   Tidak ada tagihan
                 </div>
 
-                <div class="text-body-2 total-label">
+                <div class="text-body-medium total-label">
                   Seluruh rekening air Anda sudah terbayar.
                 </div>
               </template>
@@ -235,9 +232,9 @@
           </v-col>
         </v-row>
 
-        <v-card v-if="jumlahTagihan" class="mt-4 rounded-xl overflow-hidden" :elevation="2">
+        <v-card v-if="jumlahTagihan" class="mt-4 overflow-hidden" :elevation="2" rounded="xl">
           <v-card-item class="py-3">
-            <v-card-title class="text-subtitle-1 font-weight-bold">
+            <v-card-title class="text-title-medium font-weight-bold">
               Rincian Tagihan Belum Dibayar
             </v-card-title>
           </v-card-item>
@@ -301,27 +298,27 @@
                   </td>
 
                   <td class="text-right font-mono">
-                    {{ t.stan_awal }}
+                    {{ dash(t, t.stan_awal) }}
                   </td>
 
                   <td class="text-right font-mono">
-                    {{ t.stan_akhir }}
+                    {{ dash(t, t.stan_akhir) }}
                   </td>
 
                   <td class="text-right font-mono font-weight-bold">
-                    {{ t.kubik }}
+                    {{ dash(t, t.kubik) }}
                   </td>
 
                   <td class="text-right font-mono">
-                    {{ t.air }}
+                    {{ dash(t, t.air) }}
                   </td>
 
                   <td class="text-right font-mono">
-                    {{ t.administrasi }}
+                    {{ dash(t, t.administrasi) }}
                   </td>
 
                   <td class="text-right font-mono">
-                    {{ t.denda }}
+                    {{ dash(t, t.denda) }}
                   </td>
 
                   <td v-if="adaLainnya" class="text-right font-mono">
@@ -362,37 +359,37 @@
               </div>
 
               <v-list class="bg-transparent" density="compact">
-                <v-list-item class="text-body-2" title="Stan meter">
+                <v-list-item v-if="isAir(t)" class="text-body-medium" title="Stan meter">
                   <template #append>
-                    {{ t.stan_awal }} → {{ t.stan_akhir }}
+                    {{ dash(t, t.stan_awal) }} → {{ dash(t, t.stan_akhir) }}
                   </template>
                 </v-list-item>
 
-                <v-list-item class="text-body-2" title="Pemakaian">
+                <v-list-item v-if="isAir(t)" class="text-body-medium" title="Pemakaian">
                   <template #append>
-                    {{ t.kubik }} m³
+                    {{ dash(t, t.kubik) }} m³
                   </template>
                 </v-list-item>
 
-                <v-list-item class="text-body-2" title="Biaya air">
+                <v-list-item v-if="isAir(t)" class="text-body-medium" title="Biaya air">
                   <template #append>
-                    {{ t.air }}
+                    {{ dash(t, t.air) }}
                   </template>
                 </v-list-item>
 
-                <v-list-item class="text-body-2" title="Biaya administrasi">
+                <v-list-item v-if="isAir(t)" class="text-body-medium" title="Biaya administrasi">
                   <template #append>
-                    {{ t.administrasi }}
+                    {{ dash(t, t.administrasi) }}
                   </template>
                 </v-list-item>
 
-                <v-list-item class="text-body-2" title="Denda">
+                <v-list-item v-if="isAir(t)" class="text-body-medium" title="Denda">
                   <template #append>
-                    {{ t.denda }}
+                    {{ dash(t, t.denda) }}
                   </template>
                 </v-list-item>
 
-                <v-list-item v-if="adaLainnya" class="text-body-2" title="Lainnya">
+                <v-list-item v-if="adaLainnya" class="text-body-medium" title="Lainnya">
                   <template #append>
                     {{ t.lainnya }}
                   </template>
@@ -404,7 +401,7 @@
       </template>
 
       <v-alert
-        class="mt-6 rounded-lg text-body-2"
+        class="mt-6 rounded-lg text-body-medium"
         color="info"
         icon="i-mdi:information-outline"
         variant="tonal"
@@ -412,35 +409,12 @@
         Nilai nominal pada struk pembayaran pihak ketiga / mitra merchant mungkin terdapat perbedaan karena penyesuaian biaya administrasi jasa transaksi.
       </v-alert>
 
-      <div class="d-flex justify-center mt-6">
-        <v-btn
-          color="primary"
-          prepend-icon="i-mdi:wallet-outline"
-          to="/informasi/tempat-pembayaran"
-          variant="text"
-        >
-          Lihat Mitra Loket Pembayaran Resmi
-        </v-btn>
-      </div>
+      <PBantuan />
     </v-container>
   </v-main>
 </template>
 
 <style scoped>
-  .tagihan-container {
-    max-width: 960px;
-  }
-
-  .hero-card {
-    background: linear-gradient(135deg, #0487d2 0%, #4790ff 100%);
-    color: #fff;
-  }
-
-  .hero-avatar {
-    background: rgb(255 255 255 / 20%);
-  }
-
-  .hero-subtitle,
   .total-label {
     opacity: 0.85;
   }

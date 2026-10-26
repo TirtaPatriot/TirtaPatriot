@@ -22,31 +22,27 @@
   <v-main>
     <PageHeader title="Pendaftaran" />
 
-    <v-container class="py-6">
-      <div class="text-center mb-6">
-        <h2 class="text-h4 font-weight-bold text-uppercase text-primary mb-2">
-          Pendaftaran Sambungan Baru
-        </h2>
-
-        <p class="text-body-2 text-medium-emphasis">
-          Tata cara dan tahapan permohonan pasang baru pelanggan air bersih Perumda Tirta Patriot.
-        </p>
-      </div>
+    <v-container class="py-8" max-width="960">
+      <PageIntro
+        icon="i-mdi:water-pump"
+        subtitle="Tata cara dan tahapan permohonan pasang baru pelanggan air bersih Perumda Tirta Patriot."
+        title="Pendaftaran Sambungan Baru"
+      />
 
       <PreRegister />
 
-      <v-card class="mt-8 rounded-lg" :elevation="1" variant="outlined">
-        <v-card-text class="d-flex flex-column flex-sm-row align-center pa-6">
-          <div class="mb-4 mb-sm-0 mr-sm-6 text-center">
+      <v-card class="mt-8" :elevation="1" rounded="xl" variant="outlined">
+        <v-card-text class="contact-body pa-6">
+          <div class="text-center">
             <v-icon color="warning" icon="i-mdi:information" size="48" />
           </div>
 
           <div>
-            <h4 class="text-subtitle-1 font-weight-bold mb-1">
+            <h4 class="text-title-medium font-weight-bold mb-1">
               Pendaftaran & Konsultasi Langsung
             </h4>
 
-            <p class="text-body-2 text-medium-emphasis mb-0">
+            <p class="text-body-medium text-medium-emphasis mb-0">
               Pendaftaran online saat ini dalam proses integrasi sistem. Untuk informasi pendaftaran, survei lokasi, dan permohonan sambungan baru, tim Humas dan Layanan Pelanggan Perumda Tirta Patriot siap melayani Anda melalui kanal resmi berikut:
             </p>
           </div>
@@ -61,3 +57,19 @@
     </v-container>
   </v-main>
 </template>
+
+<style scoped>
+  .contact-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
+  @media (width >= 600px) {
+    .contact-body {
+      flex-direction: row;
+      gap: 24px;
+    }
+  }
+</style>

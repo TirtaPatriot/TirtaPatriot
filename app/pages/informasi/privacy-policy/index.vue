@@ -62,13 +62,13 @@
   <v-main>
     <PageHeader title="Kebijakan Privasi & Ketentuan Layanan" />
 
-    <v-container class="prose py-8">
+    <v-container class="prose py-8" max-width="1080">
       <div class="mb-6">
-        <h1 class="text-h4 font-weight-bold text-primary mb-2">
+        <h1 class="text-headline-medium font-weight-bold text-primary mb-2">
           Pusat Kebijakan Privasi &amp; Legalitas
         </h1>
 
-        <p class="text-body-1 text-medium-emphasis">
+        <p class="text-body-large text-medium-emphasis">
           Selamat datang di portal transparansi hukum dan privasi Perumda Tirta Patriot Kota Bekasi. Halaman ini memuat seluruh dokumen kebijakan privasi, syarat penggunaan, serta pedoman pelindungan data pribadi untuk layanan digital kami.
         </p>
       </div>
@@ -88,7 +88,7 @@
                 </v-avatar>
               </template>
 
-              <v-card-title class="font-weight-bold text-subtitle-1">
+              <v-card-title class="font-weight-bold text-title-medium">
                 {{ group.category }}
               </v-card-title>
 
@@ -107,11 +107,11 @@
                 class="py-2"
                 :to="item.to"
               >
-                <v-list-item-title class="font-weight-bold text-body-1">
+                <v-list-item-title class="font-weight-bold text-body-large">
                   {{ item.title }}
                 </v-list-item-title>
 
-                <v-list-item-subtitle class="text-caption mt-1">
+                <v-list-item-subtitle class="text-body-small mt-1">
                   {{ item.subtitle }}
                 </v-list-item-subtitle>
 
@@ -131,11 +131,11 @@
       <v-divider class="my-8" />
 
       <v-card class="pa-4 bg-grey-lighten-4" flat rounded="lg">
-        <h3 class="text-subtitle-1 font-weight-bold mb-2">
+        <h3 class="text-title-medium font-weight-bold mb-2">
           Komitmen Pelindungan Data Pribadi
         </h3>
 
-        <p class="text-body-2 mb-0">
+        <p class="text-body-medium mb-0">
           Perumda Tirta Patriot Kota Bekasi senantiasa mematuhi Undang-Undang Republik Indonesia Nomor 27 Tahun 2022 tentang Pelindungan Data Pribadi (UU PDP). Kami menjamin bahwa pemrosesan data pribadi pada seluruh layanan digital dilakukan dengan prinsip legalitas, kehati-hatian, pembatasan tujuan, serta pengamanan ketat.
         </p>
       </v-card>

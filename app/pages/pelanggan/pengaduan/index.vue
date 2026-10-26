@@ -57,13 +57,16 @@
   const tiket = ref('')
   const step = ref(0)
 
-  const steps = [
+  const stepDefs = [
     { title: 'No. Pelanggan', rules: [() => !!body.id || false] },
     { title: 'Verifikasi', rules: [() => !nama.value.includes('*') || false] },
     { title: 'Pelapor' },
     { title: 'Kendala', rules: [() => !!tiket.value || false] },
     { title: 'Selesai' },
   ]
+
+  // validasi hanya ditampilkan untuk langkah yang sudah dilewati, bukan sejak awal
+  const steps = computed(() => stepDefs.map((s, i) => ({ ...s, rules: i < step.value ? s.rules : undefined })))
 
   const { executeRecaptcha } = useGoogleRecaptcha()
 
@@ -151,7 +154,7 @@
   <v-main>
     <PageHeader title="Pengaduan" />
 
-    <v-container class="py-6">
+    <v-container class="py-8" max-width="960">
       <PPengaduanStatus
         v-if="showTicketTracking"
         :tiket-data="tiketData"
@@ -169,6 +172,8 @@
         :tiket="tiket"
         @navigate="actions"
       />
+
+      <PBantuan />
     </v-container>
   </v-main>
 </template>

@@ -22,14 +22,14 @@
   <v-main>
     <PageHeader title="Ketentuan Layanan WhatsApp Business" />
 
-    <v-container class="prose py-8">
+    <v-container class="prose py-8" max-width="960">
       <div class="d-flex flex-wrap justify-space-between align-center mb-4">
         <div>
-          <h1 class="text-h4 font-weight-bold text-primary mb-2">
+          <h1 class="text-headline-medium font-weight-bold text-primary mb-2">
             Syarat &amp; Ketentuan Layanan (Terms of Service)
           </h1>
 
-          <p class="text-subtitle-1 text-medium-emphasis">
+          <p class="text-title-medium text-medium-emphasis">
             Saluran Resmi WhatsApp Business Perumda Tirta Patriot Kota Bekasi
           </p>
         </div>
@@ -40,15 +40,15 @@
       </div>
 
       <v-card class="mb-6 pa-4 bg-grey-lighten-4" flat rounded="lg">
-        <p class="text-body-2 mb-1">
+        <p class="text-body-medium mb-1">
           <strong>Tanggal Efektif:</strong> 26 Oktober 2026
         </p>
 
-        <p class="text-body-2 mb-1">
+        <p class="text-body-medium mb-1">
           <strong>Penyedia Layanan:</strong> Perusahaan Umum Daerah Air Minum Tirta Patriot (Perumda Tirta Patriot)
         </p>
 
-        <p class="text-body-2 mb-0">
+        <p class="text-body-medium mb-0">
           <strong>Tautan Terkait:</strong>
 
           <NuxtLink class="text-primary text-decoration-none ml-1 font-weight-medium" to="/informasi/privacy-policy/whatsapp-business">
@@ -64,15 +64,15 @@
       </v-card>
 
       <section id="penerimaan-persyaratan" class="mb-6">
-        <h2 class="text-h6 font-weight-bold mb-2">
+        <h2 class="text-title-large font-weight-bold mb-2">
           1. Penerimaan Persyaratan (Acceptance of Terms)
         </h2>
 
-        <p class="text-body-1 text-justify mb-3">
+        <p class="text-body-large text-justify mb-3">
           Selamat datang di saluran komunikasi resmi <strong>WhatsApp Business Perumda Air Minum Tirta Patriot</strong> ("Layanan"). Syarat dan Ketentuan Layanan ini (selanjutnya disebut <strong>"Ketentuan"</strong>) merupakan perjanjian hukum yang sah dan mengikat antara Anda sebagai pengguna perorangan maupun perwakilan badan hukum (selanjutnya disebut <strong>"Pengguna"</strong> atau <strong>"Anda"</strong>) dengan <strong>Perusahaan Umum Daerah Air Minum Tirta Patriot Kota Bekasi</strong> (selanjutnya disebut <strong>"Perumda Tirta Patriot"</strong>, <strong>"Kami"</strong>).
         </p>
 
-        <p class="text-body-1 text-justify mb-3">
+        <p class="text-body-large text-justify mb-3">
           Dengan mengakses, memulai percakapan, mengirimkan pesan, atau menggunakan fitur-fitur yang disediakan dalam saluran WhatsApp Business Kami, Anda menyatakan telah membaca, memahami, dan menyetujui untuk terikat secara penuh oleh Ketentuan ini serta
           <NuxtLink class="text-primary" to="/informasi/privacy-policy/whatsapp-business">Kebijakan Privasi</NuxtLink> kami. Apabila Anda tidak menyetujui Ketentuan ini, Anda dipersilakan untuk tidak menggunakan atau menghentikan interaksi dengan saluran WhatsApp Business Kami.
         </p>
@@ -81,15 +81,15 @@
       <v-divider class="my-6" />
 
       <section id="deskripsi-layanan" class="mb-6">
-        <h2 class="text-h6 font-weight-bold mb-2">
+        <h2 class="text-title-large font-weight-bold mb-2">
           2. Deskripsi Layanan
         </h2>
 
-        <p class="text-body-1 text-justify mb-3">
+        <p class="text-body-large text-justify mb-3">
           Layanan WhatsApp Business Perumda Tirta Patriot disediakan sebagai sarana komunikasi digital interaktif, bantuan pelanggan, serta pusat informasi kepelangganan air minum yang mencakup:
         </p>
 
-        <ul class="text-body-1 pl-6 mb-3">
+        <ul class="text-body-large pl-6 mb-3">
           <li class="mb-2">
             <strong>Inquiry Tagihan Rekening Air:</strong> Pengecekan jumlah tagihan berjalan, tunggakan, riwayat transaksi pembayaran, serta perincian denda pelanggan.
           </li>
@@ -111,15 +111,15 @@
       <v-divider class="my-6" />
 
       <section id="kewajiban-pengguna" class="mb-6">
-        <h2 class="text-h6 font-weight-bold mb-2">
+        <h2 class="text-title-large font-weight-bold mb-2">
           3. Kewajiban dan Pedoman Perilaku Pengguna (Acceptable Use)
         </h2>
 
-        <p class="text-body-1 text-justify mb-3">
+        <p class="text-body-large text-justify mb-3">
           Dalam memanfaatkan saluran WhatsApp Business Perumda Tirta Patriot, Pengguna berkewajiban untuk mematuhi etika komunikasi yang baik dan larangan-larangan berikut:
         </p>
 
-        <ul class="text-body-1 pl-6 mb-3">
+        <ul class="text-body-large pl-6 mb-3">
           <li class="mb-2">
             <strong>Akurasi Informasi:</strong> Memberikan nomor identitas pelanggan (No. SL), alamat pelaporan, dan keterangan kendala yang benar, akurat, dan dapat dipertanggungjawabkan.
           </li>
@@ -145,15 +145,15 @@
       <v-divider class="my-6" />
 
       <section id="integrasi-meta" class="mb-6">
-        <h2 class="text-h6 font-weight-bold mb-2">
+        <h2 class="text-title-large font-weight-bold mb-2">
           4. Ketergantungan Platform Pihak Ketiga (Meta &amp; WhatsApp)
         </h2>
 
-        <p class="text-body-1 text-justify mb-3">
+        <p class="text-body-large text-justify mb-3">
           Saluran layanan ini dioperasikan menggunakan infrastruktur resmi WhatsApp Business Platform yang disediakan oleh <strong>Meta Platforms, Inc. / WhatsApp LLC</strong>:
         </p>
 
-        <ul class="text-body-1 pl-6 mb-3">
+        <ul class="text-body-large pl-6 mb-3">
           <li class="mb-2">
             Penggunaan aplikasi WhatsApp oleh Pengguna tunduk pada syarat dan ketentuan tersendiri yang ditetapkan oleh WhatsApp LLC.
           </li>
@@ -171,11 +171,11 @@
       <v-divider class="my-6" />
 
       <section id="hak-kekayaan-intelektual" class="mb-6">
-        <h2 class="text-h6 font-weight-bold mb-2">
+        <h2 class="text-title-large font-weight-bold mb-2">
           5. Hak Kekayaan Intelektual
         </h2>
 
-        <p class="text-body-1 text-justify mb-3">
+        <p class="text-body-large text-justify mb-3">
           Semua merek dagang, logo perusahaan, nama layanan "Perumda Tirta Patriot", materi grafis, teks bot, rancangan alur respon, serta dokumentasi yang disediakan melalui saluran ini adalah hak kekayaan intelektual milik sah <strong>Perumda Air Minum Tirta Patriot Kota Bekasi</strong> dan dilindungi oleh Undang-Undang Republik Indonesia. Pengguna dilarang menggandakan, memodifikasi, atau menggunakan materi tersebut untuk kepentingan komersial tanpa persetujuan tertulis dari Kami.
         </p>
       </section>
@@ -183,15 +183,15 @@
       <v-divider class="my-6" />
 
       <section id="ketersediaan-dan-penolakan-jaminan" class="mb-6">
-        <h2 class="text-h6 font-weight-bold mb-2">
+        <h2 class="text-title-large font-weight-bold mb-2">
           6. Ketersediaan Layanan &amp; Penolakan Jaminan (Disclaimer)
         </h2>
 
-        <p class="text-body-1 text-justify mb-3">
+        <p class="text-body-large text-justify mb-3">
           Layanan disediakan atas dasar <strong>"SEBAGAIMANA ADANYA" (AS IS)</strong> dan <strong>"SEBAGAIMANA TERSEDIA" (AS AVAILABLE)</strong> tanpa jaminan tersurat maupun tersirat apa pun:
         </p>
 
-        <ul class="text-body-1 pl-6 mb-3">
+        <ul class="text-body-large pl-6 mb-3">
           <li class="mb-2">
             Meskipun bot otomatis beroperasi 24 jam sehari, pelayanan interaktif oleh petugas customer service manusia dibatasi pada hari dan jam operasional kerja resmi kantor Perumda Tirta Patriot.
           </li>
@@ -209,15 +209,15 @@
       <v-divider class="my-6" />
 
       <section id="batasan-tanggung-jawab" class="mb-6">
-        <h2 class="text-h6 font-weight-bold mb-2">
+        <h2 class="text-title-large font-weight-bold mb-2">
           7. Pembatasan Tanggung Jawab (Limitation of Liability)
         </h2>
 
-        <p class="text-body-1 text-justify mb-3">
+        <p class="text-body-large text-justify mb-3">
           Sejauh diizinkan oleh hukum yang berlaku, Perumda Tirta Patriot, dewan pengawas, direksi, maupun pegawai tidak bertanggung jawab atas kerugian langsung, tidak langsung, insidental, atau konsekuensial (termasuk namun tidak terbatas pada kehilangan keuntungan, gangguan bisnis, atau kehilangan data) yang timbul akibat:
         </p>
 
-        <ul class="text-body-1 pl-6 mb-3">
+        <ul class="text-body-large pl-6 mb-3">
           <li class="mb-2">
             Keterlambatan atau kegagalan transmisi pesan yang disebabkan oleh penyedia jasa seluler atau kegagalan jaringan Meta Platforms.
           </li>
@@ -235,15 +235,15 @@
       <v-divider class="my-6" />
 
       <section id="penangguhan-dan-pemblokiran" class="mb-6">
-        <h2 class="text-h6 font-weight-bold mb-2">
+        <h2 class="text-title-large font-weight-bold mb-2">
           8. Penangguhan, Pemblokiran, dan Pengakhiran Layanan
         </h2>
 
-        <p class="text-body-1 text-justify mb-3">
+        <p class="text-body-large text-justify mb-3">
           Kami berhak untuk secara sepihak memblokir nomor telepon WhatsApp Pengguna, membatasi akses, atau menghentikan percakapan tanpa pemberitahuan sebelumnya apabila Pengguna:
         </p>
 
-        <ul class="text-body-1 pl-6 mb-3">
+        <ul class="text-body-large pl-6 mb-3">
           <li class="mb-2">
             Melakukan pelanggaran terhadap satu atau lebih ketentuan dalam Syarat dan Ketentuan ini.
           </li>
@@ -261,11 +261,11 @@
       <v-divider class="my-6" />
 
       <section id="hukum-dan-yurisdiksi" class="mb-6">
-        <h2 class="text-h6 font-weight-bold mb-2">
+        <h2 class="text-title-large font-weight-bold mb-2">
           9. Hukum yang Mengatur dan Penyelesaian Sengketa
         </h2>
 
-        <p class="text-body-1 text-justify mb-3">
+        <p class="text-body-large text-justify mb-3">
           Ketentuan Layanan ini diatur, ditafsirkan, dan dilaksanakan sepenuhnya berdasarkan <strong>Hukum Negara Kesatuan Republik Indonesia</strong>. Segala perselisihan atau sengketa yang timbul dari pelaksanaan Ketentuan ini akan diselesaikan terlebih dahulu secara musyawarah untuk mencapai mufakat. Apabila kesepakatan tidak tercapai, para pihak sepakat untuk memilih domisili hukum yang tetap dan tidak berubah di wilayah kepaniteraan <strong>Pengadilan Negeri Kota Bekasi</strong>.
         </p>
       </section>
@@ -273,11 +273,11 @@
       <v-divider class="my-6" />
 
       <section id="perubahan-ketentuan" class="mb-6">
-        <h2 class="text-h6 font-weight-bold mb-2">
+        <h2 class="text-title-large font-weight-bold mb-2">
           10. Perubahan Ketentuan Layanan
         </h2>
 
-        <p class="text-body-1 text-justify mb-3">
+        <p class="text-body-large text-justify mb-3">
           Perumda Tirta Patriot berhak memperbarui Ketentuan Layanan ini secara berkala. Perubahan materi akan dipublikasikan pada halaman ini dengan tanggal efektif yang diperbarui. Penggunaan berkelanjutan Anda atas layanan WhatsApp Business setelah tanggal perubahan merupakan bentuk penerimaan dan persetujuan Anda terhadap ketentuan yang baru.
         </p>
       </section>
@@ -285,11 +285,11 @@
       <v-divider class="my-6" />
 
       <section id="kontak-kami" class="mb-6">
-        <h2 class="text-h6 font-weight-bold mb-2">
+        <h2 class="text-title-large font-weight-bold mb-2">
           11. Hubungi Kami
         </h2>
 
-        <p class="text-body-1 text-justify mb-3">
+        <p class="text-body-large text-justify mb-3">
           Jika Anda memiliki pertanyaan, klarifikasi, atau laporan mengenai Ketentuan Layanan ini, silakan menghubungi kami:
         </p>
 
@@ -358,7 +358,7 @@
         </v-card>
       </section>
 
-      <p class="text-caption text-right text-medium-emphasis mt-6">
+      <p class="text-body-small text-right text-medium-emphasis mt-6">
         Dokumen ini diterbitkan oleh Perumda Tirta Patriot Kota Bekasi untuk pemenuhan verifikasi Meta Facebook App &amp; WhatsApp Business API.
       </p>
     </v-container>

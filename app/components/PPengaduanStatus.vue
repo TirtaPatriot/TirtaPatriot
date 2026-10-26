@@ -88,9 +88,11 @@
 </script>
 
 <template>
-  <h3 class="text-headline-medium font-weight-bold text-uppercase mb-4 text-center">
-    Status Pengaduan #{{ tiketId }}
-  </h3>
+  <PageIntro
+    icon="i-mdi:ticket-confirmation-outline"
+    :subtitle="`Nomor tiket ${tiketId}`"
+    title="Status Pengaduan"
+  />
 
   <v-alert
     border="start"
@@ -104,7 +106,7 @@
 
   <v-row class="ga-4">
     <v-col cols="1/1" md="2/3">
-      <v-card elevation="2" rounded="lg">
+      <v-card elevation="2" rounded="xl">
         <v-card-title>
           Detail Aduan
         </v-card-title>
@@ -134,7 +136,7 @@
     </v-col>
 
     <v-col cols="1/1" md="1/3">
-      <v-card elevation="2" rounded="lg">
+      <v-card elevation="2" rounded="xl">
         <v-card-title>
           Progres
         </v-card-title>
@@ -175,7 +177,7 @@
     </v-col>
   </v-row>
 
-  <v-card class="mt-4" elevation="2" rounded="lg">
+  <v-card class="mt-4" elevation="2" rounded="xl">
     <v-card-title>
       Perjalanan Pengaduan
     </v-card-title>
@@ -192,7 +194,7 @@
           :icon="stage.done ? 'i-mdi:check' : 'i-mdi:clock-outline'"
           size="small"
         >
-          <v-card rounded="lg" :variant="stage.done ? 'elevated' : 'outlined'">
+          <v-card rounded="xl" :variant="stage.done ? 'elevated' : 'outlined'">
             <v-card-text>
               <div class="timeline-row-head">
                 <strong>{{ stage.label }}</strong>
