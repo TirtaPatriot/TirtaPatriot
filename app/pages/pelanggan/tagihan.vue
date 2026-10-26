@@ -24,6 +24,7 @@
     _nonaktif?: boolean
   }
   type ItemTagihan = {
+    kategori?: string
     bulan?: string
     stan_awal?: number | string
     stan_akhir?: number | string
@@ -31,6 +32,7 @@
     air?: number | string
     administrasi?: number | string
     denda?: number | string
+    lainnya?: number | string
     total?: number | string
   }
   type ResponseTagihan = {
@@ -52,6 +54,8 @@
   const { mdAndUp } = useDisplay()
 
   const jumlahTagihan = computed(() => data.value?.tagihan?.length ?? 0)
+  const adaLainnya = computed(() => data.value?.tagihan?.some(t => t.lainnya && String(t.lainnya) !== '0') ?? false)
+  const labelKategori: Record<string, string> = { NONAIR: 'Non-Air', CICILAN: 'Cicilan' }
   const alamatLengkap = computed(() => {
     const p = data.value?.pelanggan
     return [p?.alamat, p?.kelurahan, p?.kecamatan].filter(Boolean).join(', ') || '-'
@@ -270,6 +274,10 @@
                     Denda
                   </th>
 
+                  <th v-if="adaLainnya" class="text-right">
+                    Lainnya
+                  </th>
+
                   <th class="text-right">
                     Total
                   </th>
@@ -280,6 +288,16 @@
                 <tr v-for="(t, i) in data.tagihan" :key="t.bulan || i">
                   <td class="font-weight-medium">
                     {{ t.bulan }}
+
+                    <v-chip
+                      v-if="t.kategori && labelKategori[t.kategori]"
+                      class="ml-1"
+                      color="primary"
+                      size="x-small"
+                      variant="tonal"
+                    >
+                      {{ labelKategori[t.kategori] }}
+                    </v-chip>
                   </td>
 
                   <td class="text-right font-mono">
@@ -306,6 +324,10 @@
                     {{ t.denda }}
                   </td>
 
+                  <td v-if="adaLainnya" class="text-right font-mono">
+                    {{ t.lainnya }}
+                  </td>
+
                   <td class="text-right font-mono font-weight-bold text-primary">
                     {{ t.total }}
                   </td>
@@ -322,7 +344,19 @@
               variant="outlined"
             >
               <div class="d-flex align-center justify-space-between px-4 pt-3">
-                <span class="font-weight-bold">{{ t.bulan }}</span>
+                <span class="font-weight-bold">
+                  {{ t.bulan }}
+
+                  <v-chip
+                    v-if="t.kategori && labelKategori[t.kategori]"
+                    class="ml-1"
+                    color="primary"
+                    size="x-small"
+                    variant="tonal"
+                  >
+                    {{ labelKategori[t.kategori] }}
+                  </v-chip>
+                </span>
 
                 <span class="font-weight-bold text-primary">Rp {{ t.total }}</span>
               </div>
@@ -355,6 +389,12 @@
                 <v-list-item class="text-body-2" title="Denda">
                   <template #append>
                     {{ t.denda }}
+                  </template>
+                </v-list-item>
+
+                <v-list-item v-if="adaLainnya" class="text-body-2" title="Lainnya">
+                  <template #append>
+                    {{ t.lainnya }}
                   </template>
                 </v-list-item>
               </v-list>
