@@ -206,6 +206,7 @@
             <v-card-text>
               <div class="timeline-row-head">
                 <strong>{{ stage.label }}</strong>
+
                 <v-chip
                   :color="stage.done ? 'green' : 'grey-darken-1'"
                   size="x-small"
@@ -236,6 +237,7 @@
         Buat Pengaduan Baru
       </v-btn>
     </v-col>
+
     <v-col cols="1/1" md="1/3" sm="1/2">
       <v-btn block :to="`/pelanggan/pengaduan?tiket=${tiketId}`" variant="outlined">
         Muat Ulang Status

@@ -147,6 +147,7 @@
           >
         </NuxtLink>
       </template>
+
       <template #append>
         <div class="desktop-nav">
           <template v-for="(m, x) of navigation" :key="String(m.id ?? m.title ?? x)">
@@ -159,6 +160,7 @@
             >
               {{ m.title }}
             </v-btn>
+
             <v-btn
               v-else
               :active="x === currentMenu"

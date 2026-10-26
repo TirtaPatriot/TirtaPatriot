@@ -21,7 +21,9 @@
     <h3 class="text-white text-center text-headline-small">
       Statistik Terakhir
     </h3>
+
     <v-divider />
+
     <v-row class="pt-4 justify-center">
       <v-col
         v-for="(s) of data"

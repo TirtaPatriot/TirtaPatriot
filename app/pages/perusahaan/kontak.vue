@@ -32,6 +32,7 @@
 <template>
   <v-main>
     <PageHeader title="Kontak" />
+
     <v-container>
       <v-row>
         <v-col>
@@ -40,6 +41,7 @@
               <v-list-subheader class="text-title text-uppercase font-weight-bold">
                 Unit Pelayanan Langsung
               </v-list-subheader>
+
               <v-list-item
                 v-for="o of data"
                 :key="o.id"
@@ -55,6 +57,7 @@
             </v-list>
           </v-sheet>
         </v-col>
+
         <v-col>
           <v-sheet class="my-2" :elevation="2">
             <v-list class="mx-2">
@@ -69,6 +72,7 @@
                 rounded="shaped"
                 title="sekretariat@tirtapatriot.co.id"
               />
+
               <v-list-item
                 append-icon="i-mdi:launch"
                 href="tel:622188966161"
@@ -80,6 +84,7 @@
               <v-list-subheader class="text-title font-weight-bold text-uppercase">
                 Humas
               </v-list-subheader>
+
               <v-list-item
                 append-icon="i-mdi:launch"
                 href="mailto:humas@tirtapatriot.co.id"
@@ -87,6 +92,7 @@
                 rounded="shaped"
                 title="humas@tirtapatriot.co.id"
               />
+
               <v-list-item
                 append-icon="i-mdi:launch"
                 href="tel:6287875163845"
@@ -106,6 +112,7 @@
               <v-list-subheader class="text-title font-weight-bold text-uppercase">
                 Layanan Mandiri
               </v-list-subheader>
+
               <v-list-item
                 v-for="s of selfService"
                 :key="s.href"
@@ -118,6 +125,7 @@
               />
             </v-list>
           </v-sheet>
+
           <v-sheet class="my-2" :elevation="2">
             <v-list class="mx-2">
               <v-list-subheader class="text-title font-weight-bold text-uppercase">
@@ -132,6 +140,7 @@
                 rounded="shaped"
                 title="WhatsApp"
               />
+
               <v-list-item
                 append-icon="i-mdi:launch"
                 href="https://t.me/PerumdaTirtaPatriot"

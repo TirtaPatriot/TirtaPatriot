@@ -34,12 +34,16 @@ export default defineConfig({
     'i-mdi:instagram',
     'i-mdi:facebook',
     'i-mdi:twitter',
+    'i-mdi:google',
     // UI icons
     'i-mdi:chevron-down',
+    'i-mdi:chevron-right',
     'i-mdi:launch',
     'i-mdi:open-in-new',
     'i-mdi:directions',
     'i-mdi:magnify',
+    'i-mdi:alert',
+    'i-mdi:information',
     // Communication icons
     'i-mdi:email',
     'i-mdi:phone',

@@ -117,6 +117,7 @@
 <template>
   <v-main>
     <PageHeader title="Berita" />
+
     <v-container>
       <template v-if="isInitialLoading">
         <v-row
@@ -130,10 +131,12 @@
               </template>
 
               <v-skeleton-loader type="image" />
+
               <v-card-item>
                 <v-skeleton-loader type="heading" />
                 <v-skeleton-loader type="text" />
               </v-card-item>
+
               <v-card-actions class="px-4 pb-4">
                 <v-skeleton-loader class="w-100" type="button" />
               </v-card-actions>
@@ -151,6 +154,7 @@
         title="Tidak Ada Konten"
         @click:action="() => navigateTo('/perusahaan/kontak')"
       />
+
       <div v-else>
         <v-row
           v-for="item in artikel"
@@ -165,6 +169,7 @@
                 <v-card-title class="berita-title text-headline-small px-0">
                   {{ item.judul }}
                 </v-card-title>
+
                 <template #subtitle>
                   <div class="berita-date mt-2">
                     <v-icon class="berita-date-icon" icon="mdi-clock-outline" size="18" />
@@ -201,6 +206,7 @@
             size="30"
             width="3"
           />
+
           <div v-else-if="!hasNext" class="text-body-medium text-medium-emphasis">
             Semua berita sudah ditampilkan.
           </div>

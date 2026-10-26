@@ -23,6 +23,7 @@
       <h2 class="text-headline-large my-4 font-weight-light">
         Mitra Pembayaran
       </h2>
+
       <v-slide-group class="my-4" show-arrows>
         <v-slide-group-item
           v-for="p of data[0]"
@@ -39,6 +40,7 @@
       <h2 class="text-headline-large font-weight-light mt-8 mb-2">
         Unit Pelayanan Langsung
       </h2>
+
       <v-list class="px-2 bg-transparent" density="compact" variant="text">
         <v-list-item
           v-for="o of data[1]"

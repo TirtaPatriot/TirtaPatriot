@@ -88,6 +88,7 @@
         />
       </v-carousel>
     </template>
+
     <p-img
       v-else
       class="w-100"
@@ -96,11 +97,13 @@
       provider="directus"
       :src="data?.carousel?.[0]?.image || '/bg_slide-1.jpg'"
     />
+
     <div class="grad-1">
       <div class="text-white d-flex justify-center flex-column align-center py-10">
         <div class="text-headline-medium pa-4">
           Akses informasi lebih cepat dan eksklusif melalui aplikasi kami
         </div>
+
         <div>
           <v-btn
             class="ma-2 bg-black text-white"
@@ -133,6 +136,7 @@
           <v-col class="himbauan-icon justify-center" cols="1/1" md="1/4">
             <v-icon icon="i-mdi:message-fast-outline" size="240" />
           </v-col>
+
           <v-col cols="1/1" md="3/4">
             <PHimbauan />
           </v-col>
@@ -153,27 +157,33 @@
           <h4 class="text-headline-medium">
             Kantor Pusat
           </h4>
+
           <div class="text-body-medium">
             <p>
               Jl. Perjuangan  No.99, RT.003/RW.011, Marga Mulya,<br> Kec. Bekasi Utara, Kota Bekasi, Jawa Barat 17142
             </p>
+
             <p>
               <v-icon icon="i-mdi:email" size="x-small" /> humas@tirtapatriot.co.id
             </p>
+
             <p>
               <v-icon icon="i-mdi:phone" size="x-small" /> 021-8896-6161
             </p>
           </div>
         </v-col>
+
         <v-col cols="1/1" md="auto">
           <h4 class="text-headline-medium">
             Jam Operasional
           </h4>
+
           <div class="d-flex flex-column">
             <div v-for="(h, x) of hours" :key="x" class="d-flex ga-6">
               <div class="flex-shrink-0" style="width: 60px;">
                 {{ h.day }}
               </div>
+
               <div class="text-right">
                 {{ h.time }}
               </div>
@@ -181,9 +191,11 @@
           </div>
         </v-col>
       </v-row>
+
       <div>
         &copy; {{ currentYear }} — <strong>Perusahaan Umum Daerah Air Minum Tirta Patriot</strong>
       </div>
+
       <div>
         <a href="/informasi/privacy-policy/oca-google">
           OCA Privacy Policy

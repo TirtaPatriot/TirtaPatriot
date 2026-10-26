@@ -56,6 +56,7 @@
     <v-list-subheader v-if="title" class="text-title font-weight-bold text-uppercase">
       {{ title }}
     </v-list-subheader>
+
     <v-list-item
       v-for="s of socials"
       :key="s.href"

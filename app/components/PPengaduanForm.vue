@@ -33,15 +33,18 @@
           v-bind="x"
           :value="n"
         />
+
         <v-divider v-if="n < steps.length - 1" />
       </template>
     </v-stepper-header>
+
     <v-stepper-window>
       <v-stepper-window-item :value="0">
         <v-card height="200">
           <v-card-title>
             Sambungan Rumah Terkendala
           </v-card-title>
+
           <v-card-text>
             <v-text-field
               v-model="formBody.nomor"
@@ -60,9 +63,11 @@
           <v-card-title>
             Verifikasi Data Sambungan
           </v-card-title>
+
           <v-card-subtitle>
             Harap verifikasi dengan mengisi nama terdaftar untuk No. Pelanggan {{ formBody.nomor }}
           </v-card-subtitle>
+
           <v-card-text>
             <v-text-field
               v-model="nama"
@@ -87,6 +92,7 @@
               persistent-hint
               variant="outlined"
             />
+
             <v-text-field
               v-model="formBody.telepon"
               label="No. Telepon"
@@ -107,6 +113,7 @@
               persistent-hint
               variant="outlined"
             />
+
             <v-textarea
               v-model="formBody.masalah"
               auto-grow
@@ -132,6 +139,7 @@
                   Lihat Status Pengaduan
                 </v-btn>
               </v-col>
+
               <v-col cols="1/1" sm="1/2">
                 <v-btn block to="/" variant="outlined">
                   Kembali
@@ -156,12 +164,15 @@
     <v-card-text>
       <PHimbauan />
     </v-card-text>
+
     <v-card-text>
       <p>Sebelumnya, kami mohon maaf atas ketidaknyamanan yang anda alami.</p>
+
       <div class="caption">
         Jika anda berkenan untuk berkomunikasi langsung, Humas Perumda Tirta Patriot akan sangat senang melayani anda di media sosial kami berikut
       </div>
     </v-card-text>
+
     <v-card-actions class="social-actions">
       <SocialButtons />
     </v-card-actions>

@@ -7,6 +7,7 @@
     <h2 class="himbauan-title text-headline-medium text-md-headline-large font-weight-bold text-center mb-4">
       HIMBAUAN
     </h2>
+
     <ol class="himbauan-list text-body-large text-md-headline-small">
       <li>Periksalah fasilitas air bersih yang terpasang di rumah, sebab kebocoran akan mempengaruhi besarnya rekening air setiap bulan</li>
       <li>Tempatkan meter air di lokasi yang aman dan mudah dibaca oleh petugas catat meter Perumda Tirta Patriot</li>

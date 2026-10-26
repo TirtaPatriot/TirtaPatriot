@@ -14,6 +14,7 @@
 <template>
   <v-main>
     <PageHeader :img="data?.cover" :title="data?.judul || 'Sejarah'" />
+
     <v-container class="prose">
       <article v-html="data?.isi" />
     </v-container>

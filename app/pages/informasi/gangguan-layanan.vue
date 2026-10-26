@@ -20,13 +20,14 @@
   }
 
   function onClickAction () {
-    navigateTo('/pelanggan/pengaduan')
+    navigateTo('/perusahaan/kontak')
   }
 </script>
 
 <template>
   <v-main>
     <PageHeader title="Gangguan Layanan" />
+
     <v-container>
       <v-empty-state
         v-if="!gangguan?.length"
@@ -36,19 +37,24 @@
         title="Layanan Berjalan Lancar"
         @click:action="onClickAction"
       />
+
       <div v-for="x of gangguan" v-else :key="x.id">
         <!-- {{ now }} -->
         <v-card class="my-4">
           <p-img cover :height="200" :src="x.image" />
+
           <v-card-title>
             {{ x.title }}
           </v-card-title>
+
           <v-card-subtitle v-if="x.subtitle">
             {{ x.subtitle }}
           </v-card-subtitle>
+
           <v-card-text>
             <div class="prose" v-html="x.content" />
           </v-card-text>
+
           <v-card-actions class="mx-2">
             <div>{{ formatDate(x.waktu_mulai) }}</div>
             <v-spacer />

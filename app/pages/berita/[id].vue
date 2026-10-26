@@ -175,7 +175,9 @@
         <h1 class="text-headline-small">
           {{ data?.judul }}
         </h1>
+
         <MDC :key="contentRenderKey" :value="normalizedContent" />
+
         <div class="text-body-small text-right mx-4">
           {{ useDatetimeFormat(data?.dipublikasi) }}
         </div>

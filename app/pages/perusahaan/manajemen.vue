@@ -47,6 +47,7 @@
       <div id="direksi" class="text-center text-headline-medium my-6">
         JAJARAN <strong>DIREKSI</strong>
       </div>
+
       <v-row justify="center">
         <v-col
           v-for="d of data || []"
@@ -71,6 +72,7 @@
               <h5 class="mb-0 break-word text-body-large text-md-headline-small text-lg-body-large">
                 {{ d.nama }}
               </h5>
+
               <h6 class="mt-2 mb-0 font-weight-bold break-word text-body-small">
                 {{ d.jabatan }}
               </h6>
@@ -139,9 +141,11 @@
         </v-col>
       </v-row> -->
     </v-container>
+
     <div id="sotk" class="text-headline-medium text-center mb-4 mt-6 mx-auto">
       SUSUNAN ORGANISASI & TATA KERJA
     </div>
+
     <v-sheet class="pa-4 mx-4 overflow-x-auto" color="white" elevation="2">
       <PImg
         :aspect-ratio="3292 / 1825"

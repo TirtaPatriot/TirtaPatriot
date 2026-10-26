@@ -1,4 +1,4 @@
-<script setup>
+<script lang="ts" setup>
   import { computed } from 'vue'
   const props = defineProps({
     colorMode: { type: String, required: false, default: 'light' },
@@ -32,6 +32,7 @@
         backgroundImage: `radial-gradient(ellipse 100% 100% at 100% 100%, rgba(${themeColor}, 0.15) 0%, transparent 60%)`
       }"
     />
+
     <div
       :style="{
         position: 'absolute',
@@ -66,6 +67,7 @@
               <stop offset="0%" :stop-color="isPro ? '#7c3aed' : '#22c55e'" />
               <stop offset="100%" :stop-color="isPro ? '#c4b5fd' : '#86efac'" />
             </linearGradient>
+
             <linearGradient
               :id="isPro ? 'nsFill2' : 'nsFill1'"
               x1="0%"
@@ -77,7 +79,9 @@
               <stop offset="100%" :stop-color="isPro ? '#7c3aed' : '#22c55e'" stop-opacity="0" />
             </linearGradient>
           </defs>
+
           <path d="M8 52 Q20 48 24 36 T40 20 T56 12 L56 56 L8 56 Z" :fill="`url(#${isPro ? 'nsFill2' : 'nsFill1'})`" />
+
           <path
             d="M8 52 Q20 48 24 36 T40 20 T56 12"
             fill="none"
@@ -85,8 +89,10 @@
             stroke-linecap="round"
             stroke-width="4"
           />
+
           <circle cx="56" cy="12" :fill="`url(#${isPro ? 'nsLine2' : 'nsLine1'})`" r="6" />
         </svg>
+
         <span :style="{ fontSize: '32px', fontWeight: '700', letterSpacing: '-0.025em' }">
           Nuxt<span :style="{ marginLeft: '4px', color: accentColor }">SEO{{ isPro ? " Pro" : "" }}</span>
         </span>

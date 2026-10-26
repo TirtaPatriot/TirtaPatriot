@@ -47,6 +47,7 @@
           <v-card-title :class="['text-title-large', `bg-${item.color}`]">
             {{ i + 1 }}. {{ item.title }}
           </v-card-title>
+
           <v-card-text class="bg-white text--primary">
             <p>{{ item.caption }}</p>
             <!-- <v-btn
