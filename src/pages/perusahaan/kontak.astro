@@ -1,0 +1,86 @@
+---
+import Icon from '../../components/Icon.astro'
+import OfficeList from '../../components/OfficeList.astro'
+import PageHead from '../../components/PageHead.astro'
+import Base from '../../layouts/Base.astro'
+import { ADDRESS, CONTACTS, HOURS, SOCIALS } from '../../lib/site'
+
+const channels = [
+  {
+    title: 'Layanan mandiri',
+    text: 'Cek tagihan dan layanan otomatis kapan saja.',
+    items: [
+      { title: 'WhatsApp', icon: 'mdi:whatsapp', href: 'https://wa.me/message/XEQYWXIGCYSYA1' },
+      { title: 'Telegram', icon: 'mdi:telegram', href: 'https://t.me/TirtaPatriotBot' },
+    ],
+  },
+  {
+    title: 'Saluran informasi',
+    text: 'Pengumuman gangguan dan informasi resmi.',
+    items: [
+      { title: 'Saluran WhatsApp', icon: 'mdi:whatsapp', href: 'https://whatsapp.com/channel/0029VaaWmpGId7nRB1BLj52w' },
+      { title: 'Kanal Telegram', icon: 'mdi:telegram', href: 'https://t.me/PerumdaTirtaPatriot' },
+    ],
+  },
+]
+---
+
+<Base title="Kontak" description="Hubungi Perumda Tirta Patriot Kota Bekasi lewat telepon, WhatsApp, email, media sosial, atau kunjungi unit pelayanan terdekat.">
+  <PageHead
+    title="Hubungi kami"
+    lead={`Tim Humas dan Layanan Pelanggan siap membantu ${HOURS.charAt(0).toLowerCase()}${HOURS.slice(1)}. Kanal digital kami terbuka setiap saat.`}
+    crumbs={[{ title: 'Beranda', href: '/' }, { title: 'Perusahaan' }]}
+  />
+
+  <div class="wrap mt-10">
+    <ul class="grid gap-x-10 gap-y-6 sm:grid-cols-2 lg:grid-cols-4">
+      {CONTACTS.map(contact => (
+        <li>
+          <p class="flex items-center gap-2 text-redup"><Icon name={contact.icon} size={20} /> {contact.title}</p>
+          <a href={contact.href} class="mt-1 block text-lg font-bold break-words hover:text-patriot hover:underline" {...(contact.href.startsWith('http') ? { rel: 'noopener', target: '_blank' } : {})}>
+            {contact.value}
+          </a>
+        </li>
+      ))}
+    </ul>
+
+    <p class="mt-8 max-w-[60ch] text-redup">Kantor pusat: {ADDRESS}</p>
+
+    <section class="mt-14 grid gap-10 border-t border-garis pt-10 md:grid-cols-3" aria-labelledby="kanal-judul">
+      <h2 id="kanal-judul" class="text-2xl font-extrabold md:col-span-3">Kanal digital</h2>
+      {channels.map(group => (
+        <div>
+          <h3 class="text-lg font-bold">{group.title}</h3>
+          <p class="text-redup">{group.text}</p>
+          <ul class="mt-3 grid gap-1">
+            {group.items.map(item => (
+              <li>
+                <a href={item.href} rel="noopener" target="_blank" class="inline-flex min-h-11 items-center gap-2 font-semibold hover:text-patriot hover:underline">
+                  <Icon name={item.icon} size={22} class="text-patriot" /> {item.title}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+      <div>
+        <h3 class="text-lg font-bold">Media sosial</h3>
+        <p class="text-redup">Ikuti kabar terbaru dari kami.</p>
+        <ul class="mt-3 flex flex-wrap gap-1">
+          {SOCIALS.map(social => (
+            <li>
+              <a href={social.href} rel="noopener" target="_blank" class="grid size-11 place-items-center rounded-md border border-garis hover:border-patriot hover:text-patriot">
+                <Icon name={social.icon} size={22} label={social.title} />
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <section id="unit-pelayanan" class="mt-14 scroll-mt-24 border-t border-garis pt-10" aria-labelledby="unit-judul">
+      <h2 id="unit-judul" class="mb-6 text-2xl font-extrabold">Unit pelayanan</h2>
+      <OfficeList searchable />
+    </section>
+  </div>
+</Base>

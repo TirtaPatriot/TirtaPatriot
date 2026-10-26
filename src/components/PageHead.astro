@@ -1,0 +1,36 @@
+---
+/**
+ * Kepala halaman: jejak lokasi (bagian situs), judul, dan kalimat pengantar.
+ * Rata kiri dan sejajar dengan isi halaman.
+ */
+type Crumb = { title: string, href?: string }
+
+type Props = {
+  title: string
+  lead?: string
+  crumbs?: Crumb[]
+  narrow?: boolean
+}
+
+const { title, lead, crumbs = [], narrow = false } = Astro.props
+---
+
+<div class="border-b border-garis bg-kabut">
+  <div class:list={['wrap pt-8 pb-9 md:pt-12 md:pb-12', narrow && 'wrap-narrow']}>
+    {crumbs.length > 0 && (
+      <nav aria-label="Lokasi halaman" class="mb-3 text-sm text-redup">
+        <ol class="flex flex-wrap items-center gap-x-2">
+          {crumbs.map((crumb, index) => (
+            <li class="flex items-center gap-2">
+              {index > 0 && <span aria-hidden="true">/</span>}
+              {crumb.href ? <a href={crumb.href} class="hover:text-patriot hover:underline">{crumb.title}</a> : <span>{crumb.title}</span>}
+            </li>
+          ))}
+        </ol>
+      </nav>
+    )}
+    <h1 class="text-title font-extrabold">{title}</h1>
+    {lead && <p class="mt-3 max-w-[62ch] text-lg text-redup">{lead}</p>}
+    <slot />
+  </div>
+</div>

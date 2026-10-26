@@ -1,0 +1,11 @@
+---
+import Icon from './Icon.astro'
+
+type Props = { id?: string, class?: string }
+const { id, class: className } = Astro.props
+---
+
+<div id={id} class:list={['notice notice-error', className]} role="alert" tabindex="-1" data-error hidden>
+  <Icon name="mdi:alert-circle-outline" size={20} />
+  <p data-error-text></p>
+</div>

@@ -1,0 +1,137 @@
+---
+import { getCollection } from 'astro:content'
+import Icon from './Icon.astro'
+
+const navigation = (await getCollection('navigasi')).map(entry => entry.data).toSorted((a, b) => a.order - b.order)
+const path = Astro.url.pathname.replace(/\/+$/, '') || '/'
+
+function isCurrent (href: string): boolean {
+  if (!href || /^https?:/.test(href)) {
+    return false
+  }
+  return href === '/' ? path === '/' : path === href || path.startsWith(`${href}/`)
+}
+
+const linkClass = 'inline-flex min-h-11 items-center gap-1.5 rounded-md px-3 font-semibold text-pipa hover:bg-air aria-[current=page]:text-patriot'
+---
+
+<header class="sticky top-0 z-40 border-b border-garis bg-white/95 backdrop-blur-sm">
+  <div class="wrap flex h-16 items-center justify-between gap-4">
+    <a href="/" class="shrink-0" aria-label="Beranda Perumda Tirta Patriot">
+      <img src="/logo-wordmark.png" alt="Perumda Tirta Patriot" width="125" height="40" class="h-10 w-auto">
+    </a>
+
+    <nav aria-label="Menu utama" class="hidden lg:block">
+      <ul class="flex items-center gap-1">
+        {navigation.map(item => (
+          <li class="relative">
+            {item.children.length ? (
+              <details class="nav-menu group">
+                <summary class:list={[linkClass, 'cursor-pointer list-none [&::-webkit-details-marker]:hidden', item.children.some(child => isCurrent(child.href)) && 'text-patriot']}>
+                  {item.title}
+                  <Icon name="mdi:chevron-down" size={18} class="transition-transform group-open:rotate-180" />
+                </summary>
+                <ul class="absolute top-full left-0 mt-1 min-w-56 rounded-lg border border-garis bg-white p-1.5 shadow-lg shadow-pipa/10">
+                  {item.children.map(child => (
+                    <li>
+                      <a href={child.href} class="block rounded-md px-3 py-2 hover:bg-air aria-[current=page]:bg-air aria-[current=page]:font-semibold" aria-current={isCurrent(child.href) ? 'page' : undefined} {...(child.external ? { rel: 'noopener', target: '_blank' } : {})}>
+                        {child.title}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </details>
+            ) : (
+              <a href={item.href} class={linkClass} aria-current={isCurrent(item.href) ? 'page' : undefined} {...(item.external ? { rel: 'noopener', target: '_blank' } : {})}>
+                {item.title}
+                {item.external && <Icon name="mdi:open-in-new" size={15} label="(situs lain)" />}
+              </a>
+            )}
+          </li>
+        ))}
+        <li class="ml-2">
+          <a href="/pelanggan" class="btn btn-primary" aria-current={isCurrent('/pelanggan') ? 'page' : undefined}>Layanan Pelanggan</a>
+        </li>
+      </ul>
+    </nav>
+
+    <button type="button" class="btn btn-quiet lg:hidden" aria-expanded="false" aria-controls="menu-ponsel" data-menu-toggle>
+      <Icon name="mdi:menu" size={22} />
+      Menu
+    </button>
+  </div>
+
+  <nav id="menu-ponsel" aria-label="Menu utama" class="border-t border-garis bg-white lg:hidden" hidden>
+    <ul class="wrap flex flex-col py-3">
+      <li class="pb-2">
+        <a href="/pelanggan" class="btn btn-primary w-full">Layanan Pelanggan</a>
+      </li>
+      {navigation.map(item => (
+        <li>
+          {item.children.length ? (
+            <>
+              <p class="px-3 pt-4 pb-1 text-sm font-semibold text-redup">{item.title}</p>
+              <ul>
+                {item.children.map(child => (
+                  <li><a href={child.href} class={linkClass} aria-current={isCurrent(child.href) ? 'page' : undefined}>{child.title}</a></li>
+                ))}
+              </ul>
+            </>
+          ) : (
+            <a href={item.href} class={linkClass} aria-current={isCurrent(item.href) ? 'page' : undefined} {...(item.external ? { rel: 'noopener', target: '_blank' } : {})}>
+              {item.title}
+              {item.external && <Icon name="mdi:open-in-new" size={15} label="(situs lain)" />}
+            </a>
+          )}
+        </li>
+      ))}
+    </ul>
+  </nav>
+</header>
+
+<script>
+  const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]')
+  const panel = document.querySelector<HTMLElement>('#menu-ponsel')
+
+  toggle?.addEventListener('click', () => {
+    const open = toggle.getAttribute('aria-expanded') !== 'true'
+    toggle.setAttribute('aria-expanded', String(open))
+    if (panel) {
+      panel.hidden = !open
+    }
+  })
+
+  // hanya satu submenu terbuka; klik di luar atau Escape menutupnya
+  const menus = [...document.querySelectorAll<HTMLDetailsElement>('details.nav-menu')]
+  for (const menu of menus) {
+    menu.addEventListener('toggle', () => {
+      if (menu.open) {
+        for (const other of menus) {
+          if (other !== menu) {
+            other.open = false
+          }
+        }
+      }
+    })
+  }
+
+  document.addEventListener('click', event => {
+    for (const menu of menus) {
+      if (menu.open && !menu.contains(event.target as Node)) {
+        menu.open = false
+      }
+    }
+  })
+
+  document.addEventListener('keydown', event => {
+    if (event.key !== 'Escape') {
+      return
+    }
+    for (const menu of menus) {
+      if (menu.open) {
+        menu.open = false
+        menu.querySelector('summary')?.focus()
+      }
+    }
+  })
+</script>

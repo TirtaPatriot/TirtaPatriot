@@ -1,0 +1,62 @@
+---
+import { getCollection } from 'astro:content'
+import { titleCase } from '../lib/format'
+import Icon from './Icon.astro'
+
+type Props = { searchable?: boolean }
+const { searchable = false } = Astro.props
+
+const offices = (await getCollection('kantor')).map(entry => ({ id: entry.id, ...entry.data }))
+---
+
+<div data-office-list>
+  {searchable && (
+    <div class="field mb-6 max-w-md">
+      <label for="cari-unit">Cari unit pelayanan</label>
+      <input id="cari-unit" type="search" class="input" placeholder="Nama unit atau kelurahan" autocomplete="off" data-office-search>
+    </div>
+  )}
+
+  <ul class="grid gap-x-8 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
+    {offices.map(office => {
+      const name = titleCase(office.name)
+      const address = titleCase(office.address)
+      return (
+        <li class="flex flex-col gap-1 border-t-2 border-patriot pt-3" data-office={`${name} ${address}`.toLowerCase()}>
+          <h3 class="font-bold">Unit {name}</h3>
+          <p class="flex-1 text-redup">{address}</p>
+          {office.latitude && office.longitude ? (
+            <a class="link mt-1 inline-flex items-center gap-1.5 self-start" href={`https://www.google.com/maps/dir/?api=1&destination=${office.latitude},${office.longitude}`} rel="noopener" target="_blank">
+              <Icon name="mdi:directions" size={18} /> Petunjuk arah
+            </a>
+          ) : null}
+        </li>
+      )
+    })}
+  </ul>
+
+  {searchable && <p class="py-8 text-redup" data-office-empty hidden>Tidak ada unit pelayanan yang cocok. Coba kata lain, misalnya nama kecamatan.</p>}
+</div>
+
+{searchable && (
+  <script>
+    for (const list of document.querySelectorAll<HTMLElement>('[data-office-list]')) {
+      const input = list.querySelector<HTMLInputElement>('[data-office-search]')
+      const items = [...list.querySelectorAll<HTMLElement>('[data-office]')]
+      const empty = list.querySelector<HTMLElement>('[data-office-empty]')
+
+      input?.addEventListener('input', () => {
+        const query = input.value.trim().toLowerCase()
+        let shown = 0
+        for (const item of items) {
+          const match = !query || (item.dataset.office ?? '').includes(query)
+          item.hidden = !match
+          shown += match ? 1 : 0
+        }
+        if (empty) {
+          empty.hidden = shown > 0
+        }
+      })
+    }
+  </script>
+)}

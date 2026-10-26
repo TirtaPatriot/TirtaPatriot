@@ -1,0 +1,64 @@
+---
+import { getCollection } from 'astro:content'
+import Icon from '../../../components/Icon.astro'
+import PageHead from '../../../components/PageHead.astro'
+import Base from '../../../layouts/Base.astro'
+
+const GROUPS = [
+  {
+    key: 'whatsapp',
+    title: 'Layanan WhatsApp Business dan Meta App',
+    text: 'Dokumen legal dan privasi untuk saluran perpesanan resmi WhatsApp Business Perumda Tirta Patriot.',
+    icon: 'mdi:whatsapp',
+  },
+  {
+    key: 'google',
+    title: 'Layanan integrasi Google (CRM / OCA)',
+    text: 'Ketentuan dan privasi integrasi Google OAuth pada sistem CRM dukungan pelanggan OCA.',
+    icon: 'mdi:google',
+  },
+] as const
+
+const docs = (await getCollection('legal')).toSorted((a, b) => a.data.order - b.data.order)
+---
+
+<Base title="Kebijakan privasi dan ketentuan layanan" description="Kebijakan privasi, ketentuan layanan, dan panduan pelindungan data pengguna layanan digital Perusahaan Umum Daerah Air Minum Tirta Patriot Kota Bekasi.">
+  <PageHead
+    title="Kebijakan privasi dan ketentuan layanan"
+    lead="Seluruh dokumen kebijakan privasi, syarat penggunaan, dan pedoman pelindungan data pribadi untuk layanan digital Perumda Tirta Patriot Kota Bekasi."
+    crumbs={[{ title: 'Beranda', href: '/' }, { title: 'Informasi' }]}
+  />
+
+  <div class="wrap mt-10 grid gap-12 md:grid-cols-2">
+    {GROUPS.map(group => (
+      <section aria-labelledby={`grup-${group.key}`}>
+        <h2 id={`grup-${group.key}`} class="flex items-center gap-2 text-xl font-bold">
+          <Icon name={group.icon} size={24} class="text-patriot" /> {group.title}
+        </h2>
+        <p class="mt-1 text-redup">{group.text}</p>
+        <ul class="mt-4 border-t border-garis">
+          {docs.filter(doc => doc.data.group === group.key).map(doc => (
+            <li class="border-b border-garis">
+              <a href={`/informasi/privacy-policy/${doc.id}`} class="group flex items-start justify-between gap-4 py-4">
+                <span>
+                  <span class="block font-bold group-hover:text-patriot group-hover:underline">{doc.data.seoTitle.replace(/ - Perumda Tirta Patriot$/, '')}</span>
+                  <span class="block text-redup">{doc.data.summary}</span>
+                </span>
+                <span class="shrink-0 rounded-sm border border-garis px-2 py-0.5 text-sm text-redup">{doc.data.indexBadge}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))}
+  </div>
+
+  <div class="wrap mt-14">
+    <section class="max-w-[68ch] rounded-lg bg-kabut p-6" aria-labelledby="pdp-judul">
+      <h2 id="pdp-judul" class="text-lg font-bold">Komitmen pelindungan data pribadi</h2>
+      <p class="mt-2">
+        Perumda Tirta Patriot Kota Bekasi senantiasa mematuhi Undang-Undang Republik Indonesia Nomor 27 Tahun 2022 tentang Pelindungan Data Pribadi (UU PDP). Kami menjamin bahwa pemrosesan data pribadi pada seluruh layanan digital dilakukan dengan prinsip legalitas, kehati-hatian, pembatasan tujuan, serta pengamanan ketat.
+      </p>
+    </section>
+  </div>
+</Base>

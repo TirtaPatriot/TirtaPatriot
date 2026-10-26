@@ -1,0 +1,157 @@
+---
+import { getCollection } from 'astro:content'
+import ArticleCard from '../components/ArticleCard.astro'
+import CmsImage from '../components/CmsImage.astro'
+import Himbauan from '../components/Himbauan.astro'
+import Icon from '../components/Icon.astro'
+import MeterField from '../components/MeterField.astro'
+import Base from '../layouts/Base.astro'
+import { dateTimeShort, numberId } from '../lib/format'
+import { APP_LINKS } from '../lib/site'
+
+const berita = (await getCollection('artikel', entry => entry.data.jenis === 'berita'))
+  .toSorted((a, b) => b.data.terbit.getTime() - a.data.terbit.getTime())
+  .slice(0, 3)
+
+const [utama, ...lainnya] = berita
+const slide = (await getCollection('korsel')).toSorted((a, b) => a.data.order - b.data.order)[0]
+const statistik = (await getCollection('statistik')).toSorted((a, b) => a.data.order - b.data.order)
+const gangguan = (await getCollection('gangguan')).map(entry => ({ id: entry.id, ...entry.data }))
+
+const services = [
+  { title: 'Lapor gangguan', text: 'Air mati, keruh, atau pipa bocor', icon: 'mdi:message-alert-outline', href: '/pelanggan/pengaduan' },
+  { title: 'Lacak pengaduan', text: 'Pantau tiket yang sudah dibuat', icon: 'mdi:ticket-confirmation-outline', href: '/pelanggan/pengaduan#lacak' },
+  { title: 'Pasang baru', text: 'Tahapan sambungan air ke rumah', icon: 'mdi:pipe', href: '/pelanggan/pendaftaran' },
+  { title: 'Tempat bayar', text: 'Mitra dan loket resmi', icon: 'mdi:storefront-outline', href: '/informasi/tempat-pembayaran' },
+]
+---
+
+<Base description="Cek tagihan air, lapor gangguan, dan pantau informasi layanan air bersih Perumda Tirta Patriot Kota Bekasi.">
+  <section class="relative overflow-hidden bg-kabut">
+    <div class="wrap grid gap-10 py-10 md:py-16 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-center lg:gap-14">
+      <div>
+        <h1 class="text-display font-extrabold">Berapa tagihan air Anda bulan ini?</h1>
+        <p class="mt-4 max-w-[46ch] text-lg text-redup">
+          Masukkan nomor pelanggan yang tertera di rekening air. Rincian pemakaian dan tagihan langsung tampil.
+        </p>
+
+        <form action="/pelanggan/tagihan" method="get" class="mt-8 grid max-w-[34rem] gap-4">
+          <MeterField id="nomor-beranda" label="Nomor pelanggan" hint="Contoh: 010301001045" />
+          <button class="btn btn-primary justify-self-start px-6 text-lg" type="submit">
+            <Icon name="mdi:receipt-text-outline" size={22} /> Cek tagihan
+          </button>
+        </form>
+      </div>
+
+      <div class="relative">
+        {slide && (
+          <CmsImage
+            src={slide.data.image}
+            alt={slide.data.title}
+            ratio={4 / 3}
+            widths={[480, 720, 960]}
+            sizes="(min-width: 1024px) 40vw, 100vw"
+            class="w-full rounded-lg"
+            eager
+          />
+        )}
+
+        <div class="relative -mt-12 mr-4 ml-4 rounded-lg bg-white p-5 shadow-lg shadow-pipa/10 sm:mr-8 sm:ml-8" data-status-panel data-status-ids={gangguan.map(item => item.id).join(',')}>
+          {gangguan.length > 0 ? (
+            <>
+              <p class="flex items-center gap-2 font-bold text-meter">
+                <Icon name="mdi:water-alert-outline" size={22} />
+                <span data-status-count>{gangguan.length} gangguan sedang ditangani</span>
+              </p>
+              <ul class="mt-2 grid gap-1.5" data-status-list>
+                {gangguan.slice(0, 2).map(item => (
+                  <li><span class="font-semibold">{item.title}</span>{item.mulai && <span class="block text-sm text-redup">Sejak {dateTimeShort(item.mulai)}</span>}</li>
+                ))}
+              </ul>
+            </>
+          ) : (
+            <p class="flex items-center gap-2 font-bold text-lunas">
+              <Icon name="mdi:water-check-outline" size={22} />
+              <span data-status-count>Tidak ada gangguan yang tercatat</span>
+            </p>
+          )}
+          <a href="/informasi/gangguan-layanan" class="link mt-3 inline-block">Lihat informasi gangguan</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <nav aria-label="Layanan lain" class="wrap">
+    <ul class="grid gap-x-8 border-b border-garis sm:grid-cols-2 lg:grid-cols-4">
+      {services.map(service => (
+        <li>
+          <a href={service.href} class="group flex items-start gap-3 py-6">
+            <Icon name={service.icon} size={28} class="mt-0.5 shrink-0 text-patriot" />
+            <span>
+              <span class="block font-bold group-hover:text-patriot group-hover:underline">{service.title}</span>
+              <span class="block text-redup">{service.text}</span>
+            </span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+
+  {utama && (
+    <section class="wrap mt-14" aria-labelledby="berita-judul">
+      <div class="mb-6 flex items-baseline justify-between gap-4">
+        <h2 id="berita-judul" class="text-title font-extrabold">Berita terbaru</h2>
+        <a href="/berita" class="link">Semua berita</a>
+      </div>
+      <ArticleCard article={utama} lead />
+      {lainnya.length > 0 && (
+        <div class="mt-10 grid gap-8 md:grid-cols-2">
+          {lainnya.map(article => <ArticleCard article={article} />)}
+        </div>
+      )}
+    </section>
+  )}
+
+  <section class="mt-16 bg-pipa text-white" aria-labelledby="aplikasi-judul">
+    <div class="wrap flex flex-col gap-6 py-10 md:flex-row md:items-center md:justify-between">
+      <div>
+        <h2 id="aplikasi-judul" class="text-2xl font-extrabold">Tirta Patriot Mobile</h2>
+        <p class="mt-1 max-w-[52ch] text-white/85">Cek tagihan, riwayat pemakaian, dan pengaduan langsung dari ponsel Anda.</p>
+      </div>
+      <div class="flex flex-wrap gap-3">
+        <a class="btn border-white/30 bg-white text-pipa hover:bg-air" href={APP_LINKS.play} rel="noopener external" target="_blank">
+          <Icon name="logos:google-play-icon" size={20} /> Google Play
+        </a>
+        <a class="btn border-white/30 bg-white text-pipa hover:bg-air" href={APP_LINKS.appStore} rel="noopener external" target="_blank">
+          <Icon name="logos:apple-app-store" size={20} /> App Store
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap mt-16 grid gap-14 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
+    <Himbauan />
+
+    {statistik.length > 0 && (
+      <section aria-labelledby="angka-judul">
+        <h2 id="angka-judul" class="text-xl font-bold">Tirta Patriot dalam angka</h2>
+        <dl class="mt-4 grid grid-cols-2 gap-x-6 gap-y-5">
+          {statistik.map(stat => (
+            <div>
+              <dt class="text-redup">{stat.data.name}</dt>
+              <dd class="num text-2xl font-extrabold">{numberId(stat.data.value)}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+    )}
+  </div>
+</Base>
+
+<script>
+  import { bindMeterFields } from '../scripts/meter-input'
+  import { refreshStatusPanel } from '../scripts/gangguan'
+
+  bindMeterFields()
+  void refreshStatusPanel()
+</script>

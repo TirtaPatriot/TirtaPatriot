@@ -1,0 +1,19 @@
+---
+import { WHATSAPP_CC } from '../lib/site'
+import Icon from './Icon.astro'
+---
+
+<aside class="mt-12 flex flex-col gap-4 rounded-lg bg-air p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6" aria-labelledby="bantuan-judul">
+  <div>
+    <h2 id="bantuan-judul" class="text-lg font-bold">Perlu bantuan langsung?</h2>
+    <p class="text-redup">Hubungi Contact Center lewat WhatsApp atau datang ke unit pelayanan terdekat.</p>
+  </div>
+  <div class="flex shrink-0 flex-wrap gap-2">
+    <a class="btn btn-wa" href={WHATSAPP_CC} rel="noopener" target="_blank">
+      <Icon name="mdi:whatsapp" size={20} /> Chat WhatsApp
+    </a>
+    <a class="btn btn-quiet" href="/perusahaan/kontak#unit-pelayanan">
+      <Icon name="mdi:map-marker-outline" size={20} /> Cari unit pelayanan
+    </a>
+  </div>
+</aside>

@@ -1,6 +1,7 @@
 {
   "recommendations": [
-    "vuetifyjs.vuetify-vscode",
-    "vue.volar"
+    "astro-build.astro-vscode",
+    "bradlc.vscode-tailwindcss",
+    "oxc.oxc-vscode"
   ]
 }

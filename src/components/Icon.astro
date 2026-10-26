@@ -1,0 +1,38 @@
+---
+/**
+ * Ikon SVG inline dari set Iconify (`mdi:nama` atau `logos:nama`), dirender saat build
+ * sehingga tidak ada font ikon maupun JavaScript yang dikirim ke browser.
+ */
+import logos from '@iconify-json/logos/icons.json'
+import mdi from '@iconify-json/mdi/icons.json'
+import type { IconifyJSON } from '@iconify/types'
+import { getIconData, iconToHTML, iconToSVG, replaceIDs } from '@iconify/utils'
+
+type Props = {
+  name: string
+  size?: number | string
+  class?: string
+  label?: string
+}
+
+const sets: Record<string, IconifyJSON> = { mdi: mdi as IconifyJSON, logos: logos as IconifyJSON }
+
+const { name, size = '1em', class: className, label } = Astro.props
+const [prefix = 'mdi', iconName = ''] = name.replace(/^i-/, '').replace(/^mdi-/, 'mdi:').split(':')
+const data = sets[prefix] ? getIconData(sets[prefix], iconName) : null
+
+if (!data) {
+  console.warn(`[Icon] ikon tidak ditemukan: ${name}`)
+}
+
+const svg = data ? iconToSVG(data, { height: String(size) }) : null
+const attributes: Record<string, string> = {
+  ...svg?.attributes,
+  ...(label ? { 'role': 'img', 'aria-label': label } : { 'aria-hidden': 'true' }),
+  ...(className ? { class: className } : {}),
+  focusable: 'false',
+}
+const html = svg ? iconToHTML(replaceIDs(svg.body), attributes) : ''
+---
+
+<Fragment set:html={html} />

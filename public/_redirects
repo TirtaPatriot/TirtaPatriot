@@ -1,11 +1,4 @@
-/info-tagihan	/pelanggan/tagihan
-/pendaftaran-pasang-baru	/pelanggan/pendaftaran
-/profile	/perusahaan/manajemen
-/tempat-pembayaran	/informasi/tempat-pembayaran
-/info/berita	/informasi/berita
-/pengumuman-pelanggan	/informasi/berita
-/pelanggan/pengaduan/:id	/pelanggan/pengaduan?tiket=:id	301!
-
+# Domain lain ke domain utama
 https://tirtapatriot.com/* https://tirtapatriot.co.id/:splat 301!
 https://tirtapatriot.co/* https://tirtapatriot.co.id/:splat 301!
 https://perumdatirtapatriot.co.id/* https://tirtapatriot.co.id/:splat 301!
@@ -15,5 +8,41 @@ https://www.tirtapatriot.co.id/* https://tirtapatriot.co.id/:splat 301!
 https://web.tirtapatriot.co.id/* https://tirtapatriot.co.id/:splat 301!
 https://tirtapatriot.netlify.app/* https://tirtapatriot.co.id/:splat 301!
 
-/berita/daftar-sementara-peserta-seleksi-calon-direktur-bidang-teknik-perusahaan-umum-daerah-air-minum-tirta-patriot-periode-2026-2031/C1E28AB9-A2A1-42C4-AA1A-E5235AAB8924.pdf https://cms.tirtapatriot.net/assets/C1E28AB9-A2A1-42C4-AA1A-E5235AAB8924.pdf 301!
+# Alamat lama situs
+/info-tagihan	/pelanggan/tagihan	301
+/info/tagihan	/pelanggan/tagihan	301
+/pendaftaran-pasang-baru	/pelanggan/pendaftaran	301
+/profile	/perusahaan/manajemen	301
+/perusahaan	/perusahaan/sejarah	301
+/tempat-pembayaran	/informasi/tempat-pembayaran	301
+/pengumuman-pelanggan	/berita	301
+/pelanggan/pengaduan/:id	/pelanggan/pengaduan?tiket=:id	301!
 
+# Berita dan edukasi kini di /berita dan /edukasi
+/info/berita	/berita	301
+/informasi/berita	/berita	301
+/info/berita/*	/berita/:splat	301
+/informasi/berita/*	/berita/:splat	301
+/info/edukasi	/edukasi	301
+/informasi/edukasi	/edukasi	301
+/info/edukasi/*	/edukasi/:splat	301
+/informasi/edukasi/*	/edukasi/:splat	301
+
+# Alias dokumen legal (lihat `aliases` di src/content/legal/*.md); dipakai di pendaftaran aplikasi Meta & Google
+/privacy-policy	/informasi/privacy-policy/whatsapp-business	301
+/privacy	/informasi/privacy-policy/whatsapp-business	301
+/kebijakan-privasi	/informasi/privacy-policy/whatsapp-business	301
+/privacy-policy/whatsapp-business	/informasi/privacy-policy/whatsapp-business	301
+/terms-of-service	/informasi/privacy-policy/whatsapp-business-tos	301
+/tos	/informasi/privacy-policy/whatsapp-business-tos	301
+/syarat-ketentuan	/informasi/privacy-policy/whatsapp-business-tos	301
+/terms	/informasi/privacy-policy/whatsapp-business-tos	301
+/terms-of-service/whatsapp-business	/informasi/privacy-policy/whatsapp-business-tos	301
+/data-deletion	/informasi/privacy-policy/whatsapp-business-deletion	301
+/user-data-deletion	/informasi/privacy-policy/whatsapp-business-deletion	301
+/hapus-data	/informasi/privacy-policy/whatsapp-business-deletion	301
+/privacy-policy/oca-google	/informasi/privacy-policy/oca-google	301
+/terms-of-service/oca-google	/informasi/privacy-policy/oca-google-tos	301
+
+# Lampiran lama
+/berita/daftar-sementara-peserta-seleksi-calon-direktur-bidang-teknik-perusahaan-umum-daerah-air-minum-tirta-patriot-periode-2026-2031/C1E28AB9-A2A1-42C4-AA1A-E5235AAB8924.pdf https://cms.tirtapatriot.net/assets/C1E28AB9-A2A1-42C4-AA1A-E5235AAB8924.pdf 301!

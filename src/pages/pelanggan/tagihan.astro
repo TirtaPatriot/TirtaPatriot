@@ -1,0 +1,96 @@
+---
+import ErrorBox from '../../components/ErrorBox.astro'
+import HelpPanel from '../../components/HelpPanel.astro'
+import Icon from '../../components/Icon.astro'
+import MeterField from '../../components/MeterField.astro'
+import PageHead from '../../components/PageHead.astro'
+import RecaptchaNote from '../../components/RecaptchaNote.astro'
+import Base from '../../layouts/Base.astro'
+---
+
+<Base title="Cek tagihan air" description="Periksa rincian rekening dan tagihan pemakaian air pelanggan Perumda Tirta Patriot Kota Bekasi secara online.">
+  <PageHead
+    title="Cek tagihan air"
+    lead="Masukkan nomor pelanggan yang tertera di rekening air untuk melihat tagihan yang belum dibayar."
+    crumbs={[{ title: 'Beranda', href: '/' }, { title: 'Layanan pelanggan', href: '/pelanggan' }]}
+  />
+
+  <div class="wrap mt-10">
+    <form class="grid max-w-[34rem] gap-4" novalidate data-tagihan-form>
+      <MeterField id="nomor" label="Nomor pelanggan" hint="Contoh: 010301001045" autofocus />
+      <ErrorBox />
+      <div class="flex flex-wrap items-center gap-4">
+        <button class="btn btn-primary px-6 text-lg" type="submit" data-idle="Cek tagihan">
+          <Icon name="mdi:receipt-text-outline" size={22} />
+          <span data-label>Cek tagihan</span>
+        </button>
+      </div>
+      <RecaptchaNote />
+    </form>
+
+    <section class="mt-12 scroll-mt-24" aria-live="polite" data-tagihan-result hidden tabindex="-1"></section>
+
+    <p class="notice mt-12 max-w-[68ch]">
+      <Icon name="mdi:information-outline" size={20} />
+      <span>Nominal pada struk pembayaran mitra atau merchant bisa berbeda karena penyesuaian biaya administrasi transaksi.</span>
+    </p>
+
+    <HelpPanel />
+  </div>
+</Base>
+
+<style is:global>
+  /* tabel rincian: baris menjadi kartu pada layar sempit */
+  @media (width < 48rem) {
+    .tagihan-table thead {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+    }
+
+    .tagihan-table tr {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 0.25rem 1rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--color-garis);
+    }
+
+    .tagihan-table td {
+      display: contents;
+    }
+
+    .tagihan-table td::before {
+      content: attr(data-label);
+      color: var(--color-redup);
+    }
+
+    .tagihan-table td.periode::before {
+      content: none;
+    }
+
+    .tagihan-table td.periode > span {
+      grid-column: 1 / -1;
+      font-weight: 700;
+    }
+  }
+</style>
+
+<script>
+  import { bindMeterFields, digitsOnly } from '../../scripts/meter-input'
+  import { initTagihan } from '../../scripts/tagihan'
+
+  bindMeterFields()
+  initTagihan()
+
+  // nomor dari formulir beranda (?nomor=...) langsung diperiksa
+  const nomor = digitsOnly(new URLSearchParams(location.search).get('nomor') ?? '')
+  const input = document.querySelector<HTMLInputElement>('#nomor')
+  if (nomor && input) {
+    input.value = nomor
+    input.dispatchEvent(new Event('input'))
+    document.querySelector<HTMLFormElement>('[data-tagihan-form]')?.requestSubmit()
+  }
+</script>

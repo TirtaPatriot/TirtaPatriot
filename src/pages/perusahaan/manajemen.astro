@@ -1,0 +1,47 @@
+---
+import { getCollection } from 'astro:content'
+import CmsImage from '../../components/CmsImage.astro'
+import Icon from '../../components/Icon.astro'
+import PageHead from '../../components/PageHead.astro'
+import Base from '../../layouts/Base.astro'
+import { assetUrl } from '../../lib/directus'
+import { titleCase } from '../../lib/format'
+
+const direksi = (await getCollection('direksi')).map(entry => entry.data).toSorted((a, b) => a.order - b.order)
+
+const SOTK_ID = '8A917A55-EC1A-4166-890A-1FB3AC32E481'
+---
+
+<Base title="Manajemen" description="Jajaran direksi serta susunan organisasi dan tata kerja Perumda Tirta Patriot Kota Bekasi.">
+  <PageHead
+    title="Manajemen"
+    lead="Pimpinan dan susunan organisasi Perumda Tirta Patriot Kota Bekasi."
+    crumbs={[{ title: 'Beranda', href: '/' }, { title: 'Perusahaan' }]}
+  />
+
+  <div class="wrap mt-10">
+    <section id="direksi" aria-labelledby="direksi-judul">
+      <h2 id="direksi-judul" class="text-2xl font-extrabold">Jajaran direksi</h2>
+      <ul class="mt-6 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        {direksi.map(person => (
+          <li>
+            <CmsImage src={person.foto} alt={`Foto ${titleCase(person.nama)}`} ratio={4 / 5} widths={[320, 480, 640]} sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 100vw" class="w-full rounded-lg bg-air" />
+            <h3 class="mt-3 text-lg font-bold">{person.nama}</h3>
+            <p class="text-redup">{titleCase(person.jabatan)}</p>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section id="sotk" class="mt-16 border-t border-garis pt-10" aria-labelledby="sotk-judul">
+      <h2 id="sotk-judul" class="text-2xl font-extrabold">Susunan organisasi dan tata kerja</h2>
+      <p class="mt-2 text-redup">Geser bagan ke samping untuk melihat seluruhnya, atau buka gambar ukuran penuh.</p>
+      <div class="mt-6 overflow-x-auto rounded-lg border border-garis p-3">
+        <img src={assetUrl(SOTK_ID, { width: 1600 })} alt="Bagan susunan organisasi dan tata kerja Perumda Tirta Patriot" width="1600" height="887" loading="lazy" decoding="async" class="h-auto max-w-none min-w-[44rem] lg:w-full lg:min-w-0">
+      </div>
+      <a class="link mt-4 inline-flex items-center gap-1.5" href={assetUrl(SOTK_ID, { format: 'png', quality: 100 })} rel="noopener" target="_blank">
+        <Icon name="mdi:open-in-new" size={18} /> Buka gambar ukuran penuh
+      </a>
+    </section>
+  </div>
+</Base>

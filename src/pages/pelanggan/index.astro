@@ -1,0 +1,64 @@
+---
+import HelpPanel from '../../components/HelpPanel.astro'
+import Icon from '../../components/Icon.astro'
+import PageHead from '../../components/PageHead.astro'
+import Base from '../../layouts/Base.astro'
+
+const services = [
+  {
+    title: 'Cek tagihan air',
+    text: 'Lihat pemakaian kubik, stan meter, dan rincian tagihan yang belum dibayar.',
+    icon: 'mdi:receipt-text-outline',
+    href: '/pelanggan/tagihan',
+    action: 'Cek tagihan',
+  },
+  {
+    title: 'Pengaduan',
+    text: 'Laporkan air mati, air keruh, atau pipa bocor, lalu pantau penanganannya dengan nomor tiket.',
+    icon: 'mdi:message-alert-outline',
+    href: '/pelanggan/pengaduan',
+    action: 'Buat atau lacak pengaduan',
+  },
+  {
+    title: 'Pasang baru',
+    text: 'Tahapan pendaftaran, survei lokasi, sampai pemasangan meter air di rumah Anda.',
+    icon: 'mdi:pipe',
+    href: '/pelanggan/pendaftaran',
+    action: 'Lihat tahapan',
+  },
+  {
+    title: 'Tempat pembayaran',
+    text: 'Mitra pembayaran resmi dan unit pelayanan untuk membayar rekening air.',
+    icon: 'mdi:storefront-outline',
+    href: '/informasi/tempat-pembayaran',
+    action: 'Cari tempat bayar',
+  },
+]
+---
+
+<Base title="Layanan pelanggan" description="Cek tagihan air online, pengaduan dan lacak tiket, serta informasi pasang baru Perumda Tirta Patriot Kota Bekasi.">
+  <PageHead
+    title="Layanan pelanggan"
+    lead="Urus kebutuhan sambungan air Anda dari satu tempat, kapan saja."
+    crumbs={[{ title: 'Beranda', href: '/' }]}
+  />
+
+  <div class="wrap mt-10">
+    <ul class="grid gap-x-12 gap-y-2 md:grid-cols-2">
+      {services.map(service => (
+        <li class="border-b border-garis">
+          <a href={service.href} class="group grid grid-cols-[2.5rem_1fr] gap-4 py-7">
+            <Icon name={service.icon} size={34} class="text-patriot" />
+            <span>
+              <span class="block text-xl font-bold group-hover:text-patriot">{service.title}</span>
+              <span class="mt-1 block text-redup">{service.text}</span>
+              <span class="link mt-3 inline-block">{service.action}</span>
+            </span>
+          </a>
+        </li>
+      ))}
+    </ul>
+
+    <HelpPanel />
+  </div>
+</Base>

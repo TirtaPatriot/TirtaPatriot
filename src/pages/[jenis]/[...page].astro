@@ -1,0 +1,61 @@
+---
+import type { CollectionEntry } from 'astro:content'
+import type { GetStaticPaths, Page } from 'astro'
+import ArticleCard from '../../components/ArticleCard.astro'
+import Icon from '../../components/Icon.astro'
+import PageHead from '../../components/PageHead.astro'
+import Base from '../../layouts/Base.astro'
+import { getArtikel, JENIS, type Jenis } from '../../lib/artikel'
+
+export const getStaticPaths = (async ({ paginate }) => {
+  const paths = []
+  for (const jenis of Object.keys(JENIS) as Jenis[]) {
+    const articles = await getArtikel(jenis)
+    paths.push(...paginate(articles, { pageSize: 12, params: { jenis } }))
+  }
+  return paths
+}) satisfies GetStaticPaths
+
+type Props = { page: Page<CollectionEntry<'artikel'>> }
+
+const { page } = Astro.props
+const jenis = Astro.params.jenis as Jenis
+const meta = JENIS[jenis]
+const [first, ...rest] = page.data
+const showLead = page.currentPage === 1 && first
+const grid = showLead ? rest : page.data
+const title = page.currentPage > 1 ? `${meta.title}, halaman ${page.currentPage}` : meta.title
+---
+
+<Base title={title} description={meta.lead}>
+  <PageHead title={meta.title} lead={meta.lead} crumbs={[{ title: 'Beranda', href: '/' }, { title: 'Informasi' }]} />
+
+  <div class="wrap mt-10">
+    {page.total === 0 && (
+      <div class="py-10">
+        <p class="text-lg">{meta.empty}</p>
+        <p class="mt-2 text-redup">Untuk informasi lain, hubungi kami lewat <a class="link" href="/perusahaan/kontak">halaman kontak</a>.</p>
+      </div>
+    )}
+
+    {showLead && <ArticleCard article={first} lead headingLevel="h2" />}
+
+    {grid.length > 0 && (
+      <div class:list={['grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-3', showLead && 'mt-12 border-t border-garis pt-10']}>
+        {grid.map(article => <ArticleCard article={article} headingLevel="h2" />)}
+      </div>
+    )}
+
+    {page.lastPage > 1 && (
+      <nav aria-label="Halaman" class="mt-14 flex flex-wrap items-center justify-between gap-4 border-t border-garis pt-6">
+        {page.url.prev ? (
+          <a class="btn btn-quiet" href={page.url.prev}><Icon name="mdi:chevron-left" size={20} /> Lebih baru</a>
+        ) : <span />}
+        <p class="text-redup">Halaman {page.currentPage} dari {page.lastPage}</p>
+        {page.url.next ? (
+          <a class="btn btn-quiet" href={page.url.next}>Lebih lama <Icon name="mdi:chevron-right" size={20} /></a>
+        ) : <span />}
+      </nav>
+    )}
+  </div>
+</Base>

@@ -1,0 +1,55 @@
+---
+import Icon from '../../components/Icon.astro'
+import PageHead from '../../components/PageHead.astro'
+import Base from '../../layouts/Base.astro'
+import { SOCIALS } from '../../lib/site'
+
+const steps = [
+  { title: 'Hubungi kami', text: 'Hubungi Humas Perumda Tirta Patriot atau isi formulir online untuk informasi pendaftaran.' },
+  { title: 'Daftar', text: 'Bawa semua berkas yang diperlukan ke Kantor atau Unit Pelayanan Pelanggan (KPP / UPP) Tirta Patriot.' },
+  { title: 'Survei lokasi', text: 'Petugas Tirta Patriot datang ke tempat tinggal Anda untuk melakukan survei.' },
+  { title: 'Bayar biaya pemasangan', text: 'Setelah menerima surat persetujuan, datangi KPP / UPP untuk melakukan pembayaran.' },
+  { title: 'Pemasangan', text: 'Petugas Tirta Patriot datang untuk memasang meter air di tempat tinggal Anda.' },
+]
+---
+
+<Base title="Pendaftaran pasang baru" description="Alur, tahapan, dan persyaratan pendaftaran sambungan air bersih baru Perumda Tirta Patriot Kota Bekasi.">
+  <PageHead
+    title="Pasang sambungan baru"
+    lead="Lima tahap dari pendaftaran sampai meter air terpasang di rumah Anda."
+    crumbs={[{ title: 'Beranda', href: '/' }, { title: 'Layanan pelanggan', href: '/pelanggan' }]}
+  />
+
+  <div class="wrap mt-12 grid gap-14 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
+    <!-- tahapan berurutan: garis vertikal seperti pipa yang menyambung ke rumah -->
+    <ol class="relative">
+      {steps.map((step, index) => (
+        <li class="relative grid grid-cols-[3rem_1fr] gap-4 pb-10 last:pb-0">
+          {index < steps.length - 1 && <span class="absolute top-12 bottom-0 left-[1.4rem] w-1 rounded-full bg-air-strong" aria-hidden="true" />}
+          <span class="relative grid size-12 place-items-center rounded-full bg-patriot text-lg font-extrabold text-white">{index + 1}</span>
+          <div class="pt-2.5">
+            <h2 class="text-xl font-bold">{step.title}</h2>
+            <p class="mt-1 text-redup">{step.text}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+
+    <aside class="self-start rounded-lg bg-air p-6">
+      <h2 class="text-xl font-bold">Daftar dan konsultasi langsung</h2>
+      <p class="mt-2">
+        Pendaftaran online sedang dalam proses integrasi sistem. Untuk pendaftaran, survei lokasi, dan permohonan sambungan baru,
+        tim Humas dan Layanan Pelanggan siap membantu lewat kanal resmi berikut.
+      </p>
+      <ul class="mt-5 grid gap-2">
+        {SOCIALS.map(social => (
+          <li>
+            <a href={social.href} rel="noopener" target="_blank" class="flex min-h-11 items-center gap-3 rounded-md bg-white px-4 font-semibold hover:text-patriot">
+              <Icon name={social.icon} size={22} /> {social.title}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </aside>
+  </div>
+</Base>

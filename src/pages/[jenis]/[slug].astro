@@ -1,0 +1,114 @@
+---
+import type { CollectionEntry } from 'astro:content'
+import { getCollection, render } from 'astro:content'
+import type { GetStaticPaths } from 'astro'
+import ArticleCard from '../../components/ArticleCard.astro'
+import CmsImage from '../../components/CmsImage.astro'
+import Icon from '../../components/Icon.astro'
+import Base from '../../layouts/Base.astro'
+import { getArtikel, JENIS } from '../../lib/artikel'
+import { assetUrl } from '../../lib/directus'
+import { dateLong } from '../../lib/format'
+import { plainText } from '../../lib/render-content'
+
+export const getStaticPaths = (async () => {
+  const articles = await getCollection('artikel')
+  return articles.map(article => {
+    const [jenis, ...rest] = article.id.split('/')
+    return { params: { jenis, slug: rest.join('/') }, props: { article } }
+  })
+}) satisfies GetStaticPaths
+
+type Props = { article: CollectionEntry<'artikel'> }
+
+const { article } = Astro.props
+const { Content } = await render(article)
+const { judul, ringkasan, cover, terbit, jenis } = article.data
+const meta = JENIS[jenis]
+const description = ringkasan || plainText(article.rendered?.html) || meta.lead
+
+const related = (await getArtikel(jenis)).filter(entry => entry.id !== article.id).slice(0, 3)
+
+const shareUrl = new URL(`/${article.id}`, Astro.site).toString()
+const shareText = encodeURIComponent(`${judul} ${shareUrl}`)
+const shareTargets = [
+  { label: 'WhatsApp', icon: 'mdi:whatsapp', href: `https://wa.me/?text=${shareText}` },
+  { label: 'Facebook', icon: 'mdi:facebook', href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}` },
+  { label: 'X', icon: 'mdi:twitter', href: `https://twitter.com/intent/tweet?text=${shareText}` },
+]
+---
+
+<Base
+  title={judul}
+  description={description}
+  image={assetUrl(cover, { width: 1200, height: 630, fit: 'cover', format: 'jpg' })}
+  type="article"
+  publishedTime={terbit}
+>
+  <article>
+    <header class="wrap wrap-narrow pt-8 md:pt-12">
+      <nav aria-label="Lokasi halaman" class="text-sm text-redup">
+        <a href={`/${jenis}`} class="inline-flex items-center gap-1 hover:text-patriot hover:underline">
+          <Icon name="mdi:chevron-left" size={18} /> {meta.title}
+        </a>
+      </nav>
+      <h1 class="mt-3 text-title font-extrabold">{judul}</h1>
+      <p class="mt-3 text-redup">
+        Diterbitkan <time datetime={terbit.toISOString()}>{dateLong(terbit)}</time>
+      </p>
+    </header>
+
+    <div class="wrap mt-8 max-w-[60rem]">
+      <CmsImage src={cover} alt="" ratio={16 / 9} widths={[640, 960, 1440]} sizes="(min-width: 960px) 60rem, 100vw" class="w-full rounded-lg bg-air" eager />
+    </div>
+
+    <div class="wrap wrap-narrow mt-10">
+      <div class="content">
+        <Content />
+      </div>
+
+      <div class="mt-12 flex flex-wrap items-center gap-2 border-t border-garis pt-6" data-share>
+        <p class="mr-2 font-semibold">Bagikan</p>
+        {shareTargets.map(target => (
+          <a class="grid size-11 place-items-center rounded-md border border-garis hover:border-patriot hover:text-patriot" href={target.href} rel="noopener" target="_blank">
+            <Icon name={target.icon} size={20} label={`Bagikan ke ${target.label}`} />
+          </a>
+        ))}
+        <button type="button" class="btn btn-quiet" data-copy={shareUrl}>
+          <Icon name="mdi:link-variant" size={20} />
+          <span data-copy-label>Salin tautan</span>
+        </button>
+      </div>
+    </div>
+  </article>
+
+  {related.length > 0 && (
+    <section class="wrap mt-16 border-t border-garis pt-10" aria-labelledby="terkait-judul">
+      <h2 id="terkait-judul" class="text-xl font-bold">{jenis === 'berita' ? 'Berita lainnya' : 'Materi edukasi lainnya'}</h2>
+      <div class="mt-6 grid gap-8 md:grid-cols-3">
+        {related.map(entry => <ArticleCard article={entry} />)}
+      </div>
+    </section>
+  )}
+</Base>
+
+<script>
+  for (const button of document.querySelectorAll<HTMLButtonElement>('[data-copy]')) {
+    const label = button.querySelector('[data-copy-label]')
+    button.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(button.dataset.copy ?? location.href)
+        if (label) {
+          label.textContent = 'Tautan disalin'
+          setTimeout(() => {
+            label.textContent = 'Salin tautan'
+          }, 2000)
+        }
+      } catch {
+        if (label) {
+          label.textContent = 'Salin manual dari bilah alamat'
+        }
+      }
+    })
+  }
+</script>

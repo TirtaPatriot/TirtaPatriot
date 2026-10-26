@@ -1,0 +1,40 @@
+---
+import type { CollectionEntry } from 'astro:content'
+import { getCollection, render } from 'astro:content'
+import type { GetStaticPaths } from 'astro'
+import PageHead from '../../components/PageHead.astro'
+import Base from '../../layouts/Base.astro'
+
+/** Halaman profil yang isinya dikelola di CMS: /perusahaan/sejarah dan /perusahaan/visi-misi. */
+const COPY: Record<string, { lead: string, description: string }> = {
+  'sejarah': {
+    lead: 'Perjalanan kami melayani kebutuhan air bersih masyarakat Kota Bekasi.',
+    description: 'Sejarah berdirinya Perusahaan Umum Daerah Air Minum Tirta Patriot Kota Bekasi.',
+  },
+  'visi-misi': {
+    lead: 'Arah dan komitmen kami dalam menghadirkan layanan air minum yang prima.',
+    description: 'Visi dan misi Perusahaan Umum Daerah Air Minum Tirta Patriot Kota Bekasi.',
+  },
+}
+
+export const getStaticPaths = (async () => {
+  const pages = await getCollection('halaman')
+  return pages.map(page => ({ params: { halaman: page.id }, props: { page } }))
+}) satisfies GetStaticPaths
+
+type Props = { page: CollectionEntry<'halaman'> }
+
+const { page } = Astro.props
+const { Content } = await render(page)
+const copy = COPY[page.id] ?? { lead: '', description: page.data.judul }
+---
+
+<Base title={page.data.judul} description={copy.description}>
+  <PageHead title={page.data.judul} lead={copy.lead} crumbs={[{ title: 'Beranda', href: '/' }, { title: 'Perusahaan' }]} narrow />
+
+  <div class="wrap wrap-narrow mt-10">
+    <div class:list={['content', page.id === 'sejarah' && 'content-omit-heading']}>
+      <Content />
+    </div>
+  </div>
+</Base>

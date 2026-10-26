@@ -1,81 +1,55 @@
 # tirtapatriot-web
 
-Scaffolded with Vuetify CLI.
+Situs publik Perumda Tirta Patriot Kota Bekasi — https://tirtapatriot.co.id
 
-## ❗️ Documentation
+## Stack
 
-- Primary docs: https://vuetifyjs.com/
-- Getting started guide: https://vuetifyjs.com/en/getting-started/installation/
-- Community support: https://community.vuetifyjs.com/
-- Issue tracker: https://issues.vuetifyjs.com/
-
-## 🧱 Stack
-
-- Framework: Nuxt 4
-- UI Library: Vuetify
-- Language: TypeScript
+- [Astro 7](https://docs.astro.build/) dengan keluaran statis
+- [Tailwind CSS v4](https://tailwindcss.com/) lewat `@tailwindcss/vite`
+- TypeScript 7 (kompiler native) untuk pemeriksaan tipe; interaksi di browser memakai TypeScript biasa tanpa framework
+- Konten: Astro content collections yang dimuat dari CMS Directus (`cms.tirtapatriot.net`) saat build
 - Package manager: bun
 
-## 🧭 Start Here
-
-- Main entry: `app/app.vue`
-- Main app component: `app/app.vue`
-- Main styles: `app/assets/styles/`
-- Plugin setup: `app/plugins/`
-
-## 📁 Project Structure
-
-- `app/pages/` — application routes
-- `app/components/` — reusable Vue components
-- `app/assets/` — styles and static assets used in app
-- `app/plugins/` — Nuxt plugins
-- `public/` — static public files
-
-## ✨ Enabled Features
-
-- ESLint
-- Vuetify MCP
-- UnoCSS + Vuetify Preset
-- Client Hints
-
-## 💿 Install
-
-Use your selected package manager (bun) to install dependencies:
+## Mulai
 
 ```bash
 bun install
+cp .env.example .env   # isi kunci reCAPTCHA / Chatwoot bila perlu
+bun run dev
 ```
 
-## 🚀 Quick Start
+## Perintah
 
-```bash
-bun install
-bun dev
-```
+| Perintah | Fungsi |
+| --- | --- |
+| `bun run dev` | server pengembangan |
+| `bun run build` | build statis ke `dist/` |
+| `bun run preview` | pratinjau hasil build |
+| `bun run typecheck` | `astro sync` lalu `tsc --noEmit` (TypeScript 7) |
+| `bun run lint` | oxlint |
+| `bun test` | unit test (penyaring konten, format, URL aset) |
 
-## 🏗️ Build
+## Struktur
 
-```bash
-bun build
-```
+- `src/content.config.ts` — koleksi konten: artikel (berita & edukasi), navigasi, kantor, mitra pembayaran, direksi, statistik, halaman profil, gangguan, dokumen legal
+- `src/lib/` — akses Directus, render konten CMS yang aman, format tanggal/angka, data perusahaan
+- `src/pages/` — rute situs
+- `src/components/` — komponen Astro
+- `src/scripts/` — skrip browser: cek tagihan, pengaduan, gangguan langsung dari CMS
+- `src/styles/global.css` — token desain dan gaya dasar
+- `public/_redirects` — pengalihan alamat lama (format Netlify)
 
-## 🧪 Available Scripts
+## Konten
 
-- `bun build`
-- `bun dev`
-- `bun generate`
-- `bun preview`
-- `bun postinstall`
-- `bun lint`
-- `bun lint:fix`
-- `bun mcp`
-- `bun mcp:revert`
+Konten redaksi tetap dikelola di Directus. Karena situs dibangun statis, **setiap perubahan konten di CMS memerlukan build ulang**: hubungkan webhook Directus (flow saat item dibuat/diubah) ke build hook hosting.
 
-## 💪 Support Vuetify Development
+Pengecualian: halaman **Gangguan layanan** dan panel status di beranda memuat ulang data gangguan langsung dari CMS di browser, sehingga tetap terbaru di antara build.
 
-This project uses Vuetify - an MIT licensed Open Source project. We are glad to welcome contributors and any support for ongoing development:
+## Variabel lingkungan
 
-- Contribute to Vuetify and ecosystem projects: https://github.com/vuetifyjs
-- Request enterprise support: https://support.vuetifyjs.com/
-- Sponsor on GitHub: https://github.com/sponsors/vuetifyjs
-- Support on Open Collective: https://opencollective.com/vuetify
+Lihat `.env.example`. Semuanya bersifat publik (dibaca di browser):
+
+- `PUBLIC_DIRECTUS_URL` — alamat CMS
+- `PUBLIC_API_URL` — API layanan pelanggan untuk tagihan dan pengaduan (bawaan `/api`)
+- `PUBLIC_RECAPTCHA_SITE_KEY` — reCAPTCHA v3 untuk formulir
+- `PUBLIC_CHATWOOT_WEBSITE_TOKEN`, `PUBLIC_CHATWOOT_BASE_URL` — widget obrolan

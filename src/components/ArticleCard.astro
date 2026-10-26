@@ -1,0 +1,34 @@
+---
+import type { CollectionEntry } from 'astro:content'
+import { dateLong } from '../lib/format'
+import CmsImage from './CmsImage.astro'
+
+type Props = {
+  article: CollectionEntry<'artikel'>
+  /** tampilan besar untuk artikel utama */
+  lead?: boolean
+  headingLevel?: 'h2' | 'h3'
+}
+
+const { article, lead = false, headingLevel: Heading = 'h3' } = Astro.props
+const { judul, ringkasan, cover, terbit } = article.data
+---
+
+<article class:list={['group relative', lead ? 'grid gap-5 md:grid-cols-[1.35fr_1fr] md:items-center md:gap-8' : 'flex flex-col gap-3']}>
+  <CmsImage
+    src={cover}
+    alt=""
+    ratio={lead ? 16 / 10 : 3 / 2}
+    widths={lead ? [640, 960, 1280] : [400, 640, 800]}
+    sizes={lead ? '(min-width: 768px) 56vw, 100vw' : '(min-width: 768px) 33vw, 100vw'}
+    class="w-full rounded-lg bg-air"
+    eager={lead}
+  />
+  <div>
+    <time datetime={terbit.toISOString()} class="text-sm text-redup">{dateLong(terbit)}</time>
+    <Heading class:list={['mt-1 font-bold group-hover:text-patriot', lead ? 'text-title' : 'clamp-3 text-lg leading-snug']}>
+      <a href={`/${article.id}`} class="after:absolute after:inset-0">{judul}</a>
+    </Heading>
+    {ringkasan && <p class:list={['mt-2 text-redup', lead ? 'clamp-3 text-lg' : 'clamp-2']}>{ringkasan}</p>}
+  </div>
+</article>

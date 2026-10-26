@@ -1,0 +1,32 @@
+---
+type Props = {
+  id: string
+  name?: string
+  label: string
+  hint?: string
+  autofocus?: boolean
+}
+
+const { id, name = 'nomor', label, hint, autofocus = false } = Astro.props
+const cells = Array.from({ length: 12 }, (_, index) => index)
+---
+
+<div class="field">
+  <label for={id}>{label}</label>
+  <div class="meter-field">
+    {cells.map(index => <span class:list={['cell', index >= 9 && 'dec', index === 0 && 'next']} aria-hidden="true" />)}
+    <input
+      id={id}
+      name={name}
+      type="text"
+      inputmode="numeric"
+      pattern="[0-9]*"
+      autocomplete="off"
+      maxlength="14"
+      required
+      autofocus={autofocus}
+      aria-describedby={hint ? `${id}-hint` : undefined}
+    >
+  </div>
+  {hint && <p id={`${id}-hint`} class="hint">{hint}</p>}
+</div>

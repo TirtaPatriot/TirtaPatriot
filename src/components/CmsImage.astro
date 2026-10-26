@@ -1,0 +1,38 @@
+---
+/** Gambar dari CMS, diperkecil oleh Directus sesuai lebar tampilan. */
+import { assetSrcset, assetUrl } from '../lib/directus'
+
+type Props = {
+  src: string | null | undefined
+  alt: string
+  /** rasio tampilan, mis. 16/9; gambar dipotong agar pas */
+  ratio?: number
+  widths?: number[]
+  sizes?: string
+  fit?: 'cover' | 'contain'
+  class?: string
+  eager?: boolean
+}
+
+const { src, alt, ratio, widths = [480, 800, 1200], sizes = '100vw', fit = 'cover', class: className, eager = false } = Astro.props
+const largest = widths.at(-1) ?? 1200
+const height = ratio ? Math.round(largest / ratio) : undefined
+const transform = ratio && fit === 'cover' ? { fit: 'cover' as const } : {}
+const srcset = ratio && fit === 'cover'
+  ? widths.map(width => `${assetUrl(src, { ...transform, width, height: Math.round(width / ratio) })} ${width}w`).join(', ')
+  : assetSrcset(src, widths)
+---
+
+<img
+  src={assetUrl(src, { ...transform, width: largest, height })}
+  srcset={srcset}
+  sizes={sizes}
+  alt={alt}
+  width={largest}
+  height={height}
+  loading={eager ? 'eager' : 'lazy'}
+  fetchpriority={eager ? 'high' : undefined}
+  decoding="async"
+  class:list={[fit === 'cover' ? 'object-cover' : 'object-contain', className]}
+  style={ratio ? `aspect-ratio: ${ratio}` : undefined}
+>
