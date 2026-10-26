@@ -21,7 +21,7 @@
   <v-main>
     <PageHeader title="Penghapusan Data Pengguna" />
 
-    <v-container class="prose py-8" max-width="960">
+    <v-container class="py-8" max-width="960">
       <div class="d-flex flex-wrap justify-space-between align-center mb-4">
         <div>
           <h1 class="text-headline-medium font-weight-bold text-primary mb-2">
@@ -201,7 +201,7 @@
 
       <v-divider class="my-6" />
 
-      <div class="d-flex flex-wrap gap-2 justify-space-between align-center">
+      <div class="d-flex flex-wrap ga-2 justify-space-between align-center">
         <NuxtLink class="text-primary text-decoration-none font-weight-medium" to="/informasi/privacy-policy/whatsapp-business">
           ← Kembali ke Kebijakan Privasi WhatsApp
         </NuxtLink>

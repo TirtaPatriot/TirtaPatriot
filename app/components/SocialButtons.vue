@@ -53,7 +53,7 @@
     </v-col>
   </v-row> -->
   <v-list v-else>
-    <v-list-subheader v-if="title" class="text-title font-weight-bold text-uppercase">
+    <v-list-subheader v-if="title" class="text-title-medium font-weight-bold text-uppercase">
       {{ title }}
     </v-list-subheader>
 
