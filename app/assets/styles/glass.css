@@ -82,13 +82,10 @@ a.v-card.glass:hover {
   backdrop-filter: var(--glass-blur);
 }
 
-/* kolom input: kaca + cincin fokus lembut, tanpa outline ganda */
+/* kolom input: latar solid agar teks jelas; fokus cukup lewat garis tepi, tanpa halo */
 .v-field.v-field--variant-outlined {
   border-radius: 12px;
-  background: rgba(var(--v-theme-surface), 0.7);
-  transition: box-shadow 0.18s ease, background 0.18s ease;
-  -webkit-backdrop-filter: var(--glass-blur);
-  backdrop-filter: var(--glass-blur);
+  background: rgb(var(--v-theme-surface));
 }
 
 .v-field.v-field--variant-outlined .v-field__outline {
@@ -96,13 +93,12 @@ a.v-card.glass:hover {
 }
 
 .v-field.v-field--variant-outlined.v-field--focused {
-  background: rgba(var(--v-theme-surface), 0.92);
-  box-shadow: var(--ring);
+  box-shadow: none;
 }
 
 .v-field.v-field--variant-outlined.v-field--focused .v-field__outline {
   --v-field-border-opacity: 1;
-  --v-field-border-width: 1.5px;
+  --v-field-border-width: 2px;
 }
 
 .v-field.v-field--variant-outlined.v-field--focused:not(.v-field--error) .v-field__outline {
@@ -113,10 +109,6 @@ a.v-card.glass:hover {
 .v-stepper-header {
   border-bottom: 1px solid var(--glass-hairline);
   box-shadow: none;
-}
-
-.v-field.v-field--variant-outlined.v-field--error.v-field--focused {
-  box-shadow: 0 0 0 4px rgba(var(--v-theme-error), 0.2);
 }
 
 input:focus,
