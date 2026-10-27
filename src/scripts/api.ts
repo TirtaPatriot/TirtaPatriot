@@ -40,6 +40,9 @@ export function warmRecaptcha (): void {
 }
 
 export async function recaptchaToken (action: string): Promise<string> {
+  if (!SITE_KEY) {
+    console.error('PUBLIC_RECAPTCHA_SITE_KEY kosong saat build; API akan menolak permintaan (HM403).')
+  }
   const grecaptcha = await loadRecaptcha()
   return grecaptcha ? grecaptcha.execute(SITE_KEY!, { action }) : ''
 }
@@ -90,6 +93,9 @@ export async function api<T> (path: string, init: ApiInit = {}): Promise<T> {
 
   if (!response.ok) {
     const payload = data && typeof data === 'object' ? data as Record<string, unknown> : null
+    if (payload?.code === 'HM403') {
+      throw new ApiError('Verifikasi keamanan belum berhasil. Muat ulang halaman ini, lalu coba lagi.', response.status, payload)
+    }
     throw new ApiError(typeof payload?.message === 'string' ? payload.message : '', response.status, payload)
   }
 

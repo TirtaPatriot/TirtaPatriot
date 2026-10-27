@@ -12,7 +12,8 @@ COPY . .
 # Nilai PUBLIC_* ditanam ke HTML/JS saat build (bukan saat container berjalan).
 ARG PUBLIC_API_URL=https://open.tirtapatriot.net/web
 ARG PUBLIC_INFO_PELANGGAN_API=https://pelanggan.api.tirtapatriot.co
-ARG PUBLIC_RECAPTCHA_SITE_KEY=
+# site key reCAPTCHA v3 bersifat publik (tampil di setiap halaman); secret-nya hanya di API Open
+ARG PUBLIC_RECAPTCHA_SITE_KEY=6LdKx-4pAAAAAOxsfOX93guRi0sSreyEkOcsT_vX
 ARG PUBLIC_BASEMAP_STYLE=https://tiles.openfreemap.org/styles/positron
 ARG PUBLIC_PIPA_TILES=https://tile.api.tirtapatriot.com
 ARG PUBLIC_CHATWOOT_WEBSITE_TOKEN=

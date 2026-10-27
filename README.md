@@ -90,7 +90,9 @@ Lihat `.env.example`. Variabel `PUBLIC_*` ditanam saat build dan terlihat oleh p
 - `PUBLIC_API_URL` — API layanan pelanggan untuk tagihan dan pengaduan (bawaan `https://open.tirtapatriot.net/web`)
 - `PUBLIC_INFO_PELANGGAN_API` — API Informasi Pelanggan untuk gangguan dan pendaftaran sambungan baru (bawaan `https://pelanggan.api.tirtapatriot.co`)
 - `PUBLIC_BASEMAP_STYLE`, `PUBLIC_PIPA_TILES` — peta dasar dan vector tile jaringan pipa untuk peta interaktif
-- `PUBLIC_RECAPTCHA_SITE_KEY` — reCAPTCHA v3 untuk formulir
+- `PUBLIC_RECAPTCHA_SITE_KEY` — site key reCAPTCHA v3 untuk cek tagihan dan pengaduan (bawaan di Dockerfile: key situs saat ini). Domain situs harus terdaftar pada key tersebut di Google Cloud console
+
+Di Dokploy, isi variabel `PUBLIC_*` pada **Build-time Arguments**, bukan pada Environment biasa: nilainya ditanam saat build.
 - `PUBLIC_CHATWOOT_WEBSITE_TOKEN`, `PUBLIC_CHATWOOT_BASE_URL` — widget obrolan
 
 Variabel `MSSQL_*` hanya untuk `bun run data` dari jaringan internal dan tidak boleh ikut ke build situs.
