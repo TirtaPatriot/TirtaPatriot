@@ -19,3 +19,6 @@ logs
 .env.*
 !.env.example
 service-account.json
+
+# pengaturan Claude Code pribadi
+.claude/settings.local.json
