@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content'
 import Icon from '../../components/Icon.astro'
 import PageHead from '../../components/PageHead.astro'
+import PipaMap from '../../components/PipaMap.astro'
 import ServiceMap from '../../components/ServiceMap.astro'
 import kinerja from '../../data/kinerja.json'
 import Base from '../../layouts/Base.astro'
@@ -13,10 +14,10 @@ const ZONA = ['Kantor pusat', 'Zona 1', 'Zona 2', 'Zona 3', 'Zona 4']
 const grouped = [null, 1, 2, 3, 4].map(zona => ({ zona, items: kantor.filter(item => item.zona === zona) }))
 ---
 
-<Base title="Peta layanan" description="Wilayah layanan Perumda Tirta Patriot Kota Bekasi: zona layanan, jumlah pelanggan aktif per kecamatan, dan lokasi kantor pelayanan.">
+<Base title="Peta layanan" description="Wilayah layanan Perumda Tirta Patriot Kota Bekasi: jaringan pipa, zona layanan, jumlah pelanggan aktif per kecamatan, dan lokasi kantor pelayanan.">
   <PageHead
     title="Peta layanan"
-    lead="Wilayah layanan, sebaran pelanggan, dan kantor pelayanan kami di Kota Bekasi."
+    lead="Wilayah layanan, jaringan pipa, sebaran pelanggan, dan kantor pelayanan kami di Kota Bekasi."
     crumbs={[{ title: 'Beranda', href: '/' }, { title: 'Informasi' }]}
   />
 
@@ -36,6 +37,17 @@ const grouped = [null, 1, 2, 3, 4].map(zona => ({ zona, items: kantor.filter(ite
         </table>
       </section>
     </div>
+
+    <section id="jaringan" class="mt-20 scroll-mt-24 border-t border-garis pt-12" aria-labelledby="jaringan-judul">
+      <div class="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,2.2fr)] lg:items-start">
+        <div>
+          <h2 id="jaringan-judul" class="text-title font-extrabold">Jaringan pipa</h2>
+          <p class="mt-3 text-redup">Pipa air bersih yang kami kelola di Kota Bekasi. Bila jalan di depan rumah Anda sudah dilalui pipa distribusi, sambungan baru umumnya dapat dipasang lebih cepat.</p>
+          <a class="btn btn-primary mt-6" href="/pelanggan/pendaftaran">Daftar sambungan baru</a>
+        </div>
+        <PipaMap />
+      </div>
+    </section>
 
     <section id="kantor" class="mt-20 scroll-mt-24 border-t border-garis pt-12" aria-labelledby="kantor-judul">
       <h2 id="kantor-judul" class="text-title font-extrabold">Kantor pelayanan</h2>

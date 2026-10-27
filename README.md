@@ -37,7 +37,7 @@ bun run dev
 - `src/lib/` — render konten yang aman, rumus tagihan, API Informasi Pelanggan, format tanggal/angka, token grafik
 - `src/pages/` — rute situs
 - `src/components/` — komponen Astro
-- `src/scripts/` — skrip browser: cek tagihan, pengaduan, gangguan langsung dari API, grafik
+- `src/scripts/` — skrip browser: cek tagihan, pengaduan, pendaftaran sambungan baru, peta interaktif, gangguan langsung dari API, grafik
 - `scripts/` — `export-data.ts` (perbarui snapshot ERP), `migrate-directus.ts` (migrasi satu kali)
 - `src/styles/global.css` — token desain dan gaya dasar
 - `public/_redirects` — pengalihan alamat lama (format Netlify)
@@ -55,6 +55,8 @@ Situs tidak lagi bergantung pada CMS Directus (cms.tirtapatriot.net).
 | Batas kecamatan & zona layanan | snapshot dari PostGIS (`jaringan.bataskecamatan`, `jaringan.bataslayanan`), disederhanakan, di `src/data/geo/` | jarang berubah; ekspor ulang bila batas diperbarui |
 | Gangguan layanan | API Informasi Pelanggan (`GET /news`, sama dengan aplikasi Tirta Patriot Mobile) | otomatis: dimuat saat build **dan** langsung di browser |
 | Cek tagihan & pengaduan | API layanan pelanggan `https://open.tirtapatriot.net/web` | – |
+| Pendaftaran sambungan baru | API Informasi Pelanggan (`/files/upload`, `/new-customer/v2/insert`, `/new-customer/tracking`) | – |
+| Jaringan pipa | vector tile PostGIS `jaringan.pipa` dari `https://tile.api.tirtapatriot.com`, di atas peta dasar OpenFreeMap | langsung dari server tile |
 
 `scripts/migrate-directus.ts` adalah skrip migrasi satu kali dari Directus, disimpan sebagai dokumentasi.
 
@@ -86,7 +88,8 @@ Container mendengarkan port 80 dan menyediakan `/healthz` untuk pemeriksaan kese
 Lihat `.env.example`. Variabel `PUBLIC_*` ditanam saat build dan terlihat oleh pengunjung:
 
 - `PUBLIC_API_URL` — API layanan pelanggan untuk tagihan dan pengaduan (bawaan `https://open.tirtapatriot.net/web`)
-- `PUBLIC_INFO_PELANGGAN_API` — API Informasi Pelanggan untuk gangguan (bawaan `https://pelanggan.api.tirtapatriot.co`)
+- `PUBLIC_INFO_PELANGGAN_API` — API Informasi Pelanggan untuk gangguan dan pendaftaran sambungan baru (bawaan `https://pelanggan.api.tirtapatriot.co`)
+- `PUBLIC_BASEMAP_STYLE`, `PUBLIC_PIPA_TILES` — peta dasar dan vector tile jaringan pipa untuk peta interaktif
 - `PUBLIC_RECAPTCHA_SITE_KEY` — reCAPTCHA v3 untuk formulir
 - `PUBLIC_CHATWOOT_WEBSITE_TOKEN`, `PUBLIC_CHATWOOT_BASE_URL` — widget obrolan
 

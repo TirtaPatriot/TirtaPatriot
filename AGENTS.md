@@ -9,8 +9,9 @@
 - Framework: Astro 7 (static output, deployed to https://tirtapatriot.co.id)
 - Styling: Tailwind CSS v4 (CSS-first config in `src/styles/global.css`, no UI library)
 - Language: TypeScript 7 (native compiler) for type-checking; interactive pages use plain TypeScript in `src/scripts/`, no client framework
-- Content: Astro content collections (`src/content.config.ts`) from Markdown/JSON in the repo (no Directus); operational snapshots from ERP MSSQL via `bun run data`; outages from the Info Pelanggan API (`/news`)
-- Data rule: publish aggregates only — never per-customer data; never publish the pipe network (critical infrastructure)
+- Content: Astro content collections (`src/content.config.ts`) from Markdown/JSON in the repo (no Directus); operational snapshots from ERP MSSQL via `bun run data`; outages and new-connection registration through the Info Pelanggan API
+- Maps: PostGIS is used for maps only — static boundaries in `src/data/geo/`, pipe network as vector tiles (`tile.api.tirtapatriot.com`) rendered with MapLibre in `src/scripts/peta.ts`
+- Data rule: publish aggregates only — never per-customer data. The pipe network map shows line position and diameter only; never surface other pipe attributes (depth, SPK, funding, as-built numbers)
 - Lint: oxlint (typescript-eslint and `astro check` do not support TypeScript 7)
 - Enabled MCP: Vuetify docs, Astro docs (see `.ruler/ruler.toml`)
 

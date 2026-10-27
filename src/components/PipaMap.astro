@@ -1,0 +1,57 @@
+---
+/**
+ * Peta jaringan pipa interaktif di atas peta jalan. Kantor pelayanan ikut ditandai.
+ * Hanya letak pipa dan diameternya yang ditampilkan; atribut teknis lain tidak.
+ */
+import kantor from '../data/kantor.json'
+import { titleCase } from '../lib/format'
+
+const offices = kantor.map(item => ({ nama: titleCase(item.nama), lat: item.lat, lng: item.lng }))
+---
+
+<figure class="pipa-map">
+  <ul class="mb-4 flex flex-wrap items-center gap-x-5 gap-y-1 text-sm text-redup" aria-label="Legenda peta jaringan pipa">
+    <li class="flex items-center gap-2"><span class="h-1.5 w-6 rounded-full bg-pipa" />Pipa utama (≥ 250 mm)</li>
+    <li class="flex items-center gap-2"><span class="h-0.5 w-6 rounded-full bg-patriot" />Pipa distribusi</li>
+    <li class="flex items-center gap-2"><span class="w-6 border-t-2 border-dashed border-redup/70" />Batas kecamatan</li>
+    <li class="flex items-center gap-2"><span class="size-3 rounded-full border-2 border-white bg-meter shadow ring-1 ring-meter/30" />Kantor pelayanan</li>
+  </ul>
+
+  <div
+    class="relative aspect-[4/5] overflow-hidden rounded-2xl bg-kabut ring-1 ring-garis sm:aspect-[4/3]"
+    data-pipa-map
+    data-kantor={JSON.stringify(offices)}
+    role="region"
+    aria-label="Peta interaktif jaringan pipa Perumda Tirta Patriot di Kota Bekasi"
+  >
+    <p class="absolute inset-0 grid place-items-center p-6 text-center text-sm text-redup" data-map-status>Memuat peta…</p>
+  </div>
+  <figcaption class="mt-3 text-sm text-redup">Perbesar peta untuk melihat pipa di sekitar jalan tempat tinggal Anda.</figcaption>
+</figure>
+
+<script>
+  import { bindPipaTooltip, createMap, whenVisible } from '../scripts/peta'
+
+  for (const container of document.querySelectorAll<HTMLElement>('[data-pipa-map]')) {
+    const status = container.querySelector<HTMLElement>('[data-map-status]')
+    whenVisible(container, async () => {
+      try {
+        const { map, maplibre } = await createMap(container)
+        status?.remove()
+        bindPipaTooltip(map, maplibre)
+
+        const offices = JSON.parse(container.dataset.kantor ?? '[]') as { nama: string, lat: number, lng: number }[]
+        for (const office of offices) {
+          const dot = document.createElement('span')
+          dot.className = 'block size-3.5 rounded-full border-2 border-white bg-meter shadow ring-1 ring-meter/30'
+          dot.title = office.nama
+          new maplibre.Marker({ element: dot }).setLngLat([office.lng, office.lat]).setPopup(new maplibre.Popup({ offset: 10, closeButton: false }).setText(office.nama)).addTo(map)
+        }
+      } catch {
+        if (status) {
+          status.textContent = 'Peta belum dapat dimuat. Silakan muat ulang halaman ini.'
+        }
+      }
+    })
+  }
+</script>

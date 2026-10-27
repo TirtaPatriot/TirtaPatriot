@@ -1,4 +1,4 @@
-/** Pemanggil API layanan pelanggan (tagihan, pengaduan) beserta token reCAPTCHA v3. */
+/** Pemanggil API layanan pelanggan (tagihan, pengaduan) dan Info Pelanggan (pendaftaran), beserta token reCAPTCHA v3. */
 
 // API layanan pelanggan (Fastify, repo TirtaPatriot/Open); sama dengan yang dipakai situs lama
 export const API_URL = (import.meta.env.PUBLIC_API_URL || 'https://open.tirtapatriot.net/web').replace(/\/+$/, '')
@@ -54,13 +54,27 @@ export class ApiError extends Error {
   }
 }
 
-export async function api<T> (path: string, init: { method?: 'GET' | 'POST', body?: Record<string, unknown> } = {}): Promise<T> {
+type ApiInit = {
+  method?: 'GET' | 'POST'
+  /** objek dikirim sebagai JSON; Blob dikirim apa adanya (unggah berkas) */
+  body?: Record<string, unknown> | Blob
+  /** alamat API lain, mis. Info Pelanggan; bawaan API layanan pelanggan */
+  base?: string
+}
+
+export async function api<T> (path: string, init: ApiInit = {}): Promise<T> {
+  const { body } = init
+  const headers: Record<string, string> = { Accept: 'application/json' }
+  if (body) {
+    headers['Content-Type'] = body instanceof Blob ? body.type || 'application/octet-stream' : 'application/json'
+  }
+
   let response: Response
   try {
-    response = await fetch(`${API_URL}${path}`, {
+    response = await fetch(`${init.base ?? API_URL}${path}`, {
       method: init.method ?? 'GET',
-      headers: init.body ? { 'Content-Type': 'application/json', 'Accept': 'application/json' } : { Accept: 'application/json' },
-      body: init.body ? JSON.stringify(init.body) : undefined,
+      headers,
+      body: body instanceof Blob ? body : body ? JSON.stringify(body) : undefined,
     })
   } catch {
     throw new ApiError('Tidak dapat terhubung ke server. Periksa koneksi internet Anda, lalu coba lagi.', 0, null)
@@ -75,8 +89,8 @@ export async function api<T> (path: string, init: { method?: 'GET' | 'POST', bod
   }
 
   if (!response.ok) {
-    const body = data && typeof data === 'object' ? data as Record<string, unknown> : null
-    throw new ApiError(typeof body?.message === 'string' ? body.message : '', response.status, body)
+    const payload = data && typeof data === 'object' ? data as Record<string, unknown> : null
+    throw new ApiError(typeof payload?.message === 'string' ? payload.message : '', response.status, payload)
   }
 
   return data as T

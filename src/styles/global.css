@@ -916,3 +916,89 @@
     animation-delay: calc(var(--i, 0) * 45ms);
   }
 }
+
+/* peta interaktif (MapLibre) dan unggah berkas pendaftaran */
+@layer components {
+  .maplibregl-map {
+    font: inherit;
+  }
+
+  .maplibregl-popup-content {
+    padding: 0.5rem 0.75rem;
+    border-radius: var(--radius-lg);
+    box-shadow: 0 6px 20px rgb(10 42 94 / 0.16);
+    color: var(--color-pipa);
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+
+  .maplibregl-ctrl-group {
+    border-radius: var(--radius-lg);
+  }
+
+  .upload {
+    position: relative;
+    display: flex;
+    gap: 0.875rem;
+    align-items: center;
+    min-height: 4.5rem;
+    padding: 0.75rem 0.875rem;
+    border: 1.5px dashed #9fb0c4;
+    border-radius: var(--radius-lg);
+    transition: border-color 200ms ease, background-color 200ms ease;
+    background: #fff;
+    cursor: pointer;
+
+    &:hover,
+    &:focus-within {
+      border-color: var(--color-patriot);
+      background: var(--color-air);
+    }
+
+    &:focus-within {
+      outline: 2px solid var(--color-patriot);
+    }
+
+    &[data-state='done'] {
+      border-style: solid;
+      border-color: var(--color-lunas);
+    }
+
+    &[aria-invalid='true'] {
+      border-color: var(--color-meter);
+    }
+
+    & input[type='file'] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    & img {
+      width: 3.5rem;
+      height: 3.5rem;
+      border-radius: var(--radius-md);
+      object-fit: cover;
+    }
+  }
+
+  .signature {
+    display: block;
+    width: 100%;
+    height: 11rem;
+    border: 1.5px solid #9fb0c4;
+    border-radius: var(--radius-lg);
+    background: #fff;
+    cursor: crosshair;
+    touch-action: none;
+
+    &:focus-visible {
+      outline: 2px solid var(--color-patriot);
+    }
+
+    &[aria-invalid='true'] {
+      border-color: var(--color-meter);
+    }
+  }
+}
