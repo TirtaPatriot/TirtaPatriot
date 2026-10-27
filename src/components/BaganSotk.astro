@@ -1,0 +1,152 @@
+---
+/**
+ * Bagan susunan organisasi dan tata kerja (SOTK) dari src/data/sotk.json.
+ * Digambar sebagai daftar bertingkat (bisa dibaca pembaca layar dan dicari), bukan gambar:
+ * pimpinan di atas, lalu satu kolom per direktur berisi bagian (manajer) dan sub bagian (asisten manajer).
+ * Bila SK SOTK berubah, cukup perbarui src/data/sotk.json.
+ */
+import sotk from '../data/sotk.json'
+import { dateLong } from '../lib/format'
+
+const bagian = sotk.direksi.flatMap(direktur => direktur.bagian)
+const ringkasan = [
+  { label: 'Direksi', jumlah: sotk.direksi.length },
+  { label: 'Manajer', jumlah: bagian.length },
+  { label: 'Asisten manajer', jumlah: bagian.reduce((total, item) => total + item.sub.length, 0) },
+  { label: 'Pejabat fungsional', jumlah: sotk.fungsional.length },
+]
+const [utama, ...bidang] = sotk.direksi
+---
+
+<div class="sotk">
+  <!-- pimpinan: pemilik modal, dewan pengawas, direksi -->
+  <ol class="mx-auto grid max-w-3xl justify-items-center text-center" aria-label="Pimpinan">
+    <li class="sotk-node bg-awas-soft">
+      <strong class="block">{sotk.pemilik.jabatan}</strong>
+      <span class="text-sm text-redup">{sotk.pemilik.peran}</span>
+    </li>
+    <li class="sotk-stem" aria-hidden="true"></li>
+    <li class="sotk-node"><strong>{sotk.pengawas}</strong></li>
+    <li class="sotk-stem" aria-hidden="true"></li>
+    <li class="w-full rounded-2xl bg-air p-4 sm:p-5">
+      <p class="text-xs font-bold tracking-widest text-patriot uppercase">Direksi</p>
+      <p class="sotk-node mx-auto mt-2 w-fit bg-pipa text-white"><strong>{utama.jabatan}</strong></p>
+      <ul class="sotk-row mt-4 grid gap-2 sm:grid-cols-3">
+        {bidang.map(direktur => <li class="sotk-node w-full"><strong>{direktur.jabatan}</strong></li>)}
+      </ul>
+      <ul class="mt-4 flex flex-wrap justify-center gap-2 text-sm">
+        <li class="rounded-full border border-garis bg-white px-3 py-1">{sotk.tenagaAhli}</li>
+        {sotk.fungsional.map(jabatan => <li class="rounded-full border border-dashed border-redup/50 bg-white px-3 py-1">Fungsional: {jabatan}</li>)}
+      </ul>
+    </li>
+  </ol>
+
+  <!-- satu kolom per direktur -->
+  <div class="mt-10 grid gap-x-6 gap-y-10 md:grid-cols-2 xl:grid-cols-4">
+    {sotk.direksi.map(direktur => (
+      <section aria-label={`Di bawah ${direktur.jabatan}`}>
+        <h3 class="border-t-4 border-patriot pt-3 text-sm font-bold tracking-wide text-patriot uppercase">{direktur.jabatan}</h3>
+        <ul class="mt-4 grid gap-4">
+          {direktur.bagian.map(item => (
+            <li class="rounded-xl border border-garis bg-white p-4">
+              <p class="font-bold leading-snug">Bagian {item.nama}</p>
+              <ul class="sotk-sub mt-3 grid gap-1.5 text-sm text-redup" aria-label={`Sub bagian ${item.nama}`}>
+                {item.sub.map(sub => <li>{sub}</li>)}
+              </ul>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))}
+  </div>
+
+  <dl class="mt-10 grid grid-cols-2 gap-4 rounded-2xl bg-kabut p-5 sm:grid-cols-4">
+    {ringkasan.map(item => (
+      <div>
+        <dt class="text-sm text-redup">{item.label}</dt>
+        <dd class="num text-2xl font-extrabold">{item.jumlah}</dd>
+      </div>
+    ))}
+  </dl>
+  <p class="mt-4 text-sm text-redup">
+    Setiap bagian dipimpin seorang manajer; daftar di bawahnya adalah sub bagian, masing-masing dipimpin asisten manajer.
+    Ditetapkan dengan Keputusan Direksi Nomor <span class="num">{sotk.sk.nomor}</span> tanggal {dateLong(sotk.sk.tanggal)}.
+  </p>
+</div>
+
+<style>
+  .sotk-node {
+    display: block;
+    max-width: 100%;
+    border: 1px solid var(--color-garis);
+    border-radius: 0.75rem;
+    background-color: white;
+    padding: 0.625rem 1.25rem;
+    text-align: center;
+  }
+
+  .sotk-node.bg-awas-soft {
+    background-color: var(--color-awas-soft);
+  }
+
+  .sotk-node.bg-pipa {
+    border-color: var(--color-pipa);
+    background-color: var(--color-pipa);
+  }
+
+  .sotk-stem {
+    width: 2px;
+    height: 1.25rem;
+    background: var(--color-garis);
+  }
+
+  /* garis cabang dari Direktur Utama ke tiga direktur bidang (layar lebar) */
+  @media (min-width: 40rem) {
+    .sotk-row {
+      position: relative;
+      padding-top: 1rem;
+    }
+
+    .sotk-row::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 16.66%;
+      right: 16.66%;
+      height: 1rem;
+      border: 2px solid var(--color-patriot);
+      border-bottom: 0;
+      opacity: 0.35;
+    }
+
+    .sotk-row::after {
+      content: '';
+      position: absolute;
+      top: -1rem;
+      left: 50%;
+      width: 2px;
+      height: 1rem;
+      background: var(--color-patriot);
+      opacity: 0.35;
+    }
+  }
+
+  /* garis pohon sub bagian */
+  .sotk-sub {
+    border-left: 2px solid var(--color-air-strong);
+    padding-left: 0.875rem;
+  }
+
+  .sotk-sub > li {
+    position: relative;
+  }
+
+  .sotk-sub > li::before {
+    content: '';
+    position: absolute;
+    top: 0.7em;
+    left: -0.875rem;
+    width: 0.5rem;
+    border-top: 2px solid var(--color-air-strong);
+  }
+</style>
