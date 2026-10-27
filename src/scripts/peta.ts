@@ -25,7 +25,15 @@ type MapLibre = typeof import('maplibre-gl')
 let loader: Promise<MapLibre> | undefined
 
 export function loadMapLibre (): Promise<MapLibre> {
-  loader ??= Promise.all([import('maplibre-gl'), import('maplibre-gl/dist/maplibre-gl.css')]).then(([module]) => module)
+  loader ??= Promise.all([
+    import('maplibre-gl'),
+    // MapLibre 6 memuat worker dari berkas terpisah; Vite membundelnya agar ikut ter-hash di /_astro
+    import('maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url'),
+    import('maplibre-gl/dist/maplibre-gl.css'),
+  ]).then(([module, worker]) => {
+    module.setWorkerUrl(worker.default)
+    return module
+  })
   return loader
 }
 
