@@ -13,7 +13,7 @@ import { rupiah } from '../lib/tarif'
 import { api, ApiError } from './api'
 import { el, setBusy, showError } from './dom'
 import { bringIntoView, enter, reveal, swapPanels } from './motion'
-import { BEKASI, createMap, whenVisible } from './peta'
+import { mountLocationPicker } from './pilih-lokasi'
 import { ticketDisplay } from './pengaduan'
 import { bindUploads, uploadFile } from './unggah'
 
@@ -189,60 +189,7 @@ export function initPendaftaran (): void {
   })
 
   // pemilih titik lokasi
-  const picker = form.querySelector<HTMLElement>('[data-picker]')!
-  const coords = form.querySelector<HTMLElement>('[data-coords]')!
-  const setPoint = (lng: number, lat: number) => {
-    field('latitude').value = lat.toFixed(7)
-    field('longitude').value = lng.toFixed(7)
-    const [[west, south], [east, north]] = BEKASI
-    const inside = lng >= west && lng <= east && lat >= south && lat <= north
-    coords.textContent = inside
-      ? `Titik dipilih: ${lat.toFixed(5)}, ${lng.toFixed(5)}`
-      : 'Titik berada di luar Kota Bekasi. Pastikan letaknya sudah benar.'
-    coords.classList.toggle('text-meter', !inside)
-  }
-  let placeMarker: ((lng: number, lat: number) => void) | undefined
-  whenVisible(picker, async () => {
-    try {
-      const { map, maplibre } = await createMap(picker)
-      picker.querySelector('[data-map-status]')?.remove()
-      const marker = new maplibre.Marker({ color: '#c2182b', draggable: true })
-      placeMarker = (lng, lat) => {
-        marker.setLngLat([lng, lat]).addTo(map)
-        setPoint(lng, lat)
-      }
-      map.on('click', event => placeMarker!(event.lngLat.lng, event.lngLat.lat))
-      marker.on('dragend', () => {
-        const { lng, lat } = marker.getLngLat()
-        setPoint(lng, lat)
-      })
-      if (value('latitude')) {
-        placeMarker(Number(value('longitude')), Number(value('latitude')))
-      }
-    } catch {
-      const status = picker.querySelector('[data-map-status]')
-      if (status) {
-        status.textContent = 'Peta belum dapat dimuat. Gunakan tombol lokasi saya di bawah.'
-      }
-    }
-  })
-  form.querySelector<HTMLButtonElement>('[data-locate]')?.addEventListener('click', () => {
-    if (!('geolocation' in navigator)) {
-      coords.textContent = 'Perangkat ini tidak mendukung penentuan lokasi.'
-      return
-    }
-    coords.textContent = 'Mencari lokasi Anda…'
-    navigator.geolocation.getCurrentPosition(position => {
-      const { longitude, latitude } = position.coords
-      if (placeMarker) {
-        placeMarker(longitude, latitude)
-      } else {
-        setPoint(longitude, latitude)
-      }
-    }, () => {
-      coords.textContent = 'Lokasi tidak dapat diakses. Izinkan akses lokasi atau ketuk titik pada peta.'
-    }, { enableHighAccuracy: true, timeout: 15_000 })
-  })
+  const { picker } = mountLocationPicker(form)
 
   function validate (step: number): void {
     checkRequired(fieldsets[step]!)

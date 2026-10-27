@@ -29,7 +29,10 @@ const berlangsung = gangguan.filter(item => !item.selesai)
         <div>
           <h2 class="text-xl font-bold">Saat ini tidak ada gangguan</h2>
           <p class="mt-1">Apabila air di rumah Anda tidak mengalir atau keruh, silakan sampaikan kepada kami.</p>
-          <a class="btn btn-primary mt-4" href="/pelanggan/pengaduan">Lapor gangguan</a>
+          <div class="mt-4 flex flex-wrap gap-3">
+            <a class="btn btn-primary" href="/pelanggan/pengaduan">Lapor gangguan</a>
+            <a class="btn btn-quiet" href="/pelanggan/lapor-kebocoran">Lapor pipa bocor di jalan</a>
+          </div>
         </div>
       </div>
 

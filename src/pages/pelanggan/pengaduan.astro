@@ -37,7 +37,11 @@ const steps = ['Nomor pelanggan', 'Verifikasi nama', 'Data pelapor', 'Kendala']
         </ol>
         <p class="sr-only" aria-live="polite" data-step-announce>Langkah 1 dari 4: Nomor pelanggan</p>
 
-        <form class="mt-8 grid gap-6" novalidate data-pengaduan-form>
+        <p class="mt-6 text-sm text-redup">
+          Melihat pipa bocor di jalan, atau bukan pelanggan? <a class="link font-semibold" href="/pelanggan/lapor-kebocoran">Lapor kebocoran tanpa nomor pelanggan</a>.
+        </p>
+
+        <form class="mt-6 grid gap-6" novalidate data-pengaduan-form>
           <fieldset data-step="0" class="grid gap-4">
             <legend class="mb-2 text-xl font-bold">Sambungan mana yang terkendala?</legend>
             <MeterField id="aduan-nomor" label="Nomor pelanggan" hint="Nomor pelanggan tertera pada rekening air Anda." />

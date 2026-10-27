@@ -1,0 +1,132 @@
+---
+import ErrorBox from '../../components/ErrorBox.astro'
+import HelpPanel from '../../components/HelpPanel.astro'
+import Icon from '../../components/Icon.astro'
+import PageHead from '../../components/PageHead.astro'
+import RecaptchaNote from '../../components/RecaptchaNote.astro'
+import Base from '../../layouts/Base.astro'
+import { API_URL } from '../../scripts/api'
+
+const steps = ['Lokasi', 'Foto', 'Pelapor']
+---
+
+<Base preconnect={[API_URL]} title="Lapor kebocoran" description="Laporkan pipa bocor atau air meluap di jalan dan fasilitas umum Kota Bekasi, tanpa perlu nomor pelanggan. Setiap laporan mendapat nomor tiket.">
+  <PageHead
+    title="Lapor kebocoran"
+    lead="Melihat pipa bocor atau air meluap di jalan? Laporkan kepada kami, tanpa perlu menjadi pelanggan. Setiap laporan mendapat nomor tiket."
+    crumbs={[{ title: 'Beranda', href: '/' }, { title: 'Layanan pelanggan', href: '/pelanggan' }]}
+  />
+
+  <div class="wrap mt-8">
+    <div class="grid gap-14 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
+      <section aria-labelledby="lapor-judul">
+        <h2 id="lapor-judul" class="sr-only">Formulir lapor kebocoran</h2>
+        <ol class="grid grid-cols-3 gap-2" aria-label="Tahapan" data-stepper>
+          {steps.map((title, index) => (
+            <li class="border-t-4 border-garis pt-2 text-sm text-redup transition-colors duration-500 ease-out data-[state=current]:border-patriot data-[state=current]:font-semibold data-[state=current]:text-pipa data-[state=done]:border-patriot" data-state={index === 0 ? 'current' : 'todo'}>
+              {title}
+            </li>
+          ))}
+        </ol>
+        <p class="sr-only" aria-live="polite" data-step-announce>Langkah 1 dari 3: Lokasi</p>
+
+        <form class="mt-8 grid gap-6" novalidate data-lapor-form>
+          <fieldset data-step="0" class="grid gap-5">
+            <legend class="mb-2 text-xl font-bold">Di mana kebocorannya?</legend>
+            <div class="field">
+              <span class="font-semibold" id="l-titik-label">Titik lokasi</span>
+              <p class="hint" id="l-titik-hint">Ketuk peta pada letak kebocoran, atau gunakan lokasi perangkat bila Anda sedang berada di sana. Penanda dapat digeser.</p>
+              <div class="relative aspect-[4/3] overflow-hidden rounded-lg bg-kabut ring-1 ring-garis" data-picker role="application" aria-labelledby="l-titik-label" aria-describedby="l-titik-hint">
+                <p class="absolute inset-0 grid place-items-center p-6 text-center text-sm text-redup" data-map-status>Memuat peta…</p>
+              </div>
+              <div class="mt-2 flex flex-wrap items-center gap-3">
+                <button type="button" class="btn btn-quiet" data-locate>
+                  <Icon name="mdi:crosshairs-gps" size={20} /> Gunakan lokasi saya
+                </button>
+                <p class="text-sm text-redup" data-coords aria-live="polite">Belum ada titik dipilih.</p>
+              </div>
+              <input type="hidden" name="latitude">
+              <input type="hidden" name="longitude">
+            </div>
+            <div class="field">
+              <label for="l-alamat">Alamat atau patokan</label>
+              <textarea id="l-alamat" name="alamat" class="input" maxlength="250" required placeholder="Contoh: Jl. Ahmad Yani, depan Bank BJB, sisi trotoar arah Bulak Kapal"></textarea>
+            </div>
+          </fieldset>
+
+          <fieldset data-step="1" class="grid gap-5" hidden>
+            <legend class="mb-2 text-xl font-bold">Foto kebocoran</legend>
+            <p class="text-redup">Satu sampai tiga foto yang memperlihatkan titik kebocoran dan sekitarnya, agar petugas mudah menemukannya.</p>
+            <ul class="grid grid-cols-2 gap-3 sm:grid-cols-3" data-photos aria-live="polite"></ul>
+            <div class="flex flex-wrap gap-3" data-photo-actions>
+              <button type="button" class="btn btn-primary" data-camera><Icon name="mdi:camera-outline" size={20} /> Ambil foto</button>
+              <label class="btn btn-quiet cursor-pointer">
+                <Icon name="mdi:image-outline" size={20} /> Pilih dari galeri
+                <input type="file" accept="image/jpeg,image/png" class="sr-only" data-gallery>
+              </label>
+            </div>
+          </fieldset>
+
+          <fieldset data-step="2" class="grid gap-5" hidden>
+            <legend class="mb-2 text-xl font-bold">Data pelapor</legend>
+            <div class="field">
+              <label for="l-jenis">Jenis laporan</label>
+              <select id="l-jenis" name="jenis" class="input" required>
+                <option value="Pipa Distri Bocor">Pipa bocor</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="l-pelapor">Nama Anda</label>
+              <input id="l-pelapor" name="pelapor" class="input" autocomplete="name" maxlength="100" required>
+            </div>
+            <div class="field">
+              <label for="l-telepon">Nomor telepon</label>
+              <input id="l-telepon" name="telepon" class="input num max-w-72" type="tel" inputmode="tel" autocomplete="tel" maxlength="16" required aria-describedby="l-telepon-hint">
+              <p id="l-telepon-hint" class="hint">Petugas dapat menghubungi nomor ini bila perlu memastikan lokasi.</p>
+            </div>
+            <div class="field">
+              <label for="l-ket">Keterangan <span class="font-normal text-redup">(tidak wajib)</span></label>
+              <textarea id="l-ket" name="keterangan" class="input" maxlength="1000" placeholder="Contoh: air menyembur dari bawah trotoar sejak pagi"></textarea>
+            </div>
+            <RecaptchaNote />
+          </fieldset>
+
+          <ErrorBox />
+
+          <div class="flex flex-wrap items-center gap-3">
+            <button type="button" class="btn btn-quiet" data-prev hidden><Icon name="mdi:chevron-left" size={20} /> Kembali</button>
+            <button type="submit" class="btn btn-primary px-6" data-next data-idle="Lanjut"><span data-label>Lanjut</span></button>
+          </div>
+        </form>
+
+        <div data-done hidden tabindex="-1" class="mt-8 rounded-lg bg-lunas-soft p-6">
+          <h3 class="text-xl font-bold text-lunas">Terima kasih, laporan Anda telah kami terima</h3>
+          <p class="mt-2">Simpan nomor tiket berikut untuk memantau penanganannya.</p>
+          <div class="mt-4" data-done-ticket></div>
+          <div class="mt-6 flex flex-wrap gap-3">
+            <a class="btn btn-primary" data-done-link href="/pelanggan/pengaduan">Lihat status laporan</a>
+            <a class="btn btn-quiet" href="/pelanggan/lapor-kebocoran">Buat laporan lain</a>
+          </div>
+        </div>
+      </section>
+
+      <aside class="flex flex-col gap-6 self-start rounded-2xl border border-garis p-6">
+        <h2 class="text-xl font-bold">Sebelum melapor</h2>
+        <ul class="grid gap-3">
+          <li class="flex gap-2"><Icon name="mdi:map-marker-radius-outline" size={20} class="mt-0.5 shrink-0 text-patriot" /><span>Formulir ini untuk kebocoran di jalan, trotoar, atau fasilitas umum. Untuk kendala di sambungan rumah Anda, gunakan <a class="link" href="/pelanggan/pengaduan">pengaduan pelanggan</a>.</span></li>
+          <li class="flex gap-2"><Icon name="mdi:alert-outline" size={20} class="mt-0.5 shrink-0 text-patriot" />Utamakan keselamatan: jangan mendekati galian atau arus air yang deras.</li>
+          <li class="flex gap-2"><Icon name="mdi:camera-outline" size={20} class="mt-0.5 shrink-0 text-patriot" />Foto dari kamera diberi cap tanggal dan jam. Izinkan akses kamera dan lokasi di browser Anda.</li>
+          <li class="flex gap-2"><Icon name="mdi:ticket-confirmation-outline" size={20} class="mt-0.5 shrink-0 text-patriot" />Satu laporan per nomor telepon setiap hari. Bila sudah melapor, pantau dengan nomor tiket yang Anda terima.</li>
+        </ul>
+      </aside>
+    </div>
+
+    <HelpPanel />
+  </div>
+</Base>
+
+<script>
+  import { initLaporKebocoran } from '../../scripts/lapor-kebocoran'
+
+  initLaporKebocoran()
+</script>
