@@ -19,12 +19,12 @@ const bulanBerjalan = (value: string) => value === pengaduan.bulanBerjalan
 <Base title="Kinerja layanan" description="Jumlah pelanggan, penanganan pengaduan, air terjual, dan sambungan baru Perumda Tirta Patriot Kota Bekasi dalam angka.">
   <PageHead
     title="Kinerja layanan"
-    lead="Angka layanan kami langsung dari sistem billing dan pengaduan, ditampilkan apa adanya beserta catatan datanya."
+    lead="Gambaran pelayanan kami kepada pelanggan di Kota Bekasi."
     crumbs={[{ title: 'Beranda', href: '/' }, { title: 'Informasi' }]}
   />
 
   <div class="wrap mt-10">
-    <p class="text-sm text-redup">Data diambil {dateLong(kinerja.diambil)}. Seluruh angka berupa agregat; tidak ada data pelanggan perorangan yang ditampilkan.</p>
+    <p class="text-sm text-redup">Data per {dateLong(kinerja.diambil)}.</p>
 
     <!-- pelanggan -->
     <section class="mt-10 grid gap-12 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]" aria-labelledby="pelanggan-judul">
@@ -33,7 +33,7 @@ const bulanBerjalan = (value: string) => value === pengaduan.bulanBerjalan
         <p class="mt-6 text-[clamp(2.2rem,1.6rem+2vw,3rem)]">
           <Odometer value={String(pelanggan.aktif)} label="Pelanggan aktif" />
         </p>
-        <p class="mt-3 max-w-[44ch] text-redup">Sambungan berstatus aktif di sistem billing, di {pelanggan.kecamatan.length} kecamatan Kota Bekasi.</p>
+        <p class="mt-3 max-w-[44ch] text-redup">Tersebar di {pelanggan.kecamatan.length} kecamatan Kota Bekasi.</p>
 
         <dl class="mt-8 grid grid-cols-2 gap-x-8 gap-y-4 sm:grid-cols-3">
           {pelanggan.kelompok.map(item => (
@@ -48,7 +48,7 @@ const bulanBerjalan = (value: string) => value === pengaduan.bulanBerjalan
 
       <BarList
         title="Pelanggan aktif per kecamatan"
-        caption="Jumlah sambungan aktif menurut kecamatan alamat pelanggan."
+        
         items={pelanggan.kecamatan.map(item => ({ label: item.nama, value: item.jumlah }))}
       />
     </section>
@@ -56,7 +56,7 @@ const bulanBerjalan = (value: string) => value === pengaduan.bulanBerjalan
     <!-- pengaduan -->
     <section class="mt-24 border-t border-garis pt-14" aria-labelledby="aduan-judul">
       <h2 id="aduan-judul" class="text-title font-extrabold">Penanganan pengaduan</h2>
-      <p class="mt-2 max-w-[64ch] text-redup">{pengaduan.catatan}</p>
+      
 
       <dl class="mt-8 grid gap-6 sm:grid-cols-3">
         <div class="rounded-2xl bg-kabut p-5">
@@ -76,25 +76,25 @@ const bulanBerjalan = (value: string) => value === pengaduan.bulanBerjalan
       <div class="mt-12 grid gap-14 lg:grid-cols-2">
         <ColumnChart
           title="Pengaduan masuk dan ditutup"
-          caption="Jumlah tiket per bulan menurut tanggal pengaduan."
+          
           categories={aduan.map(row => bulan(row.bulan) + (bulanBerjalan(row.bulan) ? '*' : ''))}
           categoryLabels={aduan.map(row => bulan(row.bulan, true) + (bulanBerjalan(row.bulan) ? ' (berjalan)' : ''))}
           series={[
             { name: 'Masuk', color: DUA_TINGKAT[0], values: aduan.map(row => row.masuk) },
             { name: 'Ditutup', color: DUA_TINGKAT[1], values: aduan.map(row => row.selesai) },
           ]}
-          notes={[{ index: aduan.length - 1, text: 'bulan berjalan, sebagian tiket masih diproses.' }]}
+          notes={[{ index: aduan.length - 1, text: 'bulan berjalan.' }]}
         />
         <ColumnChart
           title="Median waktu penyelesaian"
-          caption="Hari dari pengaduan dicatat sampai perbaikan direalisasikan; setengah tiket selesai lebih cepat dari angka ini."
+          caption="Dalam hari, sejak pengaduan diterima hingga selesai ditangani."
           categories={aduan.map(row => bulan(row.bulan) + (bulanBerjalan(row.bulan) ? '*' : ''))}
           categoryLabels={aduan.map(row => bulan(row.bulan, true) + (bulanBerjalan(row.bulan) ? ' (berjalan)' : ''))}
           series={[{ name: 'Median', color: AKSEN, values: aduan.map(row => row.medianHari) }]}
           unit=" hari"
           digits={1}
           labelIndexes={aduan.map((_, i) => i)}
-          notes={[{ index: aduan.length - 1, text: 'angka sementara; tiket yang belum selesai belum terhitung.' }]}
+          notes={[{ index: aduan.length - 1, text: 'angka sementara.' }]}
         />
       </div>
 
@@ -115,7 +115,7 @@ const bulanBerjalan = (value: string) => value === pengaduan.bulanBerjalan
       <div class="mt-10 grid gap-14 lg:grid-cols-2">
         <ColumnChart
           title="Air terjual per bulan"
-          caption="Pemakaian pelanggan yang ditagihkan, dalam m³ per periode rekening."
+          caption="Dalam m³ per periode rekening."
           categories={airTerjual.bulanan.map(row => bulan(row.periode))}
           categoryLabels={airTerjual.bulanan.map(row => bulan(row.periode, true))}
           series={[{ name: 'Air terjual', color: AKSEN, values: airTerjual.bulanan.map(row => row.m3) }]}
@@ -125,7 +125,7 @@ const bulanBerjalan = (value: string) => value === pengaduan.bulanBerjalan
         />
         <ColumnChart
           title="Sambungan baru diaktifkan"
-          caption="Jumlah sambungan yang mulai aktif ditagih setiap bulan."
+          
           categories={sambunganBaru.bulanan.map(row => bulan(row.bulan))}
           categoryLabels={sambunganBaru.bulanan.map(row => bulan(row.bulan, true))}
           series={[{ name: 'Sambungan baru', color: AKSEN, values: sambunganBaru.bulanan.map(row => row.jumlah) }]}

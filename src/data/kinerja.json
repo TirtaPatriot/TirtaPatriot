@@ -151,7 +151,7 @@
     "periodeJenis": "Juli–Oktober 2026"
   },
   "airTerjual": {
-    "catatan": "Mulai periode Agustus 2026 termasuk pelanggan wilayah Poncol dan Pondok Ungu yang diambil alih pada 20 Juli 2026.",
+    "catatan": "termasuk pelanggan wilayah Poncol dan Pondok Ungu yang bergabung sejak 20 Juli 2026.",
     "bulanan": [
       {
         "periode": "2025-10",
@@ -216,7 +216,7 @@
     ]
   },
   "sambunganBaru": {
-    "catatan": "Desember 2025 memuat aktivasi massal dari pemindahan data.",
+    "catatan": "termasuk pemindahan data pelanggan.",
     "bulanan": [
       {
         "bulan": "2025-10",

@@ -167,11 +167,11 @@ await write('kinerja', {
     periodeJenis: 'sejak Juli 2026',
   },
   airTerjual: {
-    catatan: 'Mulai periode Agustus 2026 termasuk pelanggan wilayah Poncol dan Pondok Ungu yang diambil alih pada 20 Juli 2026.',
+    catatan: 'termasuk pelanggan wilayah Poncol dan Pondok Ungu yang bergabung sejak 20 Juli 2026.',
     bulanan: terjual.toReversed().map(row => ({ periode: periode(row.periode), m3: Number(row.m3), rekening: Number(row.rekening) })),
   },
   sambunganBaru: {
-    catatan: 'Desember 2025 memuat aktivasi massal dari pemindahan data.',
+    catatan: 'termasuk pemindahan data pelanggan.',
     bulanan: aktivasi.map(row => ({ bulan: row.bulan, jumlah: Number(row.jumlah) })),
   },
 })

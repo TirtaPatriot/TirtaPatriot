@@ -16,7 +16,7 @@ const angka = (value: number) => new Intl.NumberFormat('id-ID').format(value)
 <Base title="Tarif air dan simulasi tagihan" description="Tarif air minum per golongan pelanggan Perumda Tirta Patriot Kota Bekasi dan simulasi perkiraan tagihan dari pemakaian bulanan.">
   <PageHead
     title="Tarif air"
-    lead="Hitung perkiraan tagihan dari pemakaian bulanan Anda, lalu lihat tarif lengkap setiap golongan pelanggan."
+    lead="Perkirakan tagihan bulanan Anda dan lihat tarif setiap golongan pelanggan."
     crumbs={[{ title: 'Beranda', href: '/' }, { title: 'Layanan pelanggan', href: '/pelanggan' }]}
   />
 
@@ -56,7 +56,7 @@ const angka = (value: number) => new Intl.NumberFormat('id-ID').format(value)
               <span class="pointer-events-none absolute top-1/2 right-4 -translate-y-1/2 text-redup">m³</span>
             </div>
           </div>
-          <p id="sim-pakai-hint" class="hint">Selisih stan meter akhir dan awal. Rumah tangga rata-rata memakai sekitar 20 m³ sebulan.</p>
+          <p id="sim-pakai-hint" class="hint">Selisih angka meter akhir dan awal.</p>
         </div>
       </form>
 
@@ -97,16 +97,14 @@ const angka = (value: number) => new Intl.NumberFormat('id-ID').format(value)
         </dl>
 
         <p class="mt-6 border-t border-white/15 pt-4 text-sm text-white/70">
-          Perkiraan, bukan tagihan resmi. Denda keterlambatan dan tunggakan tidak termasuk. Untuk tagihan sebenarnya, <a class="font-semibold text-aqua-soft underline underline-offset-2 hover:text-white" href="/pelanggan/tagihan">cek tagihan</a>.
+          Hasil ini merupakan perkiraan. Untuk tagihan sebenarnya, silakan <a class="font-semibold text-aqua-soft underline underline-offset-2 hover:text-white" href="/pelanggan/tagihan">cek tagihan</a>.
         </p>
       </div>
     </section>
 
     <section class="mt-20" aria-labelledby="tabel-judul">
       <h2 id="tabel-judul" class="text-title font-extrabold">Tarif per golongan</h2>
-      <p class="mt-2 max-w-[62ch] text-redup">
-        Harga per m³ berlaku bertingkat: 10 m³ pertama dihitung dengan harga blok pertama, 10 m³ berikutnya dengan harga blok kedua, dan sisanya dengan harga blok ketiga. Setiap golongan ditagih paling sedikit 10 m³ sebulan.
-      </p>
+      <p class="mt-2 max-w-[62ch] text-redup">Harga per m³ berlaku bertingkat, dengan pemakaian minimal 10 m³ setiap bulan.</p>
 
       <div class="mt-6 overflow-x-auto rounded-2xl border border-garis">
         <table class="w-full min-w-[40rem] border-collapse text-left">
@@ -133,7 +131,7 @@ const angka = (value: number) => new Intl.NumberFormat('id-ID').format(value)
           ))}
         </table>
       </div>
-      <p class="mt-3 text-sm text-redup">Harga dalam rupiah per m³. Denda dikenakan bila rekening dibayar setelah jatuh tempo; golongan dengan perjanjian dikenai persentase dari biaya air dan administrasi.</p>
+      <p class="mt-3 text-sm text-redup">Harga dalam rupiah per m³. Denda berlaku bila pembayaran melewati jatuh tempo.</p>
 
       <div class="mt-12 grid gap-10 md:grid-cols-2">
         <section aria-labelledby="admin-judul">
@@ -155,7 +153,7 @@ const angka = (value: number) => new Intl.NumberFormat('id-ID').format(value)
             <li class="flex gap-3"><Icon name="mdi:check-circle-outline" size={20} class="mt-0.5 shrink-0 text-patriot" />Bea materai Rp10.000 dikenakan bila tagihan mencapai Rp5.000.000.</li>
             <li class="flex gap-3"><Icon name="mdi:check-circle-outline" size={20} class="mt-0.5 shrink-0 text-patriot" />Golongan khusus untuk program atau perjanjian tertentu tidak dicantumkan; tanyakan ke unit pelayanan.</li>
           </ul>
-          <p class="mt-5 text-sm text-redup">Data tarif dari sistem billing, diperbarui {dateLong(TARIF.diambil)}.</p>
+          <p class="mt-5 text-sm text-redup">Per {dateLong(TARIF.diambil)}.</p>
         </section>
       </div>
     </section>

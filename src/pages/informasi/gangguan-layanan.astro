@@ -15,7 +15,7 @@ const gangguan = await Promise.all((await getCollection('gangguan')).map(async e
 <Base title="Gangguan layanan" description="Informasi gangguan layanan air bersih Perumda Tirta Patriot Kota Bekasi yang sedang berlangsung, sama dengan yang tayang di aplikasi Tirta Patriot Mobile.">
   <PageHead
     title="Gangguan layanan"
-    lead="Pekerjaan perbaikan dan gangguan aliran yang sedang berlangsung. Halaman ini memuat informasi terbaru setiap kali dibuka, sama dengan yang tayang di aplikasi Tirta Patriot Mobile."
+    lead="Informasi pekerjaan perbaikan dan gangguan aliran air yang sedang kami tangani. Kami mohon maaf atas ketidaknyamanan yang ditimbulkan."
     crumbs={[{ title: 'Beranda', href: '/' }, { title: 'Informasi' }]}
   />
 
@@ -24,8 +24,8 @@ const gangguan = await Promise.all((await getCollection('gangguan')).map(async e
       <div class="notice notice-ok p-6" data-gangguan-empty hidden={gangguan.length > 0}>
         <Icon name="mdi:water-check-outline" size={28} />
         <div>
-          <h2 class="text-xl font-bold">Tidak ada gangguan yang diumumkan</h2>
-          <p class="mt-1">Bila air di rumah Anda tidak mengalir atau keruh, laporkan agar petugas dapat memeriksanya.</p>
+          <h2 class="text-xl font-bold">Saat ini tidak ada gangguan</h2>
+          <p class="mt-1">Apabila air di rumah Anda tidak mengalir atau keruh, silakan sampaikan kepada kami.</p>
           <a class="btn btn-primary mt-4" href="/pelanggan/pengaduan">Lapor gangguan</a>
         </div>
       </div>
@@ -51,7 +51,7 @@ const gangguan = await Promise.all((await getCollection('gangguan')).map(async e
 
     <aside class="lg:sticky lg:top-24" aria-labelledby="wilayah-judul">
       <h2 id="wilayah-judul" class="text-xl font-bold">Wilayah layanan</h2>
-      <p class="mt-1 mb-4 text-redup">Zona layanan dan kantor pelayanan terdekat untuk menanyakan gangguan di wilayah Anda.</p>
+      <p class="mt-1 mb-4 text-redup">Zona layanan dan kantor pelayanan terdekat.</p>
       <ServiceMap />
       <a href="/informasi/peta-layanan" class="link mt-4 inline-block">Buka peta layanan lengkap</a>
     </aside>

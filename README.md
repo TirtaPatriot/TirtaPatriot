@@ -66,11 +66,28 @@ MSSQL_SERVER=… MSSQL_USER=… MSSQL_PASSWORD=… bun run data
 
 Gunakan akun baca-saja. Skrip hanya membaca agregat (jumlah per kecamatan, per bulan, dsb.), tidak ada data pelanggan perorangan. Cocok dijadwalkan bulanan dari server internal (mis. Dokploy) yang lalu meng-commit perubahan ke repo sehingga situs ter-build ulang.
 
+## Docker
+
+Image dua tahap: Bun membangun situs, lalu nginx menyajikan berkas statis. Pengalihan alamat lama
+dibangkitkan otomatis dari `public/_redirects`, sehingga sama dengan di Netlify.
+
+```bash
+docker build -t tirtapatriot-web \
+  --build-arg PUBLIC_RECAPTCHA_SITE_KEY=… \
+  --build-arg PUBLIC_CHATWOOT_WEBSITE_TOKEN=… \
+  --build-arg PUBLIC_CHATWOOT_BASE_URL=… .
+docker run -p 8080:80 tirtapatriot-web
+```
+
+Container mendengarkan port 80 dan menyediakan `/healthz` untuk pemeriksaan kesehatan. TLS ditangani proxy di depannya (mis. Traefik pada Dokploy).
+
 ## Variabel lingkungan
 
-Lihat `.env.example`. Semuanya bersifat publik (dibaca di browser):
+Lihat `.env.example`. Variabel `PUBLIC_*` ditanam saat build dan terlihat oleh pengunjung:
 
 - `PUBLIC_API_URL` — API layanan pelanggan untuk tagihan dan pengaduan (bawaan `https://open.tirtapatriot.net/web`)
 - `PUBLIC_INFO_PELANGGAN_API` — API Informasi Pelanggan untuk gangguan (bawaan `https://pelanggan.api.tirtapatriot.co`)
 - `PUBLIC_RECAPTCHA_SITE_KEY` — reCAPTCHA v3 untuk formulir
 - `PUBLIC_CHATWOOT_WEBSITE_TOKEN`, `PUBLIC_CHATWOOT_BASE_URL` — widget obrolan
+
+Variabel `MSSQL_*` hanya untuk `bun run data` dari jaringan internal dan tidak boleh ikut ke build situs.
