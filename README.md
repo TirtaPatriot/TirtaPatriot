@@ -57,7 +57,7 @@ Situs tidak lagi bergantung pada CMS Directus (cms.tirtapatriot.net).
 | Gangguan layanan | API Informasi Pelanggan (`GET /news`, sama dengan aplikasi Tirta Patriot Mobile) | otomatis: dimuat saat build **dan** langsung di browser |
 | Cek tagihan & pengaduan | API layanan pelanggan `https://open.tirtapatriot.net/web` | – |
 | Pendaftaran sambungan baru | API Informasi Pelanggan (`/files/upload`, `/new-customer/v2/insert`, `/new-customer/tracking`) | – |
-| Catat meter mandiri, perubahan data pelanggan | API Open `/web/akses`, `/web/catat-meter`, `/web/pengajuan` (repo TirtaPatriot/Open, branch `claude/layanan-mandiri`). Verifikasi: nomor + nama + jumlah pembayaran terakhir; token 30 menit di `sessionStorage`. Catat meter butuh SP `bacameter.sp_catat_meter_mandiri_*` (lihat `sql/` di repo Open) | – |
+| Catat meter mandiri, perubahan data pelanggan | API Open `/web/akses`, `/web/catat-meter`, `/web/pengajuan` (repo TirtaPatriot/Open, branch `main`). Verifikasi: nomor + nama + jumlah pembayaran terakhir; token 30 menit di `sessionStorage`. Catat meter butuh SP `bacameter.sp_catat_meter_mandiri_*` (lihat `sql/` di repo Open) | – |
 | Jaringan pipa | vector tile PostGIS function layer `publik.pipa` (hanya garis dan diameter) dari `https://tile.api.tirtapatriot.com`, di atas peta dasar OpenFreeMap. Function dan role baca-saja untuk pg_tileserv di `sql/2026-10-27_tile_publik.sql` | langsung dari server tile |
 
 `scripts/migrate-directus.ts` adalah skrip migrasi satu kali dari Directus, disimpan sebagai dokumentasi.
