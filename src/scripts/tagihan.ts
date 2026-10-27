@@ -1,5 +1,6 @@
 /** Cek tagihan: kirim nomor pelanggan ke API lalu tampilkan rincian tagihan. */
 import { api, ApiError, recaptchaToken, warmRecaptcha } from './api'
+import { mountBayar } from './bayar-online'
 import { el, masked, setBusy, showError } from './dom'
 
 type Pelanggan = {
@@ -152,6 +153,9 @@ export function initTagihan (): void {
       })
 
       render(result, data)
+      if (data.tagihan?.length) {
+        void mountBayar(result, data.pelanggan?.nomor ?? nomor)
+      }
       result.hidden = false
       result.focus({ preventScroll: true })
       result.scrollIntoView({ behavior: 'smooth', block: 'start' })
