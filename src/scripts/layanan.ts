@@ -5,7 +5,7 @@
  * Token disimpan di sessionStorage (hilang saat tab ditutup).
  */
 import { api, ApiError, recaptchaToken, warmRecaptcha } from './api'
-import { el, masked } from './dom'
+import { el } from './dom'
 import { reveal } from './motion'
 
 const KEY = 'tirtapatriot.layanan'
@@ -70,7 +70,6 @@ export function blobToDataUrl (blob: Blob): Promise<string> {
   })
 }
 
-const format = (nomor: string) => nomor.replace(/^(\d{2})(\d{2})(\d{2})(\d+)$/, '$1.$2.$3.$4')
 
 /**
  * Langkah verifikasi di dalam formulir bertahap ([data-verifikasi]). Bila sesi masih berlaku, isian disembunyikan dan
@@ -86,8 +85,8 @@ export function mountVerifikasi (root: HTMLElement): { lanjut: () => Promise<Ses
     fields.hidden = Boolean(sesi)
     done.hidden = !sesi
     if (sesi) {
-      done.querySelector('[data-verifikasi-nomor]')!.textContent = format(sesi.nomor)
-      done.querySelector('[data-verifikasi-nama]')!.textContent = masked(sesi.nama)
+      // nama tidak ditampilkan lagi: pengguna baru saja mengetiknya sendiri
+      done.querySelector('[data-verifikasi-nomor]')!.textContent = sesi.nomor
     }
   }
   tampil()
