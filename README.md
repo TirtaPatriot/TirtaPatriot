@@ -55,7 +55,7 @@ Situs tidak lagi bergantung pada CMS Directus (cms.tirtapatriot.net).
 | Tempat pembayaran: bank/mitra resmi dan virtual account | snapshot dari ERP (`billing.billing_loket` dengan transaksi 60 hari terakhir, `info_pelanggan.channel`) di `src/data/pembayaran.json`; logo di `src/assets/mitra/<id>.png` | `bun run data`; gerai & aplikasi lain di `src/data/mitra.json` diubah manual |
 | Batas kecamatan & zona layanan | snapshot dari PostGIS (`jaringan.bataskecamatan`, `jaringan.bataslayanan`), disederhanakan, di `src/data/geo/` | jarang berubah; ekspor ulang bila batas diperbarui |
 | Gangguan layanan | API Informasi Pelanggan (`GET /news`, sama dengan aplikasi Tirta Patriot Mobile) | otomatis: dimuat saat build **dan** langsung di browser |
-| Cek tagihan & pengaduan | API layanan pelanggan `https://open.tirtapatriot.net/web` | – |
+| Cek tagihan & pengaduan | API layanan pelanggan `https://papi.tirtapatriot.id/web` | – |
 | Pendaftaran sambungan baru | API Informasi Pelanggan (`/files/upload`, `/new-customer/v2/insert`, `/new-customer/tracking`) | – |
 | Catat meter mandiri, perubahan data pelanggan | API Open `/web/akses`, `/web/catat-meter`, `/web/pengajuan` (repo TirtaPatriot/Open, branch `main`). Verifikasi: nomor + nama + jumlah pembayaran terakhir; token 30 menit di `sessionStorage`. Catat meter butuh SP `bacameter.sp_catat_meter_mandiri_*` (lihat `sql/` di repo Open) | – |
 | Jaringan pipa | vector tile PostGIS function layer `publik.pipa` (hanya garis dan diameter) dari `https://tile.api.tirtapatriot.com`, di atas peta dasar OpenFreeMap | langsung dari server tile |
@@ -89,7 +89,7 @@ Container mendengarkan port 80 dan menyediakan `/healthz` untuk pemeriksaan kese
 
 Lihat `.env.example`. Variabel `PUBLIC_*` ditanam saat build dan terlihat oleh pengunjung:
 
-- `PUBLIC_API_URL` — API layanan pelanggan untuk tagihan dan pengaduan (bawaan `https://open.tirtapatriot.net/web`)
+- `PUBLIC_API_URL` — API layanan pelanggan untuk tagihan dan pengaduan (bawaan `https://papi.tirtapatriot.id/web`)
 - `PUBLIC_INFO_PELANGGAN_API` — API Informasi Pelanggan untuk gangguan dan pendaftaran sambungan baru (bawaan `https://pelanggan.api.tirtapatriot.co`)
 - `PUBLIC_BASEMAP_STYLE`, `PUBLIC_PIPA_TILES` — peta dasar dan vector tile jaringan pipa untuk peta interaktif
 - `PUBLIC_RECAPTCHA_SITE_KEY` — site key reCAPTCHA v3 untuk cek tagihan dan pengaduan (bawaan di Dockerfile: key situs saat ini). Domain situs harus terdaftar pada key tersebut di Google Cloud console

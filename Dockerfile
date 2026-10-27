@@ -10,7 +10,7 @@ RUN bun install --frozen-lockfile
 COPY . .
 
 # Nilai PUBLIC_* ditanam ke HTML/JS saat build (bukan saat container berjalan).
-ARG PUBLIC_API_URL=https://open.tirtapatriot.net/web
+ARG PUBLIC_API_URL=https://papi.tirtapatriot.id/web
 ARG PUBLIC_INFO_PELANGGAN_API=https://pelanggan.api.tirtapatriot.co
 # site key reCAPTCHA v3 bersifat publik (tampil di setiap halaman); secret-nya hanya di API Open
 ARG PUBLIC_RECAPTCHA_SITE_KEY=6LdKx-4pAAAAAOxsfOX93guRi0sSreyEkOcsT_vX

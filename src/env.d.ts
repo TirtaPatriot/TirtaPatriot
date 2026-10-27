@@ -1,5 +1,5 @@
 interface ImportMetaEnv {
-  /** API layanan pelanggan (cek tagihan, pengaduan), bawaan https://open.tirtapatriot.net/web */
+  /** API layanan pelanggan (cek tagihan, pengaduan), bawaan https://papi.tirtapatriot.id/web */
   readonly PUBLIC_API_URL?: string
   /** API Informasi Pelanggan (pengumuman gangguan), bawaan https://pelanggan.api.tirtapatriot.co */
   readonly PUBLIC_INFO_PELANGGAN_API?: string
