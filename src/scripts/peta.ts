@@ -1,8 +1,7 @@
 /**
  * Peta interaktif (MapLibre) untuk jaringan pipa dan pemilih lokasi pendaftaran.
  *  - peta dasar: OpenFreeMap "positron" (tanpa kunci API)
- *  - jaringan pipa: vector tile pg_tileserv function layer publik.pipa (PostGIS; SQL-nya di repo internal);
- *    tile hanya berisi garis dan diameter, tanpa pipa dinas
+ *  - jaringan pipa: vector tile pg_tileserv layer jaringan.pipa (PostGIS); hanya garis dan diameternya yang ditampilkan
  *  - batas kecamatan: GeoJSON yang sama dengan peta layanan statis
  * MapLibre dimuat saat peta pertama kali terlihat agar halaman tetap ringan.
  */
@@ -10,7 +9,7 @@ import type { ExpressionSpecification, Map as MapLibreMap, StyleSpecification } 
 import kecamatanUrl from '../data/geo/kecamatan.json?url'
 
 export const BASEMAP = import.meta.env.PUBLIC_BASEMAP_STYLE || 'https://tiles.openfreemap.org/styles/positron'
-export const PIPA_TILES = (import.meta.env.PUBLIC_PIPA_TILES || 'https://tile.api.tirtapatriot.com').replace(/\/+$/, '') + '/publik.pipa/{z}/{x}/{y}.pbf'
+export const PIPA_TILES = (import.meta.env.PUBLIC_PIPA_TILES || 'https://tile.api.tirtapatriot.com').replace(/\/+$/, '') + '/jaringan.pipa/{z}/{x}/{y}.pbf'
 
 /** Batas Kota Bekasi (dari jaringan.pipa & batas kecamatan) */
 export const BEKASI: [[number, number], [number, number]] = [[106.9, -6.385], [107.05, -6.165]]
@@ -119,13 +118,15 @@ function addPipa (map: MapLibreMap): void {
   })
 
   const diameter: ExpressionSpecification = ['coalesce', ['get', 'diameter'], 0]
+  // pipa dinas (sambungan ke rumah) tidak ditampilkan
+  const visible: ExpressionSpecification = ['!=', ['coalesce', ['get', 'jenisjaringan'], ''], 'Dinas']
 
   map.addLayer({
     id: 'pipa-distribusi',
     type: 'line',
     source: 'pipa',
-    'source-layer': 'pipa',
-    filter: ['<', diameter, DIAMETER_UTAMA],
+    'source-layer': 'jaringan.pipa',
+    filter: ['all', visible, ['<', diameter, DIAMETER_UTAMA]],
     layout: { 'line-cap': 'round', 'line-join': 'round' },
     paint: {
       'line-color': PIPA_DISTRIBUSI,
@@ -137,8 +138,8 @@ function addPipa (map: MapLibreMap): void {
     id: 'pipa-utama',
     type: 'line',
     source: 'pipa',
-    'source-layer': 'pipa',
-    filter: ['>=', diameter, DIAMETER_UTAMA],
+    'source-layer': 'jaringan.pipa',
+    filter: ['all', visible, ['>=', diameter, DIAMETER_UTAMA]],
     layout: { 'line-cap': 'round', 'line-join': 'round' },
     paint: {
       'line-color': PIPA_UTAMA,
