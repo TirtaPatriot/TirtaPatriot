@@ -22,7 +22,9 @@ export function isGangguan (item: Pengumuman): boolean {
 }
 
 export async function fetchPengumuman (): Promise<Pengumuman[]> {
-  const response = await fetch(`${INFO_PELANGGAN_API}/news?type=all&limit=50`, { headers: { Accept: 'application/json' } })
+  // /news hanya mengembalikan entri yang sedang tayang (bukan arsip), tanpa paginasi; limit dihitung per baris tipe
+  // sebelum disaring menjadi gangguan, jadi beri ruang lega (API membatasi maksimal 1000)
+  const response = await fetch(`${INFO_PELANGGAN_API}/news?type=all&limit=200`, { headers: { Accept: 'application/json' } })
   if (!response.ok) {
     throw new Error(`Informasi Pelanggan: HTTP ${response.status}`)
   }
