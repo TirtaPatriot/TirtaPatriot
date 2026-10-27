@@ -1,0 +1,87 @@
+---
+import ErrorBox from '../../components/ErrorBox.astro'
+import HelpPanel from '../../components/HelpPanel.astro'
+import Icon from '../../components/Icon.astro'
+import PageHead from '../../components/PageHead.astro'
+import VerifikasiPelanggan from '../../components/VerifikasiPelanggan.astro'
+import Base from '../../layouts/Base.astro'
+import { API_URL } from '../../scripts/api'
+---
+
+<Base preconnect={[API_URL]} title="Riwayat pemakaian dan pembayaran" description="Lihat pemakaian air 12 bulan terakhir, riwayat pembayaran rekening, dan cetak bukti pembayaran Perumda Tirta Patriot Kota Bekasi.">
+  <PageHead
+    title="Riwayat pemakaian dan pembayaran"
+    lead="Pemakaian air bulan demi bulan, rekening yang sudah dibayar, dan bukti pembayarannya."
+    crumbs={[{ title: 'Beranda', href: '/' }, { title: 'Layanan pelanggan', href: '/pelanggan' }]}
+  />
+
+  <div class="wrap mt-8">
+    <form class="grid max-w-[52rem] gap-6" novalidate data-riwayat-form>
+      <VerifikasiPelanggan id="riwayat" />
+      <ErrorBox />
+      <div><button type="submit" class="btn btn-primary px-6" data-next data-idle="Tampilkan riwayat"><span data-label>Tampilkan riwayat</span></button></div>
+    </form>
+
+    <div class="mt-10 grid gap-12" data-riwayat hidden tabindex="-1">
+      <section aria-labelledby="pakai-judul" class="grid gap-4">
+        <div class="flex flex-wrap items-end justify-between gap-3">
+          <h2 id="pakai-judul" class="text-2xl font-extrabold">Pemakaian air</h2>
+          <p class="text-sm text-redup" data-golongan></p>
+        </div>
+        <dl class="grid grid-cols-2 gap-4 rounded-2xl bg-kabut p-5 sm:grid-cols-3" data-ringkas></dl>
+        <div data-pakai-notice aria-live="polite"></div>
+        <div data-pakai-chart></div>
+      </section>
+
+      <section aria-labelledby="bayar-judul" class="grid gap-4">
+        <h2 id="bayar-judul" class="text-2xl font-extrabold">Riwayat pembayaran</h2>
+        <p class="text-redup">Rekening 24 bulan terakhir. Bukti pembayaran dapat dicetak atau disimpan sebagai PDF untuk rekening yang sudah lunas.</p>
+        <div class="overflow-x-auto rounded-xl border border-garis">
+          <table class="w-full min-w-[40rem] border-collapse text-left text-sm">
+            <thead class="bg-kabut">
+              <tr>
+                <th class="px-4 py-3 font-semibold">Periode</th>
+                <th class="px-4 py-3 text-right font-semibold">Pemakaian</th>
+                <th class="px-4 py-3 text-right font-semibold">Jumlah</th>
+                <th class="px-4 py-3 font-semibold">Status</th>
+                <th class="px-4 py-3 font-semibold">Tempat bayar</th>
+                <th class="px-4 py-3"><span class="sr-only">Bukti</span></th>
+              </tr>
+            </thead>
+            <tbody data-bayar-rows></tbody>
+          </table>
+        </div>
+        <p class="text-sm text-redup">Untuk tagihan yang belum lunas beserta dendanya, buka <a class="link" href="/pelanggan/tagihan">cek tagihan</a>.</p>
+      </section>
+    </div>
+
+    <HelpPanel />
+  </div>
+</Base>
+
+<!-- bukti pembayaran: hanya bagian ini yang tercetak -->
+<style is:global>
+  .bukti-cetak {
+    display: none;
+  }
+
+  @media print {
+    body.mencetak-bukti > :not(.bukti-cetak) {
+      display: none !important;
+    }
+
+    body.mencetak-bukti > .bukti-cetak {
+      display: block;
+    }
+
+    @page {
+      margin: 16mm;
+    }
+  }
+</style>
+
+<script>
+  import { initRiwayat } from '../../scripts/riwayat'
+
+  initRiwayat()
+</script>

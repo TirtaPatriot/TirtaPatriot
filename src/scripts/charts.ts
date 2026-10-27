@@ -7,12 +7,13 @@ import { el } from './dom'
 type Row = { name: string, color: string, value: string }
 type Group = { label: string, rows: Row[] }
 
-for (const figure of document.querySelectorAll<HTMLElement>('[data-chart]')) {
+/** Pasang tooltip pada satu grafik (markup ColumnChart.astro atau buatan riwayat.ts). */
+export function bindChart (figure: HTMLElement): void {
   const data = JSON.parse(figure.dataset.chart ?? '[]') as Group[]
   const tip = figure.querySelector<HTMLElement>('.chart-tip')
   const groups = [...figure.querySelectorAll<SVGGElement>('.chart-group')]
   if (!tip) {
-    continue
+    return
   }
 
   const show = (group: SVGGElement) => {
@@ -60,6 +61,10 @@ for (const figure of document.querySelectorAll<HTMLElement>('[data-chart]')) {
     group.addEventListener('focusout', hide)
   }
   figure.querySelector('svg')?.addEventListener('pointerleave', hide)
+}
+
+for (const figure of document.querySelectorAll<HTMLElement>('[data-chart]')) {
+  bindChart(figure)
 }
 
 // batang dan kolom tumbuh dari garis dasar saat pertama kali terlihat
