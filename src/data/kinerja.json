@@ -1,0 +1,275 @@
+{
+  "diambil": "2026-10-27T07:37:48+07:00",
+  "sumber": "erp.billing (customer, billing), erp.pengaduan (pengaduan_data, realisasi, jenis_pengaduan); agregat saja",
+  "pelanggan": {
+    "aktif": 129888,
+    "definisi": "billing.customer.status_pelanggan = 1",
+    "kelompok": [
+      {
+        "nama": "Rumah Tangga",
+        "jumlah": 123790
+      },
+      {
+        "nama": "Niaga",
+        "jumlah": 5224
+      },
+      {
+        "nama": "Sosial",
+        "jumlah": 695
+      },
+      {
+        "nama": "Instansi Pemerintah",
+        "jumlah": 116
+      },
+      {
+        "nama": "Industri",
+        "jumlah": 45
+      },
+      {
+        "nama": "Khusus",
+        "jumlah": 18
+      }
+    ],
+    "kecamatan": [
+      {
+        "nama": "Bekasi Utara",
+        "jumlah": 47047
+      },
+      {
+        "nama": "Bekasi Timur",
+        "jumlah": 20090
+      },
+      {
+        "nama": "Medan Satria",
+        "jumlah": 19055
+      },
+      {
+        "nama": "Rawalumbu",
+        "jumlah": 14126
+      },
+      {
+        "nama": "Bekasi Barat",
+        "jumlah": 11742
+      },
+      {
+        "nama": "Bekasi Selatan",
+        "jumlah": 8829
+      },
+      {
+        "nama": "Jatisampurna",
+        "jumlah": 4022
+      },
+      {
+        "nama": "Jatiasih",
+        "jumlah": 3141
+      },
+      {
+        "nama": "Pondok Melati",
+        "jumlah": 943
+      },
+      {
+        "nama": "Bantargebang",
+        "jumlah": 480
+      },
+      {
+        "nama": "Mustika Jaya",
+        "jumlah": 289
+      },
+      {
+        "nama": "Pondokgede",
+        "jumlah": 124
+      }
+    ]
+  },
+  "pengaduan": {
+    "catatan": "Data pengaduan dimulai 1 Januari 2026; waktu penyelesaian Januari–Juni tidak andal (realisasi dientri belakangan) sehingga hanya Juli dan seterusnya yang ditampilkan.",
+    "bulanan": [
+      {
+        "bulan": "2026-07",
+        "masuk": 2315,
+        "selesai": 1840,
+        "medianHari": 15.0,
+        "dalam3Hari": 0.276
+      },
+      {
+        "bulan": "2026-08",
+        "masuk": 1918,
+        "selesai": 1572,
+        "medianHari": 10.0,
+        "dalam3Hari": 0.25
+      },
+      {
+        "bulan": "2026-09",
+        "masuk": 3028,
+        "selesai": 2221,
+        "medianHari": 9.0,
+        "dalam3Hari": 0.316
+      },
+      {
+        "bulan": "2026-10",
+        "masuk": 2191,
+        "selesai": 1060,
+        "medianHari": 2.2,
+        "dalam3Hari": 0.557
+      }
+    ],
+    "bulanBerjalan": "2026-10",
+    "jenis": [
+      {
+        "nama": "Air kecil",
+        "persen": 19.5
+      },
+      {
+        "nama": "Rekening pelanggan",
+        "persen": 15.3
+      },
+      {
+        "nama": "Air keruh",
+        "persen": 15.1
+      },
+      {
+        "nama": "Meter rusak",
+        "persen": 13.1
+      },
+      {
+        "nama": "Air tidak keluar",
+        "persen": 11.3
+      },
+      {
+        "nama": "Pipa persil bocor",
+        "persen": 6.2
+      },
+      {
+        "nama": "Rehab pipa",
+        "persen": 5.4
+      },
+      {
+        "nama": "Stop kran bocor",
+        "persen": 4.7
+      }
+    ],
+    "periodeJenis": "Juli–Oktober 2026"
+  },
+  "airTerjual": {
+    "catatan": "Mulai periode Agustus 2026 termasuk pelanggan wilayah Poncol dan Pondok Ungu yang diambil alih pada 20 Juli 2026.",
+    "bulanan": [
+      {
+        "periode": "2025-10",
+        "m3": 1597743,
+        "rekening": 95097
+      },
+      {
+        "periode": "2025-11",
+        "m3": 1652847,
+        "rekening": 95326
+      },
+      {
+        "periode": "2025-12",
+        "m3": 1576692,
+        "rekening": 95927
+      },
+      {
+        "periode": "2026-01",
+        "m3": 1724884,
+        "rekening": 99233
+      },
+      {
+        "periode": "2026-02",
+        "m3": 1667826,
+        "rekening": 99665
+      },
+      {
+        "periode": "2026-03",
+        "m3": 1512234,
+        "rekening": 100151
+      },
+      {
+        "periode": "2026-04",
+        "m3": 1631023,
+        "rekening": 100652
+      },
+      {
+        "periode": "2026-05",
+        "m3": 1682735,
+        "rekening": 101342
+      },
+      {
+        "periode": "2026-06",
+        "m3": 1702265,
+        "rekening": 101985
+      },
+      {
+        "periode": "2026-07",
+        "m3": 1736664,
+        "rekening": 104169
+      },
+      {
+        "periode": "2026-08",
+        "m3": 2740125,
+        "rekening": 129758
+      },
+      {
+        "periode": "2026-09",
+        "m3": 2662525,
+        "rekening": 129794
+      }
+    ]
+  },
+  "sambunganBaru": {
+    "catatan": "Desember 2025 memuat aktivasi massal dari pemindahan data.",
+    "bulanan": [
+      {
+        "bulan": "2025-10",
+        "jumlah": 216
+      },
+      {
+        "bulan": "2025-11",
+        "jumlah": 178
+      },
+      {
+        "bulan": "2025-12",
+        "jumlah": 4522
+      },
+      {
+        "bulan": "2026-01",
+        "jumlah": 383
+      },
+      {
+        "bulan": "2026-02",
+        "jumlah": 238
+      },
+      {
+        "bulan": "2026-03",
+        "jumlah": 329
+      },
+      {
+        "bulan": "2026-04",
+        "jumlah": 350
+      },
+      {
+        "bulan": "2026-05",
+        "jumlah": 265
+      },
+      {
+        "bulan": "2026-06",
+        "jumlah": 187
+      },
+      {
+        "bulan": "2026-07",
+        "jumlah": 170
+      },
+      {
+        "bulan": "2026-08",
+        "jumlah": 74
+      },
+      {
+        "bulan": "2026-09",
+        "jumlah": 215
+      },
+      {
+        "bulan": "2026-10",
+        "jumlah": 278
+      }
+    ]
+  }
+}

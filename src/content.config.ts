@@ -4,43 +4,10 @@
  * commit/editor di /admin memicu build ulang. Data operasional dimuat saat build dari sistem internal.
  */
 import { defineCollection } from 'astro:content'
-import type { Loader } from 'astro/loaders'
 import { file, glob } from 'astro/loaders'
 import { z } from 'astro/zod'
-import { directusItems, GANGGUAN_QUERY } from './lib/directus'
+import { fetchGangguan } from './lib/info-pelanggan'
 import { renderContent } from './lib/render-content'
-
-type LoadedEntry = {
-  id: string
-  data: Record<string, unknown>
-  /** konten mentah dari CMS yang dirender menjadi HTML aman */
-  content?: string | null
-  format?: 'auto' | 'markdown' | 'html'
-}
-
-function directusLoader (name: string, fetchEntries: () => Promise<LoadedEntry[]>): Loader {
-  return {
-    name: `directus-${name}`,
-    async load ({ store, parseData, generateDigest, logger }) {
-      const entries = await fetchEntries()
-      store.clear()
-
-      for (const entry of entries) {
-        const data = await parseData({ id: entry.id, data: entry.data })
-        const html = entry.content === undefined ? undefined : await renderContent(entry.content, entry.format)
-
-        store.set({
-          id: entry.id,
-          data,
-          digest: generateDigest({ ...entry.data, content: entry.content ?? '' }),
-          ...(html === undefined ? {} : { rendered: { html } }),
-        })
-      }
-
-      logger.info(`${entries.length} entri dimuat`)
-    },
-  }
-}
 
 /** Berita & edukasi: Markdown di src/content/artikel/{berita,edukasi}/<slug>.md, id = "berita/<slug>". */
 const artikel = defineCollection({
@@ -75,13 +42,18 @@ const navigasi = defineCollection({
   }),
 })
 
+/** Kantor pelayanan, dari info_pelanggan.cabang (sistem Informasi Pelanggan) */
 const kantor = defineCollection({
   loader: file('src/data/kantor.json'),
   schema: z.object({
     nama: z.string(),
     alamat: z.string(),
-    lat: z.number().nullable(),
-    lng: z.number().nullable(),
+    hari: z.string(),
+    jam: z.string(),
+    telepon: z.string(),
+    lat: z.number(),
+    lng: z.number(),
+    zona: z.number().nullable(),
   }),
 })
 
@@ -104,51 +76,33 @@ const direksi = defineCollection({
   }),
 })
 
-const statistik = defineCollection({
-  loader: directusLoader('statistik', async () => {
-    const rows = await directusItems<{ id: number, name: string, value: string }[]>('statistik', {
-      fields: 'id,name,value',
-      sort: 'sort,id',
-    })
-
-    return rows.map((row, order) => ({ id: String(row.id), data: { name: row.name, value: row.value, order } }))
-  }),
-  schema: z.object({ name: z.string(), value: z.string(), order: z.number() }),
-})
-
-type DirectusGangguan = {
-  id: string
-  title: string
-  subtitle: string | null
-  image: string | null
-  content: string | null
-  waktu_mulai: string | null
-  estimasi_selesai: string | null
-}
-
-/** Snapshot saat build; halaman gangguan memperbarui daftar ini langsung dari CMS di browser. */
+/**
+ * Gangguan layanan yang sedang berlaku, dari sistem Informasi Pelanggan (aplikasi mobile).
+ * Snapshot saat build; halaman memperbaruinya langsung dari API di browser.
+ */
 const gangguan = defineCollection({
-  loader: directusLoader('gangguan', async () => {
-    const rows = await directusItems<DirectusGangguan[]>('gangguan_layanan', GANGGUAN_QUERY)
-
-    return rows.map(row => ({
-      id: row.id,
-      data: {
-        title: row.title,
-        subtitle: row.subtitle,
-        image: row.image,
-        mulai: row.waktu_mulai,
-        estimasi: row.estimasi_selesai,
-      },
-      content: row.content,
-    }))
-  }),
+  loader: {
+    name: 'info-pelanggan-gangguan',
+    async load ({ store, parseData, logger }) {
+      store.clear()
+      let items: Awaited<ReturnType<typeof fetchGangguan>> = []
+      try {
+        items = await fetchGangguan()
+      } catch (error) {
+        // API tidak terjangkau saat build: halaman tetap dibangun, browser akan memuat ulang
+        logger.warn(`gangguan tidak dimuat: ${String(error)}`)
+      }
+      for (const item of items) {
+        const data = await parseData({ id: item.id, data: { title: item.title, tanggal: item.date, image: item.cover_image || item.image || null } })
+        store.set({ id: item.id, data, rendered: { html: await renderContent(item.description, 'html') } })
+      }
+      logger.info(`${items.length} gangguan aktif`)
+    },
+  },
   schema: z.object({
     title: z.string(),
-    subtitle: z.string().nullable(),
+    tanggal: z.string(),
     image: z.string().nullable(),
-    mulai: z.string().nullable(),
-    estimasi: z.string().nullable(),
   }),
 })
 
@@ -172,4 +126,4 @@ const legal = defineCollection({
   }),
 })
 
-export const collections = { artikel, halaman, navigasi, kantor, mitra, direksi, statistik, gangguan, legal }
+export const collections = { artikel, halaman, navigasi, kantor, mitra, direksi, gangguan, legal }

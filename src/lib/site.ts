@@ -23,7 +23,8 @@ export const SOCIALS = [
   { title: 'X', icon: 'mdi:twitter', href: 'https://x.com/TirtaPatriot' },
 ]
 
-export const HOURS = 'Senin sampai Sabtu, 08.00–15.00 WIB'
+// sesuai jam operasional kantor di sistem Informasi Pelanggan (info_pelanggan.cabang)
+export const HOURS = 'Senin sampai Jumat, 08.00–16.00 WIB'
 
 export const APP_LINKS = {
   play: 'https://play.google.com/store/apps/details?id=com.tpkb.intipasi',

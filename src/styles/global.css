@@ -868,3 +868,51 @@
     animation: menu-in 240ms var(--ease-out-soft) both;
   }
 }
+
+/* grafik: kolom/batang tumbuh dari garis dasar, sorotan saat hover */
+@keyframes grow-up {
+  from { transform: scaleY(0); }
+}
+
+@keyframes grow-right {
+  from { transform: scaleX(0); }
+}
+
+@layer components {
+  .chart .chart-mark {
+    transform-box: fill-box;
+    transform-origin: bottom;
+    transition: opacity 200ms ease;
+  }
+
+  .chart .chart-group.is-dim .chart-mark {
+    opacity: 0.45;
+  }
+
+  .chart .chart-hit:focus-visible {
+    outline: none;
+    stroke: var(--color-patriot);
+    stroke-width: 2;
+  }
+
+  .chart.is-armed:not(.is-on) .chart-mark {
+    transform: scaleY(0);
+  }
+
+  .chart.is-armed.is-on .chart-mark {
+    animation: grow-up 900ms var(--ease-out-soft) both;
+  }
+
+  [data-bars] .bar-grow {
+    transform-origin: left;
+  }
+
+  [data-bars].is-armed:not(.is-on) .bar-grow {
+    transform: scaleX(0);
+  }
+
+  [data-bars].is-armed.is-on .bar-grow {
+    animation: grow-right 900ms var(--ease-out-soft) both;
+    animation-delay: calc(var(--i, 0) * 45ms);
+  }
+}

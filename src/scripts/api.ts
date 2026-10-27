@@ -1,6 +1,7 @@
 /** Pemanggil API layanan pelanggan (tagihan, pengaduan) beserta token reCAPTCHA v3. */
 
-export const API_URL = (import.meta.env.PUBLIC_API_URL || '/api').replace(/\/+$/, '')
+// API layanan pelanggan (Fastify, repo TirtaPatriot/Open); sama dengan yang dipakai situs lama
+export const API_URL = (import.meta.env.PUBLIC_API_URL || 'https://open.tirtapatriot.net/web').replace(/\/+$/, '')
 const SITE_KEY = import.meta.env.PUBLIC_RECAPTCHA_SITE_KEY as string | undefined
 
 type Grecaptcha = {

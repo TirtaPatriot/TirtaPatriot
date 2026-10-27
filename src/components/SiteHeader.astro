@@ -1,9 +1,11 @@
 ---
 import { getCollection } from 'astro:content'
+import navigasiJson from '../data/navigasi.json'
 import Icon from './Icon.astro'
 
-// urutan mengikuti berkas src/data/navigasi.json
-const navigation = (await getCollection('navigasi')).map(({ data }) => ({
+// urutan mengikuti urutan di src/data/navigasi.json (loader file() tidak menjamin urutan)
+const order = navigasiJson.map(item => item.id)
+const navigation = (await getCollection('navigasi')).toSorted((a, b) => order.indexOf(a.id) - order.indexOf(b.id)).map(({ data }) => ({
   title: data.judul,
   href: data.tautan ?? '',
   external: /^https?:/.test(data.tautan ?? ''),

@@ -1,0 +1,199 @@
+---
+/**
+ * Peta wilayah layanan Kota Bekasi sebagai SVG statis (dirender saat build, tanpa ubin peta pihak ketiga).
+ *  - kecamatan: diwarnai menurut jumlah pelanggan aktif (ramp urutan satu warna, terang → gelap)
+ *  - zona layanan: garis batas berlabel (bukan warna kategori, agar terbaca oleh semua penglihatan)
+ *  - kantor pelayanan: titik dengan cincin putih
+ * Sumber geometri: PostGIS jaringan.bataskecamatan & jaringan.bataslayanan (disederhanakan).
+ */
+import kecamatanGeo from '../data/geo/kecamatan.json'
+import zonaGeo from '../data/geo/zona.json'
+import kantor from '../data/kantor.json'
+import kinerja from '../data/kinerja.json'
+import { titleCase } from '../lib/format'
+import { angka, kelas, RAMP } from '../lib/viz'
+
+type Ring = number[][]
+type Geometry = { type: 'Polygon', coordinates: Ring[] } | { type: 'MultiPolygon', coordinates: Ring[][] }
+type Feature = { properties: { nama: string, kode?: number | null }, geometry: Geometry }
+
+const kecamatan = kecamatanGeo.features as unknown as Feature[]
+const zona = zonaGeo.features as unknown as Feature[]
+
+// proyeksi equirectangular dengan koreksi lintang; cukup akurat untuk satu kota
+const all = [...kecamatan, ...zona].flatMap(f => (f.geometry.type === 'Polygon' ? [f.geometry.coordinates] : f.geometry.coordinates).flat(2) as unknown as number[][])
+const lons = all.map(p => p[0]!)
+const lats = all.map(p => p[1]!)
+const [minLon, maxLon, minLat, maxLat] = [Math.min(...lons), Math.max(...lons), Math.min(...lats), Math.max(...lats)]
+const kx = Math.cos(((minLat + maxLat) / 2) * Math.PI / 180)
+const W = 800
+const scale = W / ((maxLon - minLon) * kx)
+const H = Math.round((maxLat - minLat) * scale)
+const project = (lon: number, lat: number): [number, number] => [(lon - minLon) * kx * scale, (maxLat - lat) * scale]
+
+function path (geometry: Geometry): string {
+  const polygons = geometry.type === 'Polygon' ? [geometry.coordinates] : geometry.coordinates
+  return polygons.map(rings => rings.map(ring => ring.map(([lon, lat], i) => {
+    const [x, y] = project(lon!, lat!)
+    return `${i ? 'L' : 'M'}${x.toFixed(1)} ${y.toFixed(1)}`
+  }).join('') + 'Z').join('')).join('')
+}
+
+/** titik label: rata-rata titik cincin terluar poligon terbesar */
+function labelPoint (geometry: Geometry): [number, number] {
+  const polygons = geometry.type === 'Polygon' ? [geometry.coordinates] : geometry.coordinates
+  const outer = polygons.map(rings => rings[0]!).toSorted((a, b) => b.length - a.length)[0]!
+  const [lon, lat] = outer.reduce((sum, p) => [sum[0]! + p[0]! / outer.length, sum[1]! + p[1]! / outer.length], [0, 0])
+  return project(lon!, lat!)
+}
+
+const key = (name: string) => name.toLowerCase().replace(/[^a-z]/g, '')
+const pelanggan = new Map(kinerja.pelanggan.kecamatan.map(item => [key(item.nama), item]))
+const BATAS = [1000, 5000, 15_000, 25_000] as const
+const legend = ['< 1 rb', '1–5 rb', '5–15 rb', '15–25 rb', '> 25 rb']
+
+const areas = kecamatan.map(feature => {
+  const data = pelanggan.get(key(feature.properties.nama))
+  const jumlah = data?.jumlah ?? 0
+  return { nama: data?.nama ?? feature.properties.nama, jumlah, fill: RAMP[kelas(jumlah, BATAS)], d: path(feature.geometry) }
+})
+const zones = zona.map(feature => ({ nama: feature.properties.nama, d: path(feature.geometry), label: labelPoint(feature.geometry) }))
+const offices = kantor.map(item => ({ ...item, nama: titleCase(item.nama), xy: project(item.lng, item.lat) }))
+---
+
+<figure class="service-map relative" data-map>
+  <div class="mb-4 flex flex-wrap items-center justify-between gap-4">
+    <ul class="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-redup" aria-label="Legenda jumlah pelanggan aktif per kecamatan">
+      {legend.map((label, i) => <li class="flex items-center gap-1.5"><span class="h-3 w-5 rounded-[3px]" style={`background:${RAMP[i]}`} />{label}</li>)}
+      <li class="flex items-center gap-1.5"><span class="size-3 rounded-full border-2 border-white bg-pipa shadow ring-1 ring-pipa/30" />Kantor pelayanan</li>
+    </ul>
+    <label class="inline-flex cursor-pointer items-center gap-2 text-sm font-semibold">
+      <input type="checkbox" class="size-4 accent-patriot" checked data-toggle-zona>
+      Tampilkan batas zona layanan
+    </label>
+  </div>
+
+  <svg viewBox={`-6 -6 ${W + 12} ${H + 12}`} class="block h-auto w-full" role="img" aria-label="Peta Kota Bekasi: jumlah pelanggan aktif per kecamatan, batas zona layanan, dan lokasi kantor pelayanan. Rinciannya tersedia dalam daftar di bawah peta.">
+    <g data-areas>
+      {areas.map((area, i) => (
+        <path
+          d={area.d}
+          fill={area.fill}
+          stroke="#fff"
+          stroke-width="2"
+          stroke-linejoin="round"
+          class="map-area"
+          style={`--i: ${i}`}
+          tabindex="0"
+          data-tip={`${area.nama}|${angka(area.jumlah)} pelanggan aktif`}
+          aria-label={`Kecamatan ${area.nama}: ${angka(area.jumlah)} pelanggan aktif`}
+        />
+      ))}
+    </g>
+
+    <g data-zona class="pointer-events-none">
+      {zones.map(zone => <path d={zone.d} fill="none" stroke="#0a2a5e" stroke-width="2.5" stroke-linejoin="round" />)}
+      {zones.map(zone => (
+        <text x={zone.label[0]} y={zone.label[1]} text-anchor="middle" class="text-[13px] font-extrabold" fill="#0a2a5e" stroke="#fff" stroke-width="4" paint-order="stroke">{zone.nama}</text>
+      ))}
+    </g>
+
+    <g data-kantor>
+      {offices.map(office => (
+        <g class="map-office" tabindex="0" data-tip={`${office.nama}|${office.hari}, ${office.jam}`} aria-label={`${office.nama}, ${office.alamat}`}>
+          <circle cx={office.xy[0]} cy={office.xy[1]} r="14" fill="transparent" />
+          <circle cx={office.xy[0]} cy={office.xy[1]} r="6" fill="#0a2a5e" stroke="#fff" stroke-width="2.5" />
+        </g>
+      ))}
+    </g>
+  </svg>
+
+  <div class="map-tip pointer-events-none absolute z-10 hidden max-w-64 rounded-lg bg-white px-3 py-2 text-sm shadow-lift ring-1 ring-garis" role="status"></div>
+</figure>
+
+<style>
+  .map-area {
+    cursor: pointer;
+    transition: filter 200ms ease, opacity 300ms ease;
+  }
+
+  .map-area:hover,
+  .map-area:focus-visible {
+    filter: brightness(1.12) saturate(1.1);
+    outline: none;
+  }
+
+  .map-office {
+    cursor: pointer;
+  }
+
+  .map-office:hover circle:last-child,
+  .map-office:focus-visible circle:last-child {
+    r: 8;
+    fill: var(--color-patriot);
+  }
+
+  .map-office:focus-visible {
+    outline: none;
+  }
+
+  .map-office circle:last-child {
+    transition: r 200ms var(--ease-out-soft), fill 200ms ease;
+  }
+
+  /* kecamatan muncul bergiliran saat peta pertama kali terlihat */
+  [data-map].is-armed:not(.is-on) .map-area {
+    opacity: 0;
+  }
+
+  [data-map].is-armed.is-on .map-area {
+    animation: rise 700ms var(--ease-out-soft) both;
+    animation-delay: calc(var(--i, 0) * 50ms);
+  }
+</style>
+
+<script>
+  import { el } from '../scripts/dom'
+
+  for (const map of document.querySelectorAll<HTMLElement>('[data-map]')) {
+    const tip = map.querySelector<HTMLElement>('.map-tip')!
+    const zona = map.querySelector<SVGGElement>('[data-zona]')
+    map.querySelector<HTMLInputElement>('[data-toggle-zona]')?.addEventListener('change', event => {
+      zona?.setAttribute('visibility', (event.target as HTMLInputElement).checked ? 'visible' : 'hidden')
+    })
+
+    const show = (target: Element, x: number, y: number) => {
+      const [title = '', detail = ''] = (target.getAttribute('data-tip') ?? '').split('|')
+      tip.replaceChildren(el('strong', 'block', title), el('span', 'text-redup', detail))
+      tip.classList.remove('hidden')
+      const box = map.getBoundingClientRect()
+      tip.style.left = `${Math.min(Math.max(x - box.left - tip.offsetWidth / 2, 0), box.width - tip.offsetWidth)}px`
+      tip.style.top = `${y - box.top - tip.offsetHeight - 14}px`
+    }
+    const hide = () => tip.classList.add('hidden')
+
+    for (const target of map.querySelectorAll('[data-tip]')) {
+      target.addEventListener('pointermove', event => {
+        const pointer = event as PointerEvent
+        show(target, pointer.clientX, pointer.clientY)
+      })
+      target.addEventListener('pointerleave', hide)
+      target.addEventListener('focus', () => {
+        const rect = target.getBoundingClientRect()
+        show(target, rect.left + rect.width / 2, rect.top + rect.height / 2)
+      })
+      target.addEventListener('blur', hide)
+    }
+
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window) {
+      map.classList.add('is-armed')
+      const observer = new IntersectionObserver(entries => {
+        if (entries.some(entry => entry.isIntersecting)) {
+          map.classList.add('is-on')
+          observer.disconnect()
+        }
+      }, { threshold: 0.25 })
+      observer.observe(map)
+    }
+  }
+</script>

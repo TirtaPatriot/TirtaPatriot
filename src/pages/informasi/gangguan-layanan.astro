@@ -1,10 +1,9 @@
 ---
 import { getCollection, render } from 'astro:content'
-import CmsImage from '../../components/CmsImage.astro'
 import Icon from '../../components/Icon.astro'
 import PageHead from '../../components/PageHead.astro'
+import ServiceMap from '../../components/ServiceMap.astro'
 import Base from '../../layouts/Base.astro'
-import { dateTimeShort } from '../../lib/format'
 
 const gangguan = await Promise.all((await getCollection('gangguan')).map(async entry => ({
   id: entry.id,
@@ -13,43 +12,49 @@ const gangguan = await Promise.all((await getCollection('gangguan')).map(async e
 })))
 ---
 
-<Base title="Gangguan layanan" description="Informasi gangguan layanan air bersih Perumda Tirta Patriot Kota Bekasi yang sedang berlangsung beserta perkiraan pemulihannya.">
+<Base title="Gangguan layanan" description="Informasi gangguan layanan air bersih Perumda Tirta Patriot Kota Bekasi yang sedang berlangsung, sama dengan yang tayang di aplikasi Tirta Patriot Mobile.">
   <PageHead
     title="Gangguan layanan"
-    lead="Gangguan yang sedang ditangani dan perkiraan waktu pemulihannya. Halaman ini memuat data terbaru setiap kali dibuka."
+    lead="Pekerjaan perbaikan dan gangguan aliran yang sedang berlangsung. Halaman ini memuat informasi terbaru setiap kali dibuka, sama dengan yang tayang di aplikasi Tirta Patriot Mobile."
     crumbs={[{ title: 'Beranda', href: '/' }, { title: 'Informasi' }]}
-    narrow
   />
 
-  <div class="wrap wrap-narrow mt-10">
-    <div class="notice notice-ok p-6" data-gangguan-empty hidden={gangguan.length > 0}>
-      <Icon name="mdi:water-check-outline" size={28} />
-      <div>
-        <h2 class="text-xl font-bold">Tidak ada gangguan yang tercatat</h2>
-        <p class="mt-1">Bila air di rumah Anda tidak mengalir atau keruh, laporkan agar petugas dapat memeriksanya.</p>
-        <a class="btn btn-primary mt-4" href="/pelanggan/pengaduan">Lapor gangguan</a>
+  <div class="wrap mt-10 grid gap-14 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:items-start">
+    <section aria-label="Gangguan yang sedang berlangsung">
+      <div class="notice notice-ok p-6" data-gangguan-empty hidden={gangguan.length > 0}>
+        <Icon name="mdi:water-check-outline" size={28} />
+        <div>
+          <h2 class="text-xl font-bold">Tidak ada gangguan yang diumumkan</h2>
+          <p class="mt-1">Bila air di rumah Anda tidak mengalir atau keruh, laporkan agar petugas dapat memeriksanya.</p>
+          <a class="btn btn-primary mt-4" href="/pelanggan/pengaduan">Lapor gangguan</a>
+        </div>
       </div>
-    </div>
 
-    <div class="grid gap-8" data-gangguan-list hidden={gangguan.length === 0}>
-      {gangguan.map(item => (
-        <article class="overflow-hidden rounded-lg border border-garis" data-gangguan-id={item.id}>
-          {item.image && <CmsImage src={item.image} alt="" ratio={2} widths={[640, 960]} sizes="(min-width: 768px) 48rem, 100vw" class="w-full" />}
-          <div class="p-5 sm:p-6">
-            <p class="text-sm font-bold text-meter">Sedang ditangani</p>
-            <h2 class="mt-1 text-xl font-bold">{item.title}</h2>
-            {item.subtitle && <p class="mt-1 text-redup">{item.subtitle}</p>}
-            <div class="content mt-4"><item.Content /></div>
-            <dl class="mt-4 grid gap-1 text-sm sm:grid-cols-2">
-              <dt class="font-semibold">Mulai</dt>
-              <dd class="text-redup">{dateTimeShort(item.mulai) || 'Belum tercatat'}</dd>
-              <dt class="font-semibold">Perkiraan selesai</dt>
-              <dd class="text-redup">{item.estimasi ? dateTimeShort(item.estimasi) : 'Belum ditentukan'}</dd>
-            </dl>
-          </div>
-        </article>
-      ))}
-    </div>
+      <div class="grid gap-8" data-gangguan-list hidden={gangguan.length === 0}>
+        {gangguan.map(item => (
+          <article class="overflow-hidden rounded-2xl border border-garis" data-gangguan-id={item.id}>
+            {item.image && <img src={item.image} alt="" loading="lazy" decoding="async" class="aspect-[2/1] w-full object-cover" />}
+            <div class="p-5 sm:p-6">
+              <p class="flex items-center gap-2 text-sm font-bold text-meter"><span class="live-dot" aria-hidden="true" />Sedang berlangsung</p>
+              <h2 class="mt-1 text-xl font-bold">{item.title}</h2>
+              <p class="mt-1 text-sm text-redup">Diumumkan {item.tanggal}</p>
+              <div class="content mt-4"><item.Content /></div>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      <p class="mt-8 text-sm text-redup">
+        Ikuti juga pengumuman gangguan lewat <a class="link" href="https://whatsapp.com/channel/0029VaaWmpGId7nRB1BLj52w" rel="noopener" target="_blank">saluran WhatsApp</a> dan <a class="link" href="https://t.me/PerumdaTirtaPatriot" rel="noopener" target="_blank">kanal Telegram</a> kami.
+      </p>
+    </section>
+
+    <aside class="lg:sticky lg:top-24" aria-labelledby="wilayah-judul">
+      <h2 id="wilayah-judul" class="text-xl font-bold">Wilayah layanan</h2>
+      <p class="mt-1 mb-4 text-redup">Zona layanan dan kantor pelayanan terdekat untuk menanyakan gangguan di wilayah Anda.</p>
+      <ServiceMap />
+      <a href="/informasi/peta-layanan" class="link mt-4 inline-block">Buka peta layanan lengkap</a>
+    </aside>
   </div>
 </Base>
 

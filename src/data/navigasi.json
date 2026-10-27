@@ -48,6 +48,18 @@
       {
         "judul": "Edukasi",
         "tautan": "/edukasi"
+      },
+      {
+        "judul": "Peta Layanan",
+        "tautan": "/informasi/peta-layanan"
+      },
+      {
+        "judul": "Tarif Air",
+        "tautan": "/pelanggan/tarif"
+      },
+      {
+        "judul": "Kinerja Layanan",
+        "tautan": "/informasi/kinerja-layanan"
       }
     ]
   },

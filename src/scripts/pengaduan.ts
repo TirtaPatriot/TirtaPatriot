@@ -314,12 +314,16 @@ export async function showTicketStatus (tiketId: string): Promise<void> {
     const data = await api<Tiket>(`/pengaduan/${encodeURIComponent(tiketId)}`)
     container.replaceChildren(...statusView(tiketId, data ?? {}), statusActions(tiketId))
   } catch (caught) {
-    const notFound = caught instanceof ApiError && caught.status === 404
+    // API mengembalikan "Route GET:... not found" bila layanan pelacakan belum tersedia
+    const unavailable = caught instanceof ApiError && caught.status === 404 && caught.message.startsWith('Route ')
+    const notFound = caught instanceof ApiError && caught.status === 404 && !unavailable
     container.replaceChildren(
       el('h2', 'text-2xl font-extrabold', 'Status pengaduan'),
-      el('p', 'notice notice-error mt-6', notFound
-        ? `Tiket ${tiketId} tidak ditemukan. Periksa kembali nomor tiket Anda, lalu coba lagi.`
-        : 'Status tiket belum dapat dimuat. Coba lagi dalam beberapa saat.'),
+      el('p', 'notice notice-error mt-6', unavailable
+        ? `Pelacakan tiket lewat situs belum tersedia. Kirim nomor tiket ${tiketId} ke WhatsApp Contact Center 0878-7516-3845 untuk menanyakan statusnya.`
+        : notFound
+          ? `Tiket ${tiketId} tidak ditemukan. Periksa kembali nomor tiket Anda, lalu coba lagi.`
+          : 'Status tiket belum dapat dimuat. Coba lagi dalam beberapa saat.'),
       statusActions(tiketId),
     )
   }

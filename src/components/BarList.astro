@@ -1,0 +1,40 @@
+---
+/**
+ * Batang horizontal berurutan untuk membandingkan besaran antarkategori (satu warna).
+ * Nilai di ujung batang; batang ≤ 24 px, ujung data membulat, dasar rata.
+ */
+import { AKSEN, angka } from '../lib/viz'
+
+type Props = {
+  title: string
+  caption?: string
+  items: { label: string, value: number }[]
+  unit?: string
+  digits?: number
+  color?: string
+}
+
+const { title, caption, items, unit = '', digits = 0, color = AKSEN } = Astro.props
+const max = Math.max(...items.map(item => item.value))
+---
+
+<figure data-bars>
+  <figcaption>
+    <h3 class="text-lg font-bold">{title}</h3>
+    {caption && <p class="mt-1 text-sm text-redup">{caption}</p>}
+  </figcaption>
+  <ul class="mt-4 grid gap-2.5">
+    {items.map((item, index) => (
+      <li class="grid grid-cols-[minmax(7rem,9.5rem)_1fr] items-center gap-3 text-sm">
+        <span class="truncate text-redup" title={item.label}>{item.label}</span>
+        <span class="flex items-center gap-2">
+          <span
+            class="bar-grow block h-[18px] rounded-r-[4px]"
+            style={`width: ${Math.max(0.6, (item.value / max) * 82)}%; background: ${color}; --i: ${index}`}
+          />
+          <span class="num shrink-0 font-semibold">{angka(item.value, digits)}{unit}</span>
+        </span>
+      </li>
+    ))}
+  </ul>
+</figure>

@@ -23,8 +23,9 @@ const offices = (await getCollection('kantor')).map(entry => ({ id: entry.id, ..
       const address = titleCase(office.alamat)
       return (
         <li class="flex flex-col gap-1 border-t-2 border-patriot pt-3" data-office={`${name} ${address}`.toLowerCase()}>
-          <h3 class="font-bold">Unit {name}</h3>
+          <h3 class="font-bold">{name}</h3>
           <p class="flex-1 text-redup">{address}</p>
+          <p class="text-sm"><span class="font-semibold">{office.hari}</span>, {office.jam} WIB</p>
           {office.lat && office.lng ? (
             <a class="link mt-1 inline-flex items-center gap-1.5 self-start" href={`https://www.google.com/maps/dir/?api=1&destination=${office.lat},${office.lng}`} rel="noopener" target="_blank">
               <Icon name="mdi:directions" size={18} /> Petunjuk arah

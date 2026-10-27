@@ -1,0 +1,119 @@
+---
+/**
+ * Grafik kolom (satu atau dua seri berdampingan) sebagai SVG statis.
+ * Spesifikasi skill dataviz: kolom ≤ 24 px, ujung data membulat 4 px dan rata di garis dasar,
+ * celah 2 px antar-kolom, grid tipis padat, satu sumbu, label nilai selektif, tooltip saat
+ * hover/fokus, dan tabel data sebagai jalur tanpa warna.
+ */
+import { angka, GRID, niceScale, ringkas } from '../lib/viz'
+
+type Series = { name: string, color: string, values: number[] }
+
+type Props = {
+  title: string
+  /** kalimat pendek yang menyebut apa yang diukur (menggantikan legenda untuk satu seri) */
+  caption?: string
+  categories: string[]
+  /** label panjang kategori untuk tooltip dan tabel */
+  categoryLabels?: string[]
+  series: Series[]
+  unit?: string
+  digits?: number
+  /** indeks kategori yang nilainya dilabeli langsung */
+  labelIndexes?: number[]
+  notes?: { index: number, text: string }[]
+}
+
+const { title, caption, categories, categoryLabels = categories, series, unit = '', digits = 0, labelIndexes = [], notes = [] } = Astro.props
+
+const W = 640
+const H = 260
+const pad = { top: 28, right: 8, bottom: 30, left: 48 }
+const plotW = W - pad.left - pad.right
+const plotH = H - pad.top - pad.bottom
+const maxValue = Math.max(...series.flatMap(s => s.values))
+const scale = niceScale(maxValue)
+const ticks = Array.from({ length: Math.round(scale.max / scale.step) + 1 }, (_, i) => i * scale.step)
+const band = plotW / categories.length
+const barW = Math.min(24, (band * 0.62 - (series.length - 1) * 2) / series.length)
+const groupW = barW * series.length + (series.length - 1) * 2
+const y = (value: number) => pad.top + plotH - (value / scale.max) * plotH
+
+/** kolom dengan ujung atas membulat 4 px dan dasar persegi */
+function column (x: number, value: number): string {
+  const top = y(value)
+  const height = pad.top + plotH - top
+  const r = Math.min(4, height, barW / 2)
+  const bottom = pad.top + plotH
+  return `M${x} ${bottom}V${top + r}Q${x} ${top} ${x + r} ${top}H${x + barW - r}Q${x + barW} ${top} ${x + barW} ${top + r}V${bottom}Z`
+}
+
+const fmt = (value: number) => `${angka(value, digits)}${unit}`
+const data = categories.map((_, i) => ({
+  label: categoryLabels[i],
+  rows: series.map(s => ({ name: s.name, color: s.color, value: fmt(s.values[i] ?? 0) })),
+}))
+const chartId = `chart-${Math.abs([...title].reduce((h, c) => (h * 31 + c.charCodeAt(0)) | 0, 0)).toString(36)}`
+---
+
+<figure class="chart relative" data-chart={JSON.stringify(data)} aria-labelledby={`${chartId}-title`}>
+  <figcaption>
+    <h3 id={`${chartId}-title`} class="text-lg font-bold">{title}</h3>
+    {caption && <p class="mt-1 text-sm text-redup">{caption}</p>}
+  </figcaption>
+
+  {series.length > 1 && (
+    <ul class="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-sm text-redup" aria-hidden="true">
+      {series.map(s => <li class="flex items-center gap-2"><span class="size-3 rounded-[3px]" style={`background:${s.color}`} />{s.name}</li>)}
+    </ul>
+  )}
+
+  <svg viewBox={`0 0 ${W} ${H}`} class="mt-2 block h-auto w-full overflow-visible" role="img" aria-label={`${title}. Rincian nilai ada di tabel data di bawah grafik.`}>
+    {ticks.map(tick => (
+      <g>
+        <line x1={pad.left} x2={W - pad.right} y1={y(tick)} y2={y(tick)} stroke={GRID} stroke-width="1" />
+        <text x={pad.left - 8} y={y(tick)} dy="0.32em" text-anchor="end" class="fill-redup text-[11px]">{ringkas(tick)}</text>
+      </g>
+    ))}
+
+    {categories.map((label, i) => {
+      const x0 = pad.left + band * i + (band - groupW) / 2
+      return (
+        <g class="chart-group" data-i={i}>
+          {series.map((s, si) => <path d={column(x0 + si * (barW + 2), s.values[i] ?? 0)} fill={s.color} class="chart-mark" />)}
+          {labelIndexes.includes(i) && (
+            <text x={x0 + groupW / 2} y={y(Math.max(...series.map(s => s.values[i] ?? 0))) - 7} text-anchor="middle" class="fill-pipa text-[11px] font-semibold">
+              {ringkas(series.at(-1)!.values[i] ?? 0)}{unit}
+            </text>
+          )}
+          <text x={pad.left + band * i + band / 2} y={H - 10} text-anchor="middle" class="fill-redup text-[11px]">{label}</text>
+          <rect x={pad.left + band * i} y={pad.top} width={band} height={plotH + 4} fill="transparent" class="chart-hit" tabindex="0" aria-label={`${categoryLabels[i]}: ${series.map(s => `${s.name} ${fmt(s.values[i] ?? 0)}`).join(', ')}`} />
+        </g>
+      )
+    })}
+
+    <line x1={pad.left} x2={W - pad.right} y1={pad.top + plotH} y2={pad.top + plotH} stroke="#B8C4D2" stroke-width="1" />
+  </svg>
+
+  {notes.length > 0 && (
+    <ul class="mt-3 grid gap-1 text-sm text-redup">
+      {notes.map(note => <li><span class="font-semibold text-pipa">{categoryLabels[note.index]}:</span> {note.text}</li>)}
+    </ul>
+  )}
+
+  <details class="mt-3 text-sm">
+    <summary class="cursor-pointer font-semibold text-patriot">Lihat tabel data</summary>
+    <div class="mt-2 overflow-x-auto">
+      <table class="w-full border-collapse text-left">
+        <thead><tr class="border-b border-garis"><th class="py-1.5 pr-4 font-semibold">Periode</th>{series.map(s => <th class="py-1.5 pl-4 text-right font-semibold">{s.name}</th>)}</tr></thead>
+        <tbody>
+          {categories.map((_, i) => (
+            <tr class="border-b border-garis/60"><td class="py-1.5 pr-4">{categoryLabels[i]}</td>{series.map(s => <td class="num py-1.5 pl-4 text-right">{fmt(s.values[i] ?? 0)}</td>)}</tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </details>
+
+  <div class="chart-tip pointer-events-none absolute z-10 hidden min-w-40 rounded-lg bg-white px-3 py-2 text-sm shadow-lift ring-1 ring-garis" role="status"></div>
+</figure>

@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'bun:test'
-import { assetUrl } from '../src/lib/directus'
 import { numberId, titleCase } from '../src/lib/format'
 import { isHtmlContent, plainText, renderContent } from '../src/lib/render-content'
 
@@ -45,21 +44,6 @@ describe('plainText', () => {
     const long = plainText('kata '.repeat(60), 20)
     expect(long.length).toBeLessThanOrEqual(20)
     expect(long.endsWith('…')).toBe(true)
-  })
-})
-
-describe('assetUrl', () => {
-  it('membentuk URL transformasi Directus dari id maupun URL aset penuh', () => {
-    expect(assetUrl('ABC', { width: 400 })).toBe('https://cms.tirtapatriot.net/assets/ABC?format=webp&quality=72&width=400')
-    expect(assetUrl('https://cms.tirtapatriot.net/assets/ABC.jpeg?width=1080', { width: 10 })).toBe('https://cms.tirtapatriot.net/assets/ABC.jpeg?format=webp&quality=72&width=10')
-  })
-
-  it('memakai sampul bawaan bila sumber kosong', () => {
-    expect(assetUrl(null)).toContain('/assets/C74BDC20-E6AE-423E-BE27-68F220D0F119')
-  })
-
-  it('membiarkan URL gambar non-Directus apa adanya', () => {
-    expect(assetUrl('https://example.com/a.png')).toBe('https://example.com/a.png')
   })
 })
 

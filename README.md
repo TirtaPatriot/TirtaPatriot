@@ -7,7 +7,7 @@ Situs publik Perumda Tirta Patriot Kota Bekasi — https://tirtapatriot.co.id
 - [Astro 7](https://docs.astro.build/) dengan keluaran statis
 - [Tailwind CSS v4](https://tailwindcss.com/) lewat `@tailwindcss/vite`
 - TypeScript 7 (kompiler native) untuk pemeriksaan tipe; interaksi di browser memakai TypeScript biasa tanpa framework
-- Konten: Astro content collections yang dimuat dari CMS Directus (`cms.tirtapatriot.net`) saat build
+- Konten: Astro content collections dari Markdown/JSON di repo, ditambah data agregat dari ERP, PostGIS, dan API Informasi Pelanggan
 - Package manager: bun
 
 ## Mulai
@@ -27,29 +27,50 @@ bun run dev
 | `bun run preview` | pratinjau hasil build |
 | `bun run typecheck` | `astro sync` lalu `tsc --noEmit` (TypeScript 7) |
 | `bun run lint` | oxlint |
-| `bun test` | unit test (penyaring konten, format, URL aset) |
+| `bun test` | unit test (penyaring konten, rumus tagihan, format, grafik) |
+| `bun run data` | perbarui snapshot tarif, kantor, dan kinerja dari ERP (jaringan internal) |
 
 ## Struktur
 
-- `src/content.config.ts` — koleksi konten: artikel (berita & edukasi), navigasi, kantor, mitra pembayaran, direksi, statistik, halaman profil, gangguan, dokumen legal
-- `src/lib/` — akses Directus, render konten CMS yang aman, format tanggal/angka, data perusahaan
+- `src/content.config.ts` — koleksi konten: artikel (berita & edukasi), halaman profil, navigasi, kantor, mitra pembayaran, direksi, gangguan, dokumen legal
+- `src/data/` — data referensi dan snapshot operasional (tarif, kantor, kinerja, batas wilayah)
+- `src/lib/` — render konten yang aman, rumus tagihan, API Informasi Pelanggan, format tanggal/angka, token grafik
 - `src/pages/` — rute situs
 - `src/components/` — komponen Astro
-- `src/scripts/` — skrip browser: cek tagihan, pengaduan, gangguan langsung dari CMS
+- `src/scripts/` — skrip browser: cek tagihan, pengaduan, gangguan langsung dari API, grafik
+- `scripts/` — `export-data.ts` (perbarui snapshot ERP), `migrate-directus.ts` (migrasi satu kali)
 - `src/styles/global.css` — token desain dan gaya dasar
 - `public/_redirects` — pengalihan alamat lama (format Netlify)
 
-## Konten
+## Sumber konten dan data
 
-Konten redaksi tetap dikelola di Directus. Karena situs dibangun statis, **setiap perubahan konten di CMS memerlukan build ulang**: hubungkan webhook Directus (flow saat item dibuat/diubah) ke build hook hosting.
+Situs tidak lagi bergantung pada CMS Directus (cms.tirtapatriot.net).
 
-Pengecualian: halaman **Gangguan layanan** dan panel status di beranda memuat ulang data gangguan langsung dari CMS di browser, sehingga tetap terbaru di antara build.
+| Isi | Sumber | Cara memperbarui |
+| --- | --- | --- |
+| Berita & edukasi | `src/content/artikel/{berita,edukasi}/*.md`, gambar di `src/assets/artikel/` | tambah/ubah berkas Markdown lalu commit |
+| Sejarah, visi-misi, dokumen legal | `src/content/halaman/`, `src/content/legal/` | ubah Markdown lalu commit |
+| Navigasi, mitra pembayaran, direksi | `src/data/*.json` | ubah JSON lalu commit |
+| Tarif, kantor pelayanan, kinerja layanan | snapshot dari ERP (MSSQL) di `src/data/{tarif,kantor,kinerja}.json` | `bun run data` dari jaringan internal, lalu commit |
+| Batas kecamatan & zona layanan | snapshot dari PostGIS (`jaringan.bataskecamatan`, `jaringan.bataslayanan`), disederhanakan, di `src/data/geo/` | jarang berubah; ekspor ulang bila batas diperbarui |
+| Gangguan layanan | API Informasi Pelanggan (`GET /news`, sama dengan aplikasi Tirta Patriot Mobile) | otomatis: dimuat saat build **dan** langsung di browser |
+| Cek tagihan & pengaduan | API layanan pelanggan `https://open.tirtapatriot.net/web` | – |
+
+`scripts/migrate-directus.ts` adalah skrip migrasi satu kali dari Directus, disimpan sebagai dokumentasi.
+
+### Memperbarui data dari ERP
+
+```bash
+MSSQL_SERVER=… MSSQL_USER=… MSSQL_PASSWORD=… bun run data
+```
+
+Gunakan akun baca-saja. Skrip hanya membaca agregat (jumlah per kecamatan, per bulan, dsb.), tidak ada data pelanggan perorangan. Cocok dijadwalkan bulanan dari server internal (mis. Dokploy) yang lalu meng-commit perubahan ke repo sehingga situs ter-build ulang.
 
 ## Variabel lingkungan
 
 Lihat `.env.example`. Semuanya bersifat publik (dibaca di browser):
 
-- `PUBLIC_DIRECTUS_URL` — alamat CMS
-- `PUBLIC_API_URL` — API layanan pelanggan untuk tagihan dan pengaduan (bawaan `/api`)
+- `PUBLIC_API_URL` — API layanan pelanggan untuk tagihan dan pengaduan (bawaan `https://open.tirtapatriot.net/web`)
+- `PUBLIC_INFO_PELANGGAN_API` — API Informasi Pelanggan untuk gangguan (bawaan `https://pelanggan.api.tirtapatriot.co`)
 - `PUBLIC_RECAPTCHA_SITE_KEY` — reCAPTCHA v3 untuk formulir
 - `PUBLIC_CHATWOOT_WEBSITE_TOKEN`, `PUBLIC_CHATWOOT_BASE_URL` — widget obrolan
