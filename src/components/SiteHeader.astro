@@ -41,10 +41,10 @@ const linkClass = 'inline-flex min-h-11 items-center gap-1.5 rounded-md px-3 fon
                   {item.title}
                   <Icon name="mdi:chevron-down" size={18} class="transition-transform group-open:rotate-180" />
                 </summary>
-                <ul class="nav-dropdown absolute top-full left-0 mt-2 min-w-60 origin-top-left rounded-xl border border-garis bg-white p-1.5 shadow-lift">
+                <ul class="nav-dropdown absolute top-full left-0 mt-2 grid min-w-60 gap-0.5 origin-top-left rounded-xl border border-garis bg-white p-1.5 shadow-lift">
                   {item.children.map(child => (
                     <li>
-                      <a href={child.href} class="block rounded-lg px-3 py-2.5 transition-colors hover:bg-air aria-[current=page]:bg-air aria-[current=page]:font-semibold" aria-current={isCurrent(child.href) ? 'page' : undefined} {...(child.external ? { rel: 'noopener', target: '_blank' } : {})}>
+                      <a href={child.href} class="block rounded-lg px-3 py-2.5 transition-colors hover:bg-kabut aria-[current=page]:bg-air aria-[current=page]:font-semibold aria-[current=page]:text-patriot aria-[current=page]:shadow-[inset_3px_0_0_var(--color-patriot)] aria-[current=page]:hover:bg-air-strong" aria-current={isCurrent(child.href) ? 'page' : undefined} {...(child.external ? { rel: 'noopener', target: '_blank' } : {})}>
                         {child.title}
                       </a>
                     </li>
