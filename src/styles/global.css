@@ -7,6 +7,7 @@
  * air    – biru air yang sangat pucat: permukaan bertint
  * meter  – merah roda angka desimal pada meter air: hanya untuk gangguan & penanda register
  * lunas  – hijau untuk status tagihan lunas / layanan normal
+ * aqua   – cyan pada logo tetesan: aksen hanya di atas latar pipa (gelap)
  */
 @theme {
   --color-pipa: #0a2a5e;
@@ -24,14 +25,27 @@
   --color-lunas-soft: #e6f4ee;
   --color-awas: #8a5a00;
   --color-awas-soft: #fff4dc;
+  --color-aqua: #3cc4f0;
+  --color-aqua-soft: #a9e6fa;
+  --color-pipa-deep: #061d45;
 
   --font-sans: var(--font-jakarta), system-ui, sans-serif;
 
   --radius-sm: 4px;
   --radius-md: 8px;
   --radius-lg: 14px;
+  --radius-xl: 20px;
+  --radius-2xl: 28px;
+
+  --ease-out-soft: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --ease-water: cubic-bezier(0.45, 0, 0.25, 1);
+
+  --shadow-lift: 0 1px 2px rgb(10 42 94 / 6%), 0 12px 32px -12px rgb(10 42 94 / 22%);
 
   /* skala tipografi modular (rasio ~1,25) */
+  --text-hero: clamp(2.6rem, 1.6rem + 4.2vw, 4.75rem);
+  --text-hero--line-height: 1;
+  --text-hero--letter-spacing: -0.035em;
   --text-display: clamp(2.25rem, 1.6rem + 2.6vw, 3.5rem);
   --text-display--line-height: 1.05;
   --text-display--letter-spacing: -0.03em;
@@ -111,12 +125,16 @@
     min-height: 2.75rem;
     padding: 0.625rem 1.125rem;
     border: 1px solid transparent;
-    border-radius: var(--radius-md);
+    border-radius: 999px;
     font-weight: 650;
     line-height: 1.2;
     text-decoration: none;
     cursor: pointer;
-    transition: background-color 120ms ease, border-color 120ms ease, color 120ms ease;
+    transition: background-color 200ms ease, border-color 200ms ease, color 200ms ease, transform 160ms var(--ease-out-soft);
+
+    &:active:not(:disabled) {
+      transform: scale(0.97);
+    }
 
     &:disabled,
     &[aria-disabled='true'] {
@@ -186,7 +204,8 @@
     min-height: 2.875rem;
     padding: 0.625rem 0.875rem;
     border: 1.5px solid #9fb0c4;
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-lg);
+    transition: border-color 200ms ease;
     background: #fff;
     color: var(--color-pipa);
     font: inherit;
@@ -569,6 +588,33 @@
       color: #fff;
     }
 
+    & > .cell {
+      overflow: hidden;
+      perspective: 400px;
+      transition: box-shadow 200ms var(--ease-out-soft);
+    }
+
+    & > .cell > .roll {
+      display: block;
+      animation: digit-roll 320ms var(--ease-out-soft) both;
+    }
+
+    /* di atas latar gelap: bingkai lebih pekat, cincin fokus aqua */
+    &.on-dark {
+      background: var(--color-pipa-deep);
+      box-shadow: 0 0 0 1px rgb(255 255 255 / 12%), 0 18px 40px -18px rgb(0 0 0 / 60%);
+    }
+
+    &.on-dark:focus-within {
+      outline-color: var(--color-aqua);
+    }
+
+    /* sel muncul bergiliran pada urutan pembuka */
+    &.intro > .cell {
+      animation: cell-in 620ms var(--ease-out-soft) both;
+      animation-delay: calc(var(--i, 0) * 45ms + 520ms);
+    }
+
     /* sel berikutnya yang akan terisi, pengganti kursor teks */
     &:focus-within > .cell.next {
       box-shadow: inset 0 -4px 0 var(--color-patriot);
@@ -595,5 +641,230 @@
     & > input:focus {
       outline: none;
     }
+  }
+}
+
+/*
+ * Gerak. Semua animasi di bawah dimatikan oleh aturan prefers-reduced-motion di @layer base.
+ */
+
+/* transisi antarhalaman bawaan browser (MPA view transitions) */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+}
+
+::view-transition-old(root) {
+  animation: 180ms var(--ease-out-soft) both page-out;
+}
+
+::view-transition-new(root) {
+  animation: 380ms var(--ease-out-soft) both page-in;
+}
+
+/* sampul berita "terbang" dari kartu ke halaman artikel */
+::view-transition-group(*) {
+  animation-duration: 420ms;
+  animation-timing-function: var(--ease-out-soft);
+}
+
+@keyframes page-out {
+  to { opacity: 0; }
+}
+
+@keyframes page-in {
+  from { opacity: 0; transform: translateY(10px); }
+}
+
+/* urutan pembuka beranda: elemen .enter muncul bergiliran sesuai --i */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(18px); }
+}
+
+@keyframes line-up {
+  from { transform: translateY(105%); }
+}
+
+@keyframes cell-in {
+  from { opacity: 0; transform: translateY(-40%) rotateX(70deg); }
+}
+
+@keyframes bloom {
+  from { opacity: 0; transform: scale(0.92); }
+}
+
+@keyframes digit-roll {
+  from { transform: translateY(70%); opacity: 0; }
+}
+
+@keyframes wave-drift {
+  to { transform: translateX(-50%); }
+}
+
+@keyframes menu-in {
+  from { opacity: 0; transform: translateY(-6px) scale(0.98); }
+}
+
+@keyframes ripple {
+  0% { transform: scale(1); opacity: 0.55; }
+  100% { transform: scale(2.6); opacity: 0; }
+}
+
+@layer components {
+  .enter {
+    animation: rise 760ms var(--ease-out-soft) both;
+    animation-delay: calc(var(--i, 0) * 90ms + 80ms);
+  }
+
+  /* baris judul yang naik dari balik garis */
+  .line-mask {
+    display: block;
+    overflow: hidden;
+    padding-bottom: 0.08em;
+
+    & > span {
+      display: block;
+      animation: line-up 900ms var(--ease-out-soft) both;
+      animation-delay: calc(var(--i, 0) * 110ms + 60ms);
+    }
+  }
+
+  .bloom {
+    animation: bloom 1100ms var(--ease-out-soft) both;
+    animation-delay: 200ms;
+  }
+
+  /* titik status yang "berdenyut" menandakan data langsung */
+  .live-dot {
+    position: relative;
+    display: inline-block;
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 999px;
+    background: currentColor;
+
+    &::after {
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: currentColor;
+      content: '';
+      animation: ripple 2.4s var(--ease-water) infinite;
+    }
+  }
+
+  /* gelombang berlapis di tepi bawah bagian berwarna */
+  .waves {
+    position: absolute;
+    right: 0;
+    bottom: -1px;
+    left: 0;
+    height: clamp(36px, 6vw, 84px);
+    overflow: hidden;
+    pointer-events: none;
+
+    & svg {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 200%;
+      height: 100%;
+      animation: wave-drift var(--speed, 22s) linear infinite;
+    }
+
+    & svg:nth-child(2) {
+      --speed: 34s;
+      animation-direction: reverse;
+    }
+
+    & svg:nth-child(3) {
+      --speed: 48s;
+    }
+  }
+
+  /* kartu dengan gambar: sedikit membesar saat disorot */
+  .zoom-media {
+    overflow: hidden;
+
+    & img {
+      transition: transform 700ms var(--ease-out-soft);
+    }
+  }
+
+  .group:hover .zoom-media img,
+  .group:focus-within .zoom-media img {
+    transform: scale(1.045);
+  }
+
+  /* panah yang bergeser saat tautan disorot */
+  .nudge {
+    transition: transform 240ms var(--ease-out-soft);
+  }
+
+  .group:hover .nudge,
+  .group:focus-visible .nudge {
+    transform: translateX(4px);
+  }
+
+  /* register odometer untuk statistik: setiap sel berisi pita 0–9 */
+  .odometer {
+    display: inline-flex;
+    gap: 3px;
+    padding: 5px;
+    border-radius: var(--radius-md);
+    background: var(--color-pipa);
+    font-variant-numeric: tabular-nums;
+    font-weight: 750;
+    line-height: 1;
+
+    & .wheel {
+      position: relative;
+      width: 0.82em;
+      height: 1.25em;
+      overflow: hidden;
+      border-radius: 3px;
+      background: linear-gradient(180deg, #fff 0%, #eef2f6 48%, #dde4ec 52%, #f6f8fa 100%);
+      color: var(--color-pipa);
+    }
+
+    & .wheel.dec {
+      background: linear-gradient(180deg, #e2303f 0%, var(--color-meter) 48%, #a8121f 52%, #d82535 100%);
+      color: #fff;
+    }
+
+    & .gap {
+      width: 0.25em;
+    }
+
+    /* tanpa JavaScript angka langsung benar; skrip "mempersenjatai" lalu memutar saat terlihat */
+    & .strip {
+      display: flex;
+      flex-direction: column;
+      transform: translateY(calc(var(--d) * -1.25em));
+      transition: transform 1.8s var(--ease-water);
+      transition-delay: calc(var(--i, 0) * 80ms);
+    }
+
+    & .strip > span {
+      display: grid;
+      place-items: center;
+      height: 1.25em;
+    }
+
+    &.is-armed:not(.is-on) .strip {
+      transform: translateY(0);
+      transition: none;
+    }
+  }
+}
+
+@layer components {
+  .nav-menu[open] > .nav-dropdown {
+    animation: menu-in 200ms var(--ease-out-soft) both;
+  }
+
+  .mobile-menu:not([hidden]) {
+    animation: menu-in 240ms var(--ease-out-soft) both;
   }
 }

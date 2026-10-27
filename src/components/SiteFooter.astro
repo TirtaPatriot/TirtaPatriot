@@ -1,6 +1,7 @@
 ---
 import { ADDRESS, HOURS, SITE_LEGAL_NAME, SOCIALS } from '../lib/site'
 import Icon from './Icon.astro'
+import Waves from './Waves.astro'
 
 const services = [
   { title: 'Cek tagihan', href: '/pelanggan/tagihan' },
@@ -22,8 +23,9 @@ const info = [
 const year = new Date().getFullYear()
 ---
 
-<footer class="mt-20 bg-pipa text-white">
-  <div class="wrap grid gap-10 py-12 md:grid-cols-[1.4fr_1fr_1fr]">
+<footer class="relative isolate mt-24 overflow-hidden bg-pipa text-white">
+  <Waves flip />
+  <div class="wrap grid gap-10 pt-24 pb-12 md:grid-cols-[1.4fr_1fr_1fr] md:pt-28">
     <div class="max-w-sm">
       <h2 class="text-lg font-bold">Kantor pusat</h2>
       <p class="mt-2 text-white/85">{ADDRESS}</p>

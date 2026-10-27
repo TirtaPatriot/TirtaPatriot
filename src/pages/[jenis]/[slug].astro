@@ -6,7 +6,7 @@ import ArticleCard from '../../components/ArticleCard.astro'
 import CmsImage from '../../components/CmsImage.astro'
 import Icon from '../../components/Icon.astro'
 import Base from '../../layouts/Base.astro'
-import { getArtikel, JENIS } from '../../lib/artikel'
+import { coverTransition, getArtikel, JENIS } from '../../lib/artikel'
 import { assetUrl } from '../../lib/directus'
 import { dateLong } from '../../lib/format'
 import { plainText } from '../../lib/render-content'
@@ -59,7 +59,9 @@ const shareTargets = [
     </header>
 
     <div class="wrap mt-8 max-w-[60rem]">
-      <CmsImage src={cover} alt="" ratio={16 / 9} widths={[640, 960, 1440]} sizes="(min-width: 960px) 60rem, 100vw" class="w-full rounded-lg bg-air" eager />
+      <div class="overflow-hidden rounded-2xl bg-air outline-1 -outline-offset-1 outline-pipa/10" style={`view-transition-name: ${coverTransition(article.id)}`}>
+        <CmsImage src={cover} alt="" ratio={16 / 9} widths={[640, 960, 1440]} sizes="(min-width: 960px) 60rem, 100vw" class="w-full" eager />
+      </div>
     </div>
 
     <div class="wrap wrap-narrow mt-10">

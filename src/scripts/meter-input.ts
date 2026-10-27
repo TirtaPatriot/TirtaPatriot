@@ -24,7 +24,14 @@ export function renderRegister (field: HTMLElement, value: string): void {
 
   cells.forEach((cell, index) => {
     cell.hidden = index >= count
-    cell.textContent = value[index] ?? ''
+    const digit = value[index] ?? ''
+    if (cell.textContent !== digit) {
+      // angka baru "berputar" masuk seperti roda register
+      const roll = document.createElement('span')
+      roll.className = 'roll'
+      roll.textContent = digit
+      cell.replaceChildren(...(digit ? [roll] : []))
+    }
     cell.classList.toggle('dec', index >= count - 3)
     cell.classList.toggle('next', index === Math.min(value.length, count - 1))
   })

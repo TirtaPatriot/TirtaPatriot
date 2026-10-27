@@ -1,0 +1,38 @@
+---
+/**
+ * Tiga lapis gelombang air di tepi bawah bagian berwarna. Setiap path periodik, dua kali
+ * lebar tampilan, dan periodenya membagi 1440, sehingga geseran -50% berulang tanpa sambungan.
+ * `fill` adalah warna bagian berikutnya (gelombang "menjadi" latar di bawahnya).
+ */
+type Props = {
+  fill?: string
+  /** tampilkan dari atas (untuk tepi atas footer) */
+  flip?: boolean
+}
+
+const { fill = '#ffffff', flip = false } = Astro.props
+
+/** gelombang periodik: `count` lembah selebar `period`, setinggi `amp` di sekitar `mid` */
+function wave (mid: number, amp: number, period: number, count: number): string {
+  const half = period / 2
+  let d = `M0 ${mid} q${half / 2} ${-amp} ${half} 0 t${half} 0`
+  for (let i = 1; i < count; i++) {
+    d += ` t${half} 0 t${half} 0`
+  }
+  return `${d} V120 H0 Z`
+}
+
+const layers = [
+  { d: wave(58, 26, 720, 4), opacity: 0.25 },
+  { d: wave(70, 18, 1440, 2), opacity: 0.45 },
+  { d: wave(84, 14, 480, 6), opacity: 1 },
+]
+---
+
+<div class="waves" aria-hidden="true" style={flip ? 'top: -1px; bottom: auto; transform: scaleY(-1)' : undefined}>
+  {layers.map(layer => (
+    <svg viewBox="0 0 2880 120" preserveAspectRatio="none">
+      <path d={layer.d} fill={fill} fill-opacity={layer.opacity} />
+    </svg>
+  ))}
+</div>

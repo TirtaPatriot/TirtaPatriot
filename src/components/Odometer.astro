@@ -1,0 +1,27 @@
+---
+/** Angka statistik dalam bentuk register meter yang berputar saat terlihat di layar. */
+type Props = {
+  value: string
+  label: string
+  class?: string
+}
+
+const { value, label, class: className } = Astro.props
+const digits = [...String(value).replace(/\D+/g, '')]
+// pemisah ribuan sebagai celah kecil, dihitung dari kanan
+const items = digits.flatMap((digit, index) => {
+  const fromRight = digits.length - index
+  return index > 0 && fromRight % 3 === 0 ? ['gap', digit] : [digit]
+})
+let wheel = 0
+---
+
+<span class:list={['odometer', className]} role="img" aria-label={`${label}: ${new Intl.NumberFormat('id-ID').format(Number(digits.join('')) || 0)}`} data-odometer>
+  {items.map(item => item === 'gap' ? <span class="gap" /> : (
+    <span class="wheel" aria-hidden="true">
+      <span class="strip" style={`--d: ${item}; --i: ${wheel++}`}>
+        {Array.from({ length: 10 }, (_, n) => <span>{n}</span>)}
+      </span>
+    </span>
+  ))}
+</span>

@@ -21,3 +21,12 @@ export async function getArtikel (jenis: Jenis): Promise<CollectionEntry<'artike
   const entries = await getCollection('artikel', entry => entry.data.jenis === jenis)
   return entries.toSorted((a, b) => b.data.terbit.getTime() - a.data.terbit.getTime())
 }
+
+/** Nama view-transition yang unik dan valid untuk sampul artikel (dipakai kartu dan halaman artikel). */
+export function coverTransition (id: string): string {
+  let hash = 0
+  for (const char of id) {
+    hash = (hash * 31 + char.codePointAt(0)!) >>> 0
+  }
+  return `sampul-${hash.toString(36)}`
+}

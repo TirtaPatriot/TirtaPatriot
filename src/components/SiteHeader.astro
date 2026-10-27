@@ -15,7 +15,7 @@ function isCurrent (href: string): boolean {
 const linkClass = 'inline-flex min-h-11 items-center gap-1.5 rounded-md px-3 font-semibold text-pipa hover:bg-air aria-[current=page]:text-patriot'
 ---
 
-<header class="sticky top-0 z-40 border-b border-garis bg-white/95 backdrop-blur-sm">
+<header class="site-header sticky top-0 z-40 border-b border-transparent bg-white/85 backdrop-blur-md backdrop-saturate-150 transition-[border-color,box-shadow] duration-300 data-[scrolled]:border-garis data-[scrolled]:shadow-[0_8px_24px_-16px_rgb(10_42_94/35%)]" style="view-transition-name: site-header" data-site-header>
   <div class="wrap flex h-16 items-center justify-between gap-4">
     <a href="/" class="shrink-0" aria-label="Beranda Perumda Tirta Patriot">
       <img src="/logo-wordmark.png" alt="Perumda Tirta Patriot" width="125" height="40" class="h-10 w-auto">
@@ -31,10 +31,10 @@ const linkClass = 'inline-flex min-h-11 items-center gap-1.5 rounded-md px-3 fon
                   {item.title}
                   <Icon name="mdi:chevron-down" size={18} class="transition-transform group-open:rotate-180" />
                 </summary>
-                <ul class="absolute top-full left-0 mt-1 min-w-56 rounded-lg border border-garis bg-white p-1.5 shadow-lg shadow-pipa/10">
+                <ul class="nav-dropdown absolute top-full left-0 mt-2 min-w-60 origin-top-left rounded-xl border border-garis bg-white p-1.5 shadow-lift">
                   {item.children.map(child => (
                     <li>
-                      <a href={child.href} class="block rounded-md px-3 py-2 hover:bg-air aria-[current=page]:bg-air aria-[current=page]:font-semibold" aria-current={isCurrent(child.href) ? 'page' : undefined} {...(child.external ? { rel: 'noopener', target: '_blank' } : {})}>
+                      <a href={child.href} class="block rounded-lg px-3 py-2.5 transition-colors hover:bg-air aria-[current=page]:bg-air aria-[current=page]:font-semibold" aria-current={isCurrent(child.href) ? 'page' : undefined} {...(child.external ? { rel: 'noopener', target: '_blank' } : {})}>
                         {child.title}
                       </a>
                     </li>
@@ -61,7 +61,7 @@ const linkClass = 'inline-flex min-h-11 items-center gap-1.5 rounded-md px-3 fon
     </button>
   </div>
 
-  <nav id="menu-ponsel" aria-label="Menu utama" class="border-t border-garis bg-white lg:hidden" hidden>
+  <nav id="menu-ponsel" aria-label="Menu utama" class="mobile-menu border-t border-garis bg-white lg:hidden" hidden>
     <ul class="wrap flex flex-col py-3">
       <li class="pb-2">
         <a href="/pelanggan" class="btn btn-primary w-full">Layanan Pelanggan</a>
@@ -90,6 +90,12 @@ const linkClass = 'inline-flex min-h-11 items-center gap-1.5 rounded-md px-3 fon
 </header>
 
 <script>
+  // bayangan tipis setelah halaman digulir
+  const header = document.querySelector<HTMLElement>('[data-site-header]')
+  const onScroll = () => header?.toggleAttribute('data-scrolled', window.scrollY > 8)
+  window.addEventListener('scroll', onScroll, { passive: true })
+  onScroll()
+
   const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]')
   const panel = document.querySelector<HTMLElement>('#menu-ponsel')
 

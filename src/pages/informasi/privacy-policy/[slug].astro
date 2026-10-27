@@ -24,26 +24,26 @@ const { title, seoTitle, description, subtitle, badge, effective, partyLabel, pa
     crumbs={[{ title: 'Beranda', href: '/' }, { title: 'Kebijakan privasi', href: '/informasi/privacy-policy' }]}
     narrow
   >
-    <dl class="mt-6 grid gap-x-6 gap-y-1 text-sm sm:grid-cols-[auto_1fr]">
+    <dl class="enter mt-8 grid gap-x-6 gap-y-1 rounded-xl bg-white/8 p-5 text-sm ring-1 ring-white/12 sm:grid-cols-[auto_1fr]" style="--i: 4">
       {effective && (
         <>
           <dt class="font-semibold">Tanggal efektif</dt>
-          <dd class="text-redup">{effective}</dd>
+          <dd class="text-white/80">{effective}</dd>
         </>
       )}
       <dt class="font-semibold">{partyLabel}</dt>
-      <dd class="text-redup">{party}</dd>
+      <dd class="text-white/80">{party}</dd>
       {badge && (
         <>
           <dt class="font-semibold">Berlaku untuk</dt>
-          <dd class="text-redup">{badge}</dd>
+          <dd class="text-white/80">{badge}</dd>
         </>
       )}
       {links && links.length > 0 && (
         <>
           <dt class="font-semibold">Dokumen terkait</dt>
           <dd class="flex flex-wrap gap-x-4">
-            {links.map(link => <a class="link" href={link.href}>{link.title}</a>)}
+            {links.map(link => <a class="font-semibold text-aqua-soft underline underline-offset-2 hover:text-white" href={link.href}>{link.title}</a>)}
           </dd>
         </>
       )}

@@ -5,13 +5,15 @@ import CmsImage from '../components/CmsImage.astro'
 import Himbauan from '../components/Himbauan.astro'
 import Icon from '../components/Icon.astro'
 import MeterField from '../components/MeterField.astro'
+import Odometer from '../components/Odometer.astro'
+import Waves from '../components/Waves.astro'
 import Base from '../layouts/Base.astro'
-import { dateTimeShort, numberId } from '../lib/format'
+import { dateTimeShort } from '../lib/format'
 import { APP_LINKS } from '../lib/site'
 
 const berita = (await getCollection('artikel', entry => entry.data.jenis === 'berita'))
   .toSorted((a, b) => b.data.terbit.getTime() - a.data.terbit.getTime())
-  .slice(0, 3)
+  .slice(0, 4)
 
 const [utama, ...lainnya] = berita
 const slide = (await getCollection('korsel')).toSorted((a, b) => a.data.order - b.data.order)[0]
@@ -19,78 +21,109 @@ const statistik = (await getCollection('statistik')).toSorted((a, b) => a.data.o
 const gangguan = (await getCollection('gangguan')).map(entry => ({ id: entry.id, ...entry.data }))
 
 const services = [
-  { title: 'Lapor gangguan', text: 'Air mati, keruh, atau pipa bocor', icon: 'mdi:message-alert-outline', href: '/pelanggan/pengaduan' },
-  { title: 'Lacak pengaduan', text: 'Pantau tiket yang sudah dibuat', icon: 'mdi:ticket-confirmation-outline', href: '/pelanggan/pengaduan#lacak' },
-  { title: 'Pasang baru', text: 'Tahapan sambungan air ke rumah', icon: 'mdi:pipe', href: '/pelanggan/pendaftaran' },
-  { title: 'Tempat bayar', text: 'Mitra dan loket resmi', icon: 'mdi:storefront-outline', href: '/informasi/tempat-pembayaran' },
+  { title: 'Lapor gangguan', text: 'Air mati, keruh, atau pipa bocor di sekitar rumah.', icon: 'mdi:message-alert-outline', href: '/pelanggan/pengaduan' },
+  { title: 'Lacak pengaduan', text: 'Pantau penanganan dengan nomor tiket Anda.', icon: 'mdi:ticket-confirmation-outline', href: '/pelanggan/pengaduan#lacak' },
+  { title: 'Pasang baru', text: 'Lima tahap sampai meter air terpasang.', icon: 'mdi:pipe', href: '/pelanggan/pendaftaran' },
+  { title: 'Tempat bayar', text: 'Mitra resmi dan unit pelayanan terdekat.', icon: 'mdi:storefront-outline', href: '/informasi/tempat-pembayaran' },
 ]
 ---
 
 <Base description="Cek tagihan air, lapor gangguan, dan pantau informasi layanan air bersih Perumda Tirta Patriot Kota Bekasi.">
-  <section class="relative overflow-hidden bg-kabut">
-    <div class="wrap grid gap-10 py-10 md:py-16 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-center lg:gap-14">
+  <!-- hero: cek tagihan adalah hal pertama yang dicari pelanggan -->
+  <section class="relative isolate overflow-hidden bg-pipa text-white">
+    <div class="absolute inset-0 -z-10 bg-[radial-gradient(60rem_40rem_at_85%_-10%,rgb(11_111_184/55%),transparent_70%)]" aria-hidden="true"></div>
+
+    <div class="wrap grid gap-12 pt-12 pb-28 md:pt-20 md:pb-36 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:items-center lg:gap-16">
       <div>
-        <h1 class="text-display font-extrabold">Berapa tagihan air Anda bulan ini?</h1>
-        <p class="mt-4 max-w-[46ch] text-lg text-redup">
+        <h1 class="text-hero font-extrabold">
+          <span class="line-mask"><span style="--i: 0">Berapa tagihan</span></span>
+          <span class="line-mask"><span style="--i: 1">air Anda bulan ini?</span></span>
+        </h1>
+        <p class="enter mt-6 max-w-[44ch] text-lg text-white/80" style="--i: 3">
           Masukkan nomor pelanggan yang tertera di rekening air. Rincian pemakaian dan tagihan langsung tampil.
         </p>
 
-        <form action="/pelanggan/tagihan" method="get" class="mt-8 grid max-w-[34rem] gap-4">
-          <MeterField id="nomor-beranda" label="Nomor pelanggan" hint="Contoh: 010301001045" />
-          <button class="btn btn-primary justify-self-start px-6 text-lg" type="submit">
-            <Icon name="mdi:receipt-text-outline" size={22} /> Cek tagihan
-          </button>
+        <form action="/pelanggan/tagihan" method="get" class="mt-9 grid max-w-[34rem] gap-5">
+          <div class="enter" style="--i: 4">
+            <MeterField id="nomor-beranda" label="Nomor pelanggan" hint="Contoh: 010301001045" dark intro />
+          </div>
+          <div class="enter" style="--i: 6">
+            <button class="group btn min-h-13 bg-aqua px-7 text-lg text-pipa-deep hover:bg-aqua-soft" type="submit">
+              <Icon name="mdi:receipt-text-outline" size={22} /> Cek tagihan
+              <Icon name="mdi:arrow-right" size={20} class="nudge" />
+            </button>
+          </div>
         </form>
       </div>
 
-      <div class="relative">
-        {slide && (
-          <CmsImage
-            src={slide.data.image}
-            alt={slide.data.title}
-            ratio={4 / 3}
-            widths={[480, 720, 960]}
-            sizes="(min-width: 1024px) 40vw, 100vw"
-            class="w-full rounded-lg"
-            eager
-          />
-        )}
+      <div class="relative mx-auto w-full max-w-[26rem] lg:max-w-none">
+        <!-- foto berbentuk tetesan air, seperti logo -->
+        <svg width="0" height="0" class="absolute" aria-hidden="true">
+          <clipPath id="tetesan" clipPathUnits="objectBoundingBox">
+            <path d="M0.5 0 C0.6 0.16 1 0.42 1 0.66 C1 0.87 0.78 1 0.5 1 C0.22 1 0 0.87 0 0.66 C0 0.42 0.4 0.16 0.5 0 Z" />
+          </clipPath>
+        </svg>
+        <div class="bloom relative aspect-[5/6]">
+          <div class="absolute inset-0 translate-x-4 translate-y-3 bg-aqua/25 [clip-path:url(#tetesan)]" aria-hidden="true"></div>
+          {slide ? (
+            <CmsImage
+              src={slide.data.image}
+              alt={slide.data.title}
+              ratio={5 / 6}
+              widths={[480, 720, 960]}
+              sizes="(min-width: 1024px) 34vw, 26rem"
+              class="relative h-full w-full [clip-path:url(#tetesan)]"
+              eager
+            />
+          ) : <div class="relative h-full w-full bg-patriot [clip-path:url(#tetesan)]" />}
+        </div>
 
-        <div class="relative -mt-12 mr-4 ml-4 rounded-lg bg-white p-5 shadow-lg shadow-pipa/10 sm:mr-8 sm:ml-8" data-status-panel data-status-ids={gangguan.map(item => item.id).join(',')}>
+        <div
+          class="enter absolute bottom-2 left-0 w-[min(20rem,92%)] rounded-xl bg-white/95 p-4 text-pipa shadow-lift backdrop-blur sm:-left-6"
+          style="--i: 8"
+          data-status-panel
+          data-status-ids={gangguan.map(item => item.id).join(',')}
+        >
           {gangguan.length > 0 ? (
             <>
-              <p class="flex items-center gap-2 font-bold text-meter">
-                <Icon name="mdi:water-alert-outline" size={22} />
-                <span data-status-count>{gangguan.length} gangguan sedang ditangani</span>
+              <p class="flex items-center gap-2.5 font-bold text-meter">
+                <span class="live-dot" aria-hidden="true" />
+                <span>{gangguan.length} gangguan sedang ditangani</span>
               </p>
-              <ul class="mt-2 grid gap-1.5" data-status-list>
+              <ul class="mt-2 grid gap-1.5 text-sm">
                 {gangguan.slice(0, 2).map(item => (
-                  <li><span class="font-semibold">{item.title}</span>{item.mulai && <span class="block text-sm text-redup">Sejak {dateTimeShort(item.mulai)}</span>}</li>
+                  <li><span class="font-semibold">{item.title}</span>{item.mulai && <span class="block text-redup">Sejak {dateTimeShort(item.mulai)}</span>}</li>
                 ))}
               </ul>
             </>
           ) : (
-            <p class="flex items-center gap-2 font-bold text-lunas">
-              <Icon name="mdi:water-check-outline" size={22} />
-              <span data-status-count>Tidak ada gangguan yang tercatat</span>
+            <p class="flex items-center gap-2.5 font-bold text-lunas">
+              <span class="live-dot" aria-hidden="true" />
+              <span>Tidak ada gangguan tercatat</span>
             </p>
           )}
-          <a href="/informasi/gangguan-layanan" class="link mt-3 inline-block">Lihat informasi gangguan</a>
+          <a href="/informasi/gangguan-layanan" class="link mt-2 inline-block text-sm">Lihat informasi gangguan</a>
         </div>
       </div>
     </div>
+
+    <Waves />
   </section>
 
-  <nav aria-label="Layanan lain" class="wrap">
-    <ul class="grid gap-x-8 border-b border-garis sm:grid-cols-2 lg:grid-cols-4">
+  <!-- layanan lain -->
+  <nav aria-label="Layanan lain" class="wrap relative z-10 -mt-6">
+    <ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
       {services.map(service => (
         <li>
-          <a href={service.href} class="group flex items-start gap-3 py-6">
-            <Icon name={service.icon} size={28} class="mt-0.5 shrink-0 text-patriot" />
-            <span>
-              <span class="block font-bold group-hover:text-patriot group-hover:underline">{service.title}</span>
-              <span class="block text-redup">{service.text}</span>
+          <a href={service.href} class="group flex h-full flex-col rounded-xl border border-garis bg-white p-5 transition duration-300 ease-out hover:-translate-y-1 hover:border-patriot/40 hover:shadow-lift">
+            <span class="grid size-12 place-items-center rounded-full bg-air text-patriot transition-colors duration-300 group-hover:bg-patriot group-hover:text-white">
+              <Icon name={service.icon} size={24} />
             </span>
+            <span class="mt-4 flex items-center gap-1 text-lg font-bold">
+              {service.title}
+              <Icon name="mdi:arrow-right" size={18} class="nudge text-patriot" />
+            </span>
+            <span class="mt-1 text-redup">{service.text}</span>
           </a>
         </li>
       ))}
@@ -98,59 +131,68 @@ const services = [
   </nav>
 
   {utama && (
-    <section class="wrap mt-14" aria-labelledby="berita-judul">
-      <div class="mb-6 flex items-baseline justify-between gap-4">
+    <section class="wrap mt-20" aria-labelledby="berita-judul">
+      <div class="mb-8 flex items-end justify-between gap-4">
         <h2 id="berita-judul" class="text-title font-extrabold">Berita terbaru</h2>
-        <a href="/berita" class="link">Semua berita</a>
+        <a href="/berita" class="group link inline-flex items-center gap-1">Semua berita <Icon name="mdi:arrow-right" size={18} class="nudge" /></a>
       </div>
       <ArticleCard article={utama} lead />
       {lainnya.length > 0 && (
-        <div class="mt-10 grid gap-8 md:grid-cols-2">
+        <div class="mt-12 grid gap-8 md:grid-cols-3">
           {lainnya.map(article => <ArticleCard article={article} />)}
         </div>
       )}
     </section>
   )}
 
-  <section class="mt-16 bg-pipa text-white" aria-labelledby="aplikasi-judul">
-    <div class="wrap flex flex-col gap-6 py-10 md:flex-row md:items-center md:justify-between">
-      <div>
-        <h2 id="aplikasi-judul" class="text-2xl font-extrabold">Tirta Patriot Mobile</h2>
-        <p class="mt-1 max-w-[52ch] text-white/85">Cek tagihan, riwayat pemakaian, dan pengaduan langsung dari ponsel Anda.</p>
+  {statistik.length > 0 && (
+    <section class="wrap mt-24" aria-labelledby="angka-judul">
+      <div class="rounded-2xl bg-kabut px-6 py-10 md:px-12 md:py-14">
+        <h2 id="angka-judul" class="text-title font-extrabold">Tirta Patriot dalam angka</h2>
+        <p class="mt-2 max-w-[52ch] text-redup">Setiap angka dibaca seperti register meter air di rumah Anda.</p>
+        <dl class="mt-10 flex flex-wrap gap-x-14 gap-y-8">
+          {statistik.map(stat => (
+            <div class="flex flex-col-reverse gap-3">
+              <dt class="font-semibold text-redup">{stat.data.name}</dt>
+              <dd class="text-[clamp(1.75rem,1.2rem+1.6vw,2.4rem)]"><Odometer value={stat.data.value} label={stat.data.name} /></dd>
+            </div>
+          ))}
+        </dl>
       </div>
-      <div class="flex flex-wrap gap-3">
-        <a class="btn border-white/30 bg-white text-pipa hover:bg-air" href={APP_LINKS.play} rel="noopener external" target="_blank">
-          <Icon name="logos:google-play-icon" size={20} /> Google Play
-        </a>
-        <a class="btn border-white/30 bg-white text-pipa hover:bg-air" href={APP_LINKS.appStore} rel="noopener external" target="_blank">
-          <Icon name="logos:apple-app-store" size={20} /> App Store
-        </a>
+    </section>
+  )}
+
+  <section class="wrap mt-24" aria-labelledby="aplikasi-judul">
+    <div class="relative isolate overflow-hidden rounded-2xl bg-patriot px-6 py-10 text-white md:px-12 md:py-14">
+      <svg class="absolute -right-24 -bottom-32 -z-10 h-[26rem] w-[26rem] text-white/10" viewBox="0 0 100 120" aria-hidden="true">
+        <path fill="currentColor" d="M50 0 C60 19 100 50 100 79 C100 104 78 120 50 120 C22 120 0 104 0 79 C0 50 40 19 50 0 Z" />
+      </svg>
+      <div class="flex flex-col gap-8 md:flex-row md:items-center md:justify-between">
+        <div>
+          <h2 id="aplikasi-judul" class="text-title font-extrabold">Tirta Patriot Mobile</h2>
+          <p class="mt-2 max-w-[48ch] text-lg text-white/85">Cek tagihan, riwayat pemakaian, dan pengaduan langsung dari ponsel Anda.</p>
+        </div>
+        <div class="flex flex-wrap gap-3">
+          <a class="btn min-h-13 bg-white px-5 text-pipa hover:bg-air" href={APP_LINKS.play} rel="noopener external" target="_blank">
+            <Icon name="logos:google-play-icon" size={22} /> Google Play
+          </a>
+          <a class="btn min-h-13 bg-white px-5 text-pipa hover:bg-air" href={APP_LINKS.appStore} rel="noopener external" target="_blank">
+            <Icon name="logos:apple-app-store" size={22} /> App Store
+          </a>
+        </div>
       </div>
     </div>
   </section>
 
-  <div class="wrap mt-16 grid gap-14 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
+  <div class="wrap mt-24">
     <Himbauan />
-
-    {statistik.length > 0 && (
-      <section aria-labelledby="angka-judul">
-        <h2 id="angka-judul" class="text-xl font-bold">Tirta Patriot dalam angka</h2>
-        <dl class="mt-4 grid grid-cols-2 gap-x-6 gap-y-5">
-          {statistik.map(stat => (
-            <div>
-              <dt class="text-redup">{stat.data.name}</dt>
-              <dd class="num text-2xl font-extrabold">{numberId(stat.data.value)}</dd>
-            </div>
-          ))}
-        </dl>
-      </section>
-    )}
   </div>
 </Base>
 
 <script>
-  import { bindMeterFields } from '../scripts/meter-input'
   import { refreshStatusPanel } from '../scripts/gangguan'
+  import { bindMeterFields } from '../scripts/meter-input'
+  import '../scripts/odometer'
 
   bindMeterFields()
   void refreshStatusPanel()

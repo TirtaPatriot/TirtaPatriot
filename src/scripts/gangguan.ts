@@ -54,14 +54,16 @@ export async function refreshStatusPanel (): Promise<void> {
     return
   }
 
-  const heading = el('p', `flex items-center gap-2 font-bold ${live.length ? 'text-meter' : 'text-lunas'}`)
-  heading.append(el('span', '', live.length ? `${live.length} gangguan sedang ditangani` : 'Tidak ada gangguan yang tercatat'))
-  const list = el('ul', 'mt-2 grid gap-1.5')
+  const heading = el('p', `flex items-center gap-2.5 font-bold ${live.length ? 'text-meter' : 'text-lunas'}`)
+  const dot = el('span', 'live-dot')
+  dot.setAttribute('aria-hidden', 'true')
+  heading.append(dot, el('span', '', live.length ? `${live.length} gangguan sedang ditangani` : 'Tidak ada gangguan tercatat'))
+  const list = el('ul', 'mt-2 grid gap-1.5 text-sm')
   for (const item of live.slice(0, 2)) {
     const row = el('li', '')
     row.append(el('span', 'font-semibold', item.title))
     if (item.waktu_mulai) {
-      row.append(el('span', 'block text-sm text-redup', `Sejak ${dateTimeShort(item.waktu_mulai)}`))
+      row.append(el('span', 'block text-redup', `Sejak ${dateTimeShort(item.waktu_mulai)}`))
     }
     list.append(row)
   }
