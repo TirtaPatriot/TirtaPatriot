@@ -1,0 +1,78 @@
+---
+import { getCollection } from 'astro:content'
+import Icon from '../../components/Icon.astro'
+import PageHead from '../../components/PageHead.astro'
+import PipaMap from '../../components/PipaMap.astro'
+import ServiceMap from '../../components/ServiceMap.astro'
+import kantorJson from '../../data/kantor.json'
+import kinerja from '../../data/kinerja.json'
+import Base from '../../layouts/Base.astro'
+import { titleCase } from '../../lib/format'
+import { angka } from '../../lib/viz'
+
+const order = kantorJson.map(item => item.id)
+const kantor = (await getCollection('kantor')).toSorted((a, b) => order.indexOf(a.id) - order.indexOf(b.id)).map(entry => entry.data)
+const ZONA = ['Kantor pusat', 'Zona 1', 'Zona 2', 'Zona 3', 'Zona 4']
+const grouped = [null, 1, 2, 3, 4].map(zona => ({ zona, items: kantor.filter(item => item.zona === zona) }))
+---
+
+<Base title="Peta layanan" description="Wilayah layanan Perumda Tirta Patriot Kota Bekasi: jaringan pipa, zona layanan, jumlah pelanggan aktif per kecamatan, dan lokasi kantor pelayanan.">
+  <PageHead
+    title="Peta layanan"
+    lead="Wilayah layanan, jaringan pipa, sebaran pelanggan, dan kantor pelayanan kami di Kota Bekasi."
+    crumbs={[{ title: 'Beranda', href: '/' }, { title: 'Informasi' }]}
+  />
+
+  <div class="wrap mt-10">
+    <div class="grid gap-12 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)] lg:items-start">
+      <ServiceMap />
+
+      <section aria-labelledby="kecamatan-judul">
+        <h2 id="kecamatan-judul" class="text-xl font-bold">Pelanggan aktif per kecamatan</h2>
+        <table class="mt-4 w-full border-collapse text-left text-sm">
+          <thead><tr class="border-b-2 border-pipa"><th class="py-2 font-semibold">Kecamatan</th><th class="py-2 text-right font-semibold">Pelanggan aktif</th></tr></thead>
+          <tbody>
+            {kinerja.pelanggan.kecamatan.map(item => (
+              <tr class="border-b border-garis/70"><td class="py-2">{item.nama}</td><td class="num py-2 text-right font-semibold">{angka(item.jumlah)}</td></tr>
+            ))}
+          </tbody>
+        </table>
+      </section>
+    </div>
+
+    <section id="jaringan" class="mt-20 scroll-mt-24 border-t border-garis pt-12" aria-labelledby="jaringan-judul">
+      <div class="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,2.2fr)] lg:items-start">
+        <div>
+          <h2 id="jaringan-judul" class="text-title font-extrabold">Jaringan pipa</h2>
+          <p class="mt-3 text-redup">Pipa air bersih yang kami kelola di Kota Bekasi. Bila jalan di depan rumah Anda sudah dilalui pipa distribusi, sambungan baru umumnya dapat dipasang lebih cepat.</p>
+          <a class="btn btn-primary mt-6" href="/pelanggan/pendaftaran">Daftar sambungan baru</a>
+        </div>
+        <PipaMap />
+      </div>
+    </section>
+
+    <section id="kantor" class="mt-20 scroll-mt-24 border-t border-garis pt-12" aria-labelledby="kantor-judul">
+      <h2 id="kantor-judul" class="text-title font-extrabold">Kantor pelayanan</h2>
+      <div class="mt-8 grid gap-10">
+        {grouped.filter(group => group.items.length).map(group => (
+          <div>
+            <h3 class="text-sm font-bold text-patriot">{ZONA[group.zona ?? 0]}</h3>
+            <ul class="mt-3 grid gap-x-8 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
+              {group.items.map(item => (
+                <li class="flex flex-col gap-1 rounded-2xl border border-garis p-5">
+                  <p class="font-bold">{titleCase(item.nama)}</p>
+                  <p class="flex-1 text-sm text-redup">{item.alamat}</p>
+                  <p class="mt-2 text-sm"><span class="font-semibold">{item.hari}</span>, {item.jam} WIB</p>
+                  <div class="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-sm">
+                    <a class="link inline-flex items-center gap-1" href={`https://www.google.com/maps/dir/?api=1&destination=${item.lat},${item.lng}`} rel="noopener" target="_blank"><Icon name="mdi:directions" size={18} /> Petunjuk arah</a>
+                    <a class="link inline-flex items-center gap-1" href={`tel:${item.telepon.replace(/[^\d+]/g, '')}`}><Icon name="mdi:phone-outline" size={18} /> {item.telepon}</a>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </section>
+  </div>
+</Base>

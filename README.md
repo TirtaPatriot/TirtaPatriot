@@ -1,81 +1,100 @@
 # tirtapatriot-web
 
-Scaffolded with Vuetify CLI.
+Situs publik Perumda Tirta Patriot Kota Bekasi — https://tirtapatriot.co.id
 
-## ❗️ Documentation
+## Stack
 
-- Primary docs: https://vuetifyjs.com/
-- Getting started guide: https://vuetifyjs.com/en/getting-started/installation/
-- Community support: https://community.vuetifyjs.com/
-- Issue tracker: https://issues.vuetifyjs.com/
-
-## 🧱 Stack
-
-- Framework: Nuxt 4
-- UI Library: Vuetify
-- Language: TypeScript
+- [Astro 7](https://docs.astro.build/) dengan keluaran statis
+- [Tailwind CSS v4](https://tailwindcss.com/) lewat `@tailwindcss/vite`
+- TypeScript 7 (kompiler native) untuk pemeriksaan tipe; interaksi di browser memakai TypeScript biasa tanpa framework
+- Konten: Astro content collections dari Markdown/JSON di repo, ditambah data agregat dari ERP, PostGIS, dan API Informasi Pelanggan
 - Package manager: bun
 
-## 🧭 Start Here
-
-- Main entry: `app/app.vue`
-- Main app component: `app/app.vue`
-- Main styles: `app/assets/styles/`
-- Plugin setup: `app/plugins/`
-
-## 📁 Project Structure
-
-- `app/pages/` — application routes
-- `app/components/` — reusable Vue components
-- `app/assets/` — styles and static assets used in app
-- `app/plugins/` — Nuxt plugins
-- `public/` — static public files
-
-## ✨ Enabled Features
-
-- ESLint
-- Vuetify MCP
-- UnoCSS + Vuetify Preset
-- Client Hints
-
-## 💿 Install
-
-Use your selected package manager (bun) to install dependencies:
+## Mulai
 
 ```bash
 bun install
+cp .env.example .env   # isi kunci reCAPTCHA / Chatwoot bila perlu
+bun run dev
 ```
 
-## 🚀 Quick Start
+## Perintah
+
+| Perintah | Fungsi |
+| --- | --- |
+| `bun run dev` | server pengembangan |
+| `bun run build` | build statis ke `dist/` |
+| `bun run preview` | pratinjau hasil build |
+| `bun run typecheck` | `astro sync` lalu `tsc --noEmit` (TypeScript 7) |
+| `bun run lint` | oxlint |
+| `bun test` | unit test (penyaring konten, rumus tagihan, format, grafik) |
+| `bun run data` | perbarui snapshot tarif, kantor, dan kinerja dari ERP (jaringan internal) |
+
+## Struktur
+
+- `src/content.config.ts` — koleksi konten: artikel (berita & edukasi), halaman profil, navigasi, kantor, mitra pembayaran, direksi, gangguan, dokumen legal
+- `src/data/` — data referensi dan snapshot operasional (tarif, kantor, kinerja, batas wilayah)
+- `src/lib/` — render konten yang aman, rumus tagihan, API Informasi Pelanggan, format tanggal/angka, token grafik
+- `src/pages/` — rute situs
+- `src/components/` — komponen Astro
+- `src/scripts/` — skrip browser: cek tagihan, pengaduan, pendaftaran sambungan baru, verifikasi layanan mandiri, catat meter mandiri (kamera langsung), perubahan data, peta interaktif, gangguan langsung dari API, grafik
+- `scripts/` — `export-data.ts` (perbarui snapshot ERP), `migrate-directus.ts` (migrasi satu kali)
+- `src/styles/global.css` — token desain dan gaya dasar
+- `public/_redirects` — pengalihan alamat lama (format Netlify)
+
+## Sumber konten dan data
+
+Situs tidak lagi bergantung pada CMS Directus (cms.tirtapatriot.net).
+
+| Isi | Sumber | Cara memperbarui |
+| --- | --- | --- |
+| Berita & edukasi | `src/content/artikel/{berita,edukasi}/*.md`, gambar di `src/assets/artikel/` | tambah/ubah berkas Markdown lalu commit |
+| Sejarah, visi-misi, dokumen legal | `src/content/halaman/`, `src/content/legal/` | ubah Markdown lalu commit |
+| Navigasi, mitra pembayaran, direksi | `src/data/*.json` | ubah JSON lalu commit |
+| Tarif, kantor pelayanan, kinerja layanan | snapshot dari ERP (MSSQL) di `src/data/{tarif,kantor,kinerja}.json` | `bun run data` dari jaringan internal, lalu commit |
+| Tempat pembayaran: bank/mitra resmi dan virtual account | snapshot dari ERP (`billing.billing_loket` dengan transaksi 60 hari terakhir, `info_pelanggan.channel`) di `src/data/pembayaran.json`; logo di `src/assets/mitra/<id>.png` | `bun run data`; gerai & aplikasi lain di `src/data/mitra.json` diubah manual |
+| Batas kecamatan & zona layanan | snapshot dari PostGIS (`jaringan.bataskecamatan`, `jaringan.bataslayanan`), disederhanakan, di `src/data/geo/` | jarang berubah; ekspor ulang bila batas diperbarui |
+| Gangguan layanan | API Informasi Pelanggan (`GET /news`, sama dengan aplikasi Tirta Patriot Mobile) | otomatis: dimuat saat build **dan** langsung di browser |
+| Cek tagihan & pengaduan | API layanan pelanggan `https://open.tirtapatriot.net/web` | – |
+| Pendaftaran sambungan baru | API Informasi Pelanggan (`/files/upload`, `/new-customer/v2/insert`, `/new-customer/tracking`) | – |
+| Catat meter mandiri, perubahan data pelanggan | API Open `/web/akses`, `/web/catat-meter`, `/web/pengajuan` (repo TirtaPatriot/Open, branch `main`). Verifikasi: nomor + nama + jumlah pembayaran terakhir; token 30 menit di `sessionStorage`. Catat meter butuh SP `bacameter.sp_catat_meter_mandiri_*` (lihat `sql/` di repo Open) | – |
+| Jaringan pipa | vector tile PostGIS function layer `publik.pipa` (hanya garis dan diameter) dari `https://tile.api.tirtapatriot.com`, di atas peta dasar OpenFreeMap. Function dan role baca-saja untuk pg_tileserv di `sql/2026-10-27_tile_publik.sql` | langsung dari server tile |
+
+`scripts/migrate-directus.ts` adalah skrip migrasi satu kali dari Directus, disimpan sebagai dokumentasi.
+
+### Memperbarui data dari ERP
 
 ```bash
-bun install
-bun dev
+MSSQL_SERVER=… MSSQL_USER=… MSSQL_PASSWORD=… bun run data
 ```
 
-## 🏗️ Build
+Gunakan akun baca-saja. Skrip hanya membaca agregat (jumlah per kecamatan, per bulan, dsb.), tidak ada data pelanggan perorangan. Cocok dijadwalkan bulanan dari server internal (mis. Dokploy) yang lalu meng-commit perubahan ke repo sehingga situs ter-build ulang.
+
+## Docker
+
+Image dua tahap: Bun membangun situs, lalu nginx menyajikan berkas statis. Pengalihan alamat lama
+dibangkitkan otomatis dari `public/_redirects`, sehingga sama dengan di Netlify.
 
 ```bash
-bun build
+docker build -t tirtapatriot-web \
+  --build-arg PUBLIC_RECAPTCHA_SITE_KEY=… \
+  --build-arg PUBLIC_CHATWOOT_WEBSITE_TOKEN=… \
+  --build-arg PUBLIC_CHATWOOT_BASE_URL=… .
+docker run -p 8080:80 tirtapatriot-web
 ```
 
-## 🧪 Available Scripts
+Container mendengarkan port 80 dan menyediakan `/healthz` untuk pemeriksaan kesehatan. TLS ditangani proxy di depannya (mis. Traefik pada Dokploy).
 
-- `bun build`
-- `bun dev`
-- `bun generate`
-- `bun preview`
-- `bun postinstall`
-- `bun lint`
-- `bun lint:fix`
-- `bun mcp`
-- `bun mcp:revert`
+## Variabel lingkungan
 
-## 💪 Support Vuetify Development
+Lihat `.env.example`. Variabel `PUBLIC_*` ditanam saat build dan terlihat oleh pengunjung:
 
-This project uses Vuetify - an MIT licensed Open Source project. We are glad to welcome contributors and any support for ongoing development:
+- `PUBLIC_API_URL` — API layanan pelanggan untuk tagihan dan pengaduan (bawaan `https://open.tirtapatriot.net/web`)
+- `PUBLIC_INFO_PELANGGAN_API` — API Informasi Pelanggan untuk gangguan dan pendaftaran sambungan baru (bawaan `https://pelanggan.api.tirtapatriot.co`)
+- `PUBLIC_BASEMAP_STYLE`, `PUBLIC_PIPA_TILES` — peta dasar dan vector tile jaringan pipa untuk peta interaktif
+- `PUBLIC_RECAPTCHA_SITE_KEY` — site key reCAPTCHA v3 untuk cek tagihan dan pengaduan (bawaan di Dockerfile: key situs saat ini). Domain situs harus terdaftar pada key tersebut di Google Cloud console
 
-- Contribute to Vuetify and ecosystem projects: https://github.com/vuetifyjs
-- Request enterprise support: https://support.vuetifyjs.com/
-- Sponsor on GitHub: https://github.com/sponsors/vuetifyjs
-- Support on Open Collective: https://opencollective.com/vuetify
+Di Dokploy, isi variabel `PUBLIC_*` pada **Build-time Arguments**, bukan pada Environment biasa: nilainya ditanam saat build.
+- `PUBLIC_CHATWOOT_WEBSITE_TOKEN`, `PUBLIC_CHATWOOT_BASE_URL` — widget obrolan
+
+Variabel `MSSQL_*` hanya untuk `bun run data` dari jaringan internal dan tidak boleh ikut ke build situs.

@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__MSSQL__query",
+      "Bash(bun test)",
+      "Bash(bun test *)",
+      "Bash(bun run lint)",
+      "Bash(bun run typecheck)",
+      "mcp__MSSQL__search-knowledge",
+      "mcp__Aurora__gitlab_search"
+    ]
+  }
+}

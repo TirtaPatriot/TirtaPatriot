@@ -1,0 +1,144 @@
+---
+import { API_URL } from '../../scripts/api'
+import ErrorBox from '../../components/ErrorBox.astro'
+import HelpPanel from '../../components/HelpPanel.astro'
+import Himbauan from '../../components/Himbauan.astro'
+import Icon from '../../components/Icon.astro'
+import MeterField from '../../components/MeterField.astro'
+import PageHead from '../../components/PageHead.astro'
+import RecaptchaNote from '../../components/RecaptchaNote.astro'
+import Base from '../../layouts/Base.astro'
+
+const steps = ['Nomor pelanggan', 'Verifikasi nama', 'Data pelapor', 'Kendala']
+---
+
+<Base preconnect={[API_URL]} title="Pengaduan pelanggan" description="Laporkan kendala sambungan rumah dan aliran air, lalu pantau penanganannya dengan nomor tiket pengaduan Perumda Tirta Patriot Kota Bekasi.">
+  <PageHead
+    title="Pengaduan pelanggan"
+    lead="Laporkan kendala sambungan air di rumah Anda. Setiap laporan mendapat nomor tiket untuk memantau penanganannya."
+    crumbs={[{ title: 'Beranda', href: '/' }, { title: 'Layanan pelanggan', href: '/pelanggan' }]}
+  />
+
+  <div class="wrap mt-10">
+    <!-- status tiket (?tiket=...) -->
+    <section data-status hidden tabindex="-1" aria-live="polite" class="max-w-[52rem]"></section>
+
+    <div class="grid gap-14 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]" data-form-area>
+      <section aria-labelledby="buat-judul">
+        <h2 id="buat-judul" class="text-2xl font-extrabold">Buat pengaduan</h2>
+
+        <ol class="mt-5 grid grid-cols-4 gap-2" aria-label="Tahapan" data-stepper>
+          {steps.map((title, index) => (
+            <li class="border-t-4 border-garis pt-2 text-sm text-redup transition-colors duration-500 ease-out data-[state=current]:border-patriot data-[state=current]:font-semibold data-[state=current]:text-pipa data-[state=done]:border-patriot" data-state={index === 0 ? 'current' : 'todo'}>
+              <span class="hidden sm:inline">{title}</span>
+              <span class="sm:hidden">{index + 1}</span>
+            </li>
+          ))}
+        </ol>
+        <p class="sr-only" aria-live="polite" data-step-announce>Langkah 1 dari 4: Nomor pelanggan</p>
+
+        <form class="mt-8 grid gap-6" novalidate data-pengaduan-form>
+          <fieldset data-step="0" class="grid gap-4">
+            <legend class="mb-2 text-xl font-bold">Sambungan mana yang terkendala?</legend>
+            <MeterField id="aduan-nomor" label="Nomor pelanggan" hint="Nomor pelanggan tertera pada rekening air Anda." />
+          </fieldset>
+
+          <fieldset data-step="1" class="grid gap-4" hidden>
+            <legend class="mb-2 text-xl font-bold">Pastikan ini sambungan Anda</legend>
+            <p>
+              Nama terdaftar untuk nomor <strong data-echo-nomor></strong> ditampilkan tersamar: <strong class="whitespace-nowrap" data-echo-masked></strong>
+            </p>
+            <div class="field">
+              <label for="aduan-nama">Nama lengkap pelanggan</label>
+              <input id="aduan-nama" name="nama" class="input" autocomplete="off" aria-describedby="aduan-nama-hint" required>
+              <p id="aduan-nama-hint" class="hint">Tulis nama lengkap sesuai rekening air, tanpa tanda bintang.</p>
+            </div>
+          </fieldset>
+
+          <fieldset data-step="2" class="grid gap-4" hidden>
+            <legend class="mb-2 text-xl font-bold">Siapa yang melapor?</legend>
+            <div class="field">
+              <label for="aduan-pelapor">Nama pelapor <span class="font-normal text-redup">(tidak wajib)</span></label>
+              <input id="aduan-pelapor" name="pelapor" class="input" autocomplete="name" aria-describedby="aduan-pelapor-hint">
+              <p id="aduan-pelapor-hint" class="hint">Kosongkan bila pelapor adalah pemilik sambungan.</p>
+            </div>
+            <div class="field">
+              <label for="aduan-telepon">Nomor telepon</label>
+              <input id="aduan-telepon" name="telepon" class="input" type="tel" inputmode="tel" autocomplete="tel" aria-describedby="aduan-telepon-hint">
+              <p id="aduan-telepon-hint" class="hint">Petugas akan menghubungi nomor ini bila perlu.</p>
+            </div>
+          </fieldset>
+
+          <fieldset data-step="3" class="grid gap-4" hidden>
+            <legend class="mb-2 text-xl font-bold">Apa kendalanya?</legend>
+            <div class="field">
+              <label for="aduan-jenis">Perihal</label>
+              <select id="aduan-jenis" name="jenis" class="input" required>
+                <option value="">Pilih perihal</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="aduan-masalah">Ceritakan kendalanya</label>
+              <textarea id="aduan-masalah" name="masalah" class="input" maxlength="365" aria-describedby="aduan-masalah-hint"></textarea>
+              <p id="aduan-masalah-hint" class="hint"><span data-count>0</span> dari 365 karakter. Sebutkan sejak kapan dan lokasinya bila perlu.</p>
+            </div>
+          </fieldset>
+
+          <ErrorBox />
+
+          <div class="flex flex-wrap items-center gap-3" data-actions>
+            <button type="button" class="btn btn-quiet" data-prev hidden>
+              <Icon name="mdi:chevron-left" size={20} /> Kembali
+            </button>
+            <button type="submit" class="btn btn-primary px-6" data-next data-idle="Lanjut">
+              <span data-label>Lanjut</span>
+            </button>
+          </div>
+          <RecaptchaNote />
+        </form>
+
+        <div data-done hidden tabindex="-1" class="mt-8 rounded-lg bg-lunas-soft p-6">
+          <h3 class="text-xl font-bold text-lunas">Pengaduan terkirim</h3>
+          <p class="mt-2">Simpan nomor tiket berikut untuk memantau penanganannya.</p>
+          <div class="mt-4" data-done-ticket></div>
+          <div class="mt-6 flex flex-wrap gap-3">
+            <a class="btn btn-primary" data-done-link href="/pelanggan/pengaduan">Lihat status pengaduan</a>
+            <a class="btn btn-quiet" href="/">Ke beranda</a>
+          </div>
+        </div>
+      </section>
+
+      <aside class="flex flex-col gap-10">
+        <section id="lacak" aria-labelledby="lacak-judul" class="scroll-mt-24 rounded-lg bg-kabut p-5 sm:p-6">
+          <h2 id="lacak-judul" class="text-xl font-bold">Lacak pengaduan</h2>
+          <p class="mt-1 text-redup">Sudah punya nomor tiket? Lihat sampai mana penanganannya.</p>
+          <form action="/pelanggan/pengaduan" method="get" class="mt-4 grid gap-3">
+            <div class="field">
+              <label for="lacak-tiket">Nomor tiket</label>
+              <input id="lacak-tiket" name="tiket" class="input" required autocomplete="off">
+            </div>
+            <button class="btn btn-primary justify-self-start" type="submit">Lihat status</button>
+          </form>
+        </section>
+
+        <section class="rounded-lg border border-garis p-5 sm:p-6">
+          <Himbauan title="Sebelum melapor" compact />
+        </section>
+      </aside>
+    </div>
+
+    <HelpPanel />
+  </div>
+</Base>
+
+<script>
+  import { bindMeterFields } from '../../scripts/meter-input'
+  import { initPengaduan, showTicketStatus } from '../../scripts/pengaduan'
+
+  bindMeterFields()
+  const tiket = new URLSearchParams(location.search).get('tiket')?.trim()
+  if (tiket) {
+    void showTicketStatus(tiket)
+  }
+  initPengaduan()
+</script>

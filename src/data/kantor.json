@@ -1,0 +1,145 @@
+[
+  {
+    "id": "4",
+    "nama": "Kantor Pusat Teluk Buyung",
+    "alamat": "Jl. Perjuangan Dalam No.99, RT.003/RW.011, Kel. Marga Mulya, Kec. Bekasi Utara, Kota Bekasi, Jawa Barat 17142",
+    "hari": "Senin–Jumat",
+    "jam": "08.00–16.00",
+    "telepon": "021-88966161",
+    "lat": -6.229938,
+    "lng": 107.001514,
+    "zona": null
+  },
+  {
+    "id": "5",
+    "nama": "Kantor Pelayanan Zona Satu",
+    "alamat": "Jl. Prima Harapan Regency, Kel. Harapan Baru, Kec. Bekasi Utara, Kota Bekasi, Jawa Barat 17123",
+    "hari": "Senin–Jumat",
+    "jam": "08.00–16.00",
+    "telepon": "0878-7516-3845",
+    "lat": -6.209394,
+    "lng": 107.016121,
+    "zona": 1
+  },
+  {
+    "id": "16",
+    "nama": "Kantor Layanan Zona Satu Harapan Baru",
+    "alamat": "Jl. Jambu Air Raya (Prm. Harapan Baru I), Kel. Kota Baru, Kec. Bekasi Barat, Kota Bekasi, Jawa Barat 17139",
+    "hari": "Senin–Jumat",
+    "jam": "08.00–16.00",
+    "telepon": "0878-7516-3845",
+    "lat": -6.210943,
+    "lng": 106.963361,
+    "zona": 1
+  },
+  {
+    "id": "17",
+    "nama": "Kantor Pelayanan Zona Dua",
+    "alamat": "Jl. Wijaya 1 (Kp. Dua) No.41, RT.006/RW.015, Kel. Jakasampurna, Kec. Bekasi Barat, Kota Bekasi, Jawa Barat 17145",
+    "hari": "Senin–Jumat",
+    "jam": "08.00–16.00",
+    "telepon": "0878-7516-3845",
+    "lat": -6.250915,
+    "lng": 106.959015,
+    "zona": 2
+  },
+  {
+    "id": "19",
+    "nama": "Kantor Layanan Zona Dua Jatisari",
+    "alamat": "Jl. Surya Dharma No.2 Blok CE 1D RT.002/RW.017, Kel. Jatisari, Kec. Jatiasih, Kota Bekasi, Jawa Barat 17426",
+    "hari": "Senin–Jumat",
+    "jam": "08.00–16.00",
+    "telepon": "0878-7516-3845",
+    "lat": -6.340641,
+    "lng": 106.950702,
+    "zona": 2
+  },
+  {
+    "id": "1019",
+    "nama": "Kantor Layanan Zona Dua Puri Gading",
+    "alamat": "Jl. Puri Gading Sport Center (Prm. Puri Gading), Kel. Jatimelati, Kec. Pondok Melati, Kota Bekasi, Jawa Barat 17415",
+    "hari": "Senin–Jumat",
+    "jam": "08.00–16.00",
+    "telepon": "0878-7516-3845",
+    "lat": -6.315977,
+    "lng": 106.940435,
+    "zona": 2
+  },
+  {
+    "id": "1020",
+    "nama": "Kantor Pelayanan Zona Tiga",
+    "alamat": "Jl. Wijaya 1 (Kp. Dua) No.41, RT.006/RW.015, Kel. Jakasampurna, Kec. Bekasi Barat, Kota Bekasi, Jawa Barat 17145",
+    "hari": "Senin–Jumat",
+    "jam": "08.00–16.00",
+    "telepon": "0878-7516-3845",
+    "lat": -6.250866,
+    "lng": 106.95905,
+    "zona": 3
+  },
+  {
+    "id": "1021",
+    "nama": "Kantor Layanan Zona Tiga Perumnas 1",
+    "alamat": "Jl. Komodo Raya (Perumnas 1), Kel. Kranji, Kec. Bekasi Barat, Kota Bekasi, Jawa Barat 17144",
+    "hari": "Senin–Jumat",
+    "jam": "08.00–16.00",
+    "telepon": "0878-7516-3845",
+    "lat": -6.233226,
+    "lng": 106.980468,
+    "zona": 3
+  },
+  {
+    "id": "1022",
+    "nama": "Kantor Layanan Zona Tiga MPP Kota Bekasi",
+    "alamat": "Jl. Ahmad Yani, Kel. Marga Jaya, Kec. Bekasi Selatan, Kota Bekasi, Jawa Barat 17141",
+    "hari": "Senin–Jumat",
+    "jam": "08.00–16.00",
+    "telepon": "0878-7516-3845",
+    "lat": -6.238793,
+    "lng": 106.993306,
+    "zona": 3
+  },
+  {
+    "id": "1023",
+    "nama": "Kantor Pelayanan Zona Empat",
+    "alamat": "Jl. Tri Satya, Kel. Bojong Rawalumbu, Kec. Rawalumbu, Kota Bekasi, Jawa Barat 17116",
+    "hari": "Senin–Jumat",
+    "jam": "08.00–16.00",
+    "telepon": "0878-7516-3845",
+    "lat": -6.280042,
+    "lng": 106.998321,
+    "zona": 4
+  },
+  {
+    "id": "1027",
+    "nama": "Kantor Layanan Zona Empat Setia Mekar",
+    "alamat": "Jl. Nusantara Raya (Perumnas 3), Kel. Aren Jaya, Kec. Bekasi Timur, Kota Bekasi, Jawa Barat 17111",
+    "hari": "Senin–Jumat",
+    "jam": "08.00–16.00",
+    "telepon": "0878-7516-3845",
+    "lat": -6.243693,
+    "lng": 107.030718,
+    "zona": 4
+  },
+  {
+    "id": "1028",
+    "nama": "Kantor Layanan Zona Empat Vida",
+    "alamat": "Jl. Alun-Alun Selatan (Pasar Alam Vida Bekasi), Kel. Padurenan, Kec. Mustika Jaya, Kota Bekasi, Jawa Barat",
+    "hari": "Senin–Jumat",
+    "jam": "08.00–16.00",
+    "telepon": "0878-7516-3845",
+    "lat": -6.321064,
+    "lng": 107.000293,
+    "zona": 4
+  },
+  {
+    "id": "1029",
+    "nama": "Kantor Layanan Zona Empat Kemang Pratama",
+    "alamat": "Jl. Duta Raya (Kemang Pratama), Kel. Bojong Rawalumbu, Kec. Rawalumbu, Kota Bekasi, Jawa Barat 17116",
+    "hari": "Senin–Jumat",
+    "jam": "08.00–16.00",
+    "telepon": "0878-7516-3845",
+    "lat": -6.275607,
+    "lng": 106.984219,
+    "zona": 4
+  }
+]

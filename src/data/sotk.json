@@ -1,0 +1,47 @@
+{
+  "sk": {
+    "nomor": "690.1/08/Kep.Dir/PERUMDA-TP/IX/2026",
+    "tanggal": "2026-09-01",
+    "tentang": "Perubahan keempat penambahan, penghapusan dan perubahan bagian dan sub bagian organisasi serta perubahan wilayah pelayanan di lingkungan Perumda Tirta Patriot"
+  },
+  "pemilik": { "jabatan": "Wali Kota Bekasi", "peran": "Kuasa Pemilik Modal" },
+  "pengawas": "Dewan Pengawas",
+  "tenagaAhli": "Tenaga Ahli",
+  "fungsional": ["Pejabat Pembuat Komitmen (PPK)"],
+  "direksi": [
+    {
+      "jabatan": "Direktur Utama",
+      "bagian": [
+        { "nama": "Satuan Pengawas Intern (SPI)", "sub": ["Audit Operasional", "Audit Khusus"] },
+        { "nama": "Sekretaris Perusahaan", "sub": ["Kesekretariatan", "Hukum dan Perizinan", "Humas dan Call Center", "Pengadaan Barang dan Jasa", "Teknologi Informasi"] },
+        { "nama": "Investasi, Pengembangan dan Manajemen Risiko", "sub": ["Investasi dan Kerja Sama", "Manajemen Risiko"] }
+      ]
+    },
+    {
+      "jabatan": "Direktur Bidang Teknik",
+      "bagian": [
+        { "nama": "Perencanaan", "sub": ["Perencanaan Teknik", "Pengawasan"] },
+        { "nama": "Produksi", "sub": ["IPA dan Off Take Teluk Buyung", "IPA Rawa Tembaga dan Off Take Jatibening", "IPA Rawa Lumbu dan Sumur Dalam", "IPA Pondok Ungu", "IPA Kota", "Laboratorium", "Mekanikal dan Elektrikal"] },
+        { "nama": "Distribusi", "sub": ["Pengaliran Zona Satu", "Pengaliran Zona Dua", "Pengaliran Zona Tiga", "Pengaliran Zona Empat", "Pengaliran Zona Lima", "Bengkel Meter", "NRW dan GIS"] }
+      ]
+    },
+    {
+      "jabatan": "Direktur Bidang Umum",
+      "bagian": [
+        { "nama": "Keuangan", "sub": ["Akuntansi", "Pajak", "Kas", "Analisa Perencanaan Keuangan"] },
+        { "nama": "Sumber Daya Manusia (SDM)", "sub": ["Kesejahteraan Pegawai", "Pengembangan SDM"] },
+        { "nama": "Umum", "sub": ["Sarana Prasarana", "Logistik", "Manajemen Aset"] }
+      ]
+    },
+    {
+      "jabatan": "Direktur Bidang Usaha",
+      "bagian": [
+        { "nama": "Pelayanan Zona Satu", "sub": ["Pemasaran Teluk Buyung", "Penagihan dan Tunggakan Teluk Buyung", "Meter Air Teluk Buyung", "Pemasaran Pondok Ungu", "Penagihan dan Tunggakan Pondok Ungu", "Meter Air Pondok Ungu"] },
+        { "nama": "Pelayanan Zona Dua", "sub": ["Pemasaran", "Penagihan dan Tunggakan", "Meter Air"] },
+        { "nama": "Pelayanan Zona Tiga", "sub": ["Pemasaran", "Penagihan dan Tunggakan", "Meter Air"] },
+        { "nama": "Pelayanan Zona Empat", "sub": ["Pemasaran", "Penagihan dan Tunggakan", "Meter Air"] },
+        { "nama": "Pelayanan Zona Lima", "sub": ["Pemasaran", "Penagihan dan Tunggakan", "Meter Air"] }
+      ]
+    }
+  ]
+}

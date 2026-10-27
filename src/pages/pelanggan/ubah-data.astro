@@ -1,0 +1,91 @@
+---
+import ErrorBox from '../../components/ErrorBox.astro'
+import HelpPanel from '../../components/HelpPanel.astro'
+import Icon from '../../components/Icon.astro'
+import PageHead from '../../components/PageHead.astro'
+import VerifikasiPelanggan from '../../components/VerifikasiPelanggan.astro'
+import Base from '../../layouts/Base.astro'
+import { API_URL } from '../../scripts/api'
+
+const steps = ['Verifikasi', 'Jenis pengajuan', 'Lampiran']
+---
+
+<Base preconnect={[API_URL]} title="Perubahan data pelanggan" description="Ajukan perubahan alamat, nama pelanggan, dan layanan lain secara online, lalu pantau status pengajuan Anda.">
+  <PageHead
+    title="Perubahan data pelanggan"
+    lead="Ajukan perubahan alamat, nama pelanggan, dan layanan lain tanpa datang ke kantor."
+    crumbs={[{ title: 'Beranda', href: '/' }, { title: 'Layanan pelanggan', href: '/pelanggan' }]}
+  />
+
+  <div class="wrap mt-8">
+    <div class="grid gap-14 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
+      <section aria-labelledby="ajuan-judul">
+        <h2 id="ajuan-judul" class="text-2xl font-extrabold">Pengajuan baru</h2>
+        <ol class="mt-5 grid grid-cols-3 gap-2" aria-label="Tahapan" data-stepper>
+          {steps.map((title, index) => (
+            <li class="border-t-4 border-garis pt-2 text-sm text-redup transition-colors duration-500 ease-out data-[state=current]:border-patriot data-[state=current]:font-semibold data-[state=current]:text-pipa data-[state=done]:border-patriot" data-state={index === 0 ? 'current' : 'todo'}>
+              {title}
+            </li>
+          ))}
+        </ol>
+        <p class="sr-only" aria-live="polite" data-step-announce>Langkah 1 dari 3: Verifikasi</p>
+
+        <form class="mt-8 grid gap-6" novalidate data-ubah-form>
+          <VerifikasiPelanggan id="ubah" />
+
+          <fieldset data-step="1" class="grid gap-5" hidden>
+            <legend class="mb-2 text-xl font-bold">Apa yang ingin diubah?</legend>
+            <div class="grid gap-2 sm:grid-cols-2" role="radiogroup" aria-label="Jenis pengajuan" data-types><p class="text-redup">Memuat jenis pengajuan…</p></div>
+            <div class="grid gap-5" data-fields aria-live="polite"></div>
+          </fieldset>
+
+          <fieldset data-step="2" class="grid gap-5" hidden>
+            <legend class="mb-2 text-xl font-bold">Lampiran dan keterangan</legend>
+            <p class="text-redup">Lampirkan foto pendukung, misalnya KTP pemohon atau dokumen kepemilikan. Maksimal 3 foto JPG atau PNG.</p>
+            <div class="grid gap-3 sm:grid-cols-3" data-attachments>
+              {[1, 2, 3].map(index => (
+                <label class="upload" data-upload={`lampiran-${index}`}>
+                  <input type="file" accept="image/jpeg,image/png" aria-label={`Lampiran ${index}`}>
+                  <Icon name="mdi:paperclip" size={24} />
+                  <span class="text-sm" data-upload-text>Lampiran {index}</span>
+                </label>
+              ))}
+            </div>
+            <div class="field">
+              <label for="u-desk">Keterangan pengajuan</label>
+              <textarea id="u-desk" name="deskripsi" class="input" maxlength="300" required placeholder="Jelaskan singkat alasan pengajuan"></textarea>
+            </div>
+            <dl class="grid gap-x-8 gap-y-3 rounded-lg bg-kabut p-4 sm:grid-cols-2" data-review></dl>
+          </fieldset>
+
+          <ErrorBox />
+
+          <div class="flex flex-wrap items-center gap-3">
+            <button type="button" class="btn btn-quiet" data-prev hidden><Icon name="mdi:chevron-left" size={20} /> Kembali</button>
+            <button type="submit" class="btn btn-primary px-6" data-next data-idle="Lanjut"><span data-label>Lanjut</span></button>
+          </div>
+        </form>
+
+        <div data-done hidden tabindex="-1" class="mt-8 rounded-lg bg-lunas-soft p-6">
+          <h3 class="text-xl font-bold text-lunas">Pengajuan Anda telah kami terima</h3>
+          <p class="mt-2">Terima kasih. Petugas akan memeriksa pengajuan Anda. Statusnya dapat dipantau pada daftar pengajuan di halaman ini.</p>
+          <div class="mt-4 grid justify-items-start gap-1" data-done-number></div>
+          <button type="button" class="btn btn-quiet mt-6" data-again>Buat pengajuan lain</button>
+        </div>
+      </section>
+
+      <aside class="self-start" aria-labelledby="riwayat-judul">
+        <h2 id="riwayat-judul" class="text-xl font-bold">Pengajuan Anda</h2>
+        <div class="mt-4 grid gap-3" data-history aria-live="polite"><p class="text-redup">Verifikasi nomor pelanggan untuk melihat pengajuan Anda.</p></div>
+      </aside>
+    </div>
+
+    <HelpPanel />
+  </div>
+</Base>
+
+<script>
+  import { initUbahData } from '../../scripts/ubah-data'
+
+  void initUbahData()
+</script>

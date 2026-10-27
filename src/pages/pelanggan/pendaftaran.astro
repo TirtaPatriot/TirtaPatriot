@@ -1,0 +1,294 @@
+---
+import { INFO_PELANGGAN_API } from '../../lib/info-pelanggan'
+import ErrorBox from '../../components/ErrorBox.astro'
+import HelpPanel from '../../components/HelpPanel.astro'
+import Icon from '../../components/Icon.astro'
+import PageHead from '../../components/PageHead.astro'
+import Base from '../../layouts/Base.astro'
+
+const steps = ['Data pemohon', 'Lokasi pemasangan', 'Berkas', 'Periksa dan kirim']
+
+const alur = [
+  { title: 'Verifikasi berkas', text: 'Petugas memeriksa data dan berkas permohonan Anda.' },
+  { title: 'Survei lokasi', text: 'Petugas datang ke lokasi untuk memastikan jaringan dan ukuran meter.' },
+  { title: 'Pembayaran', text: 'Biaya pemasangan dibayarkan setelah permohonan disetujui.' },
+  { title: 'Pemasangan', text: 'Meter air dipasang dan sambungan mulai aktif.' },
+]
+
+const persyaratan = [
+  'Foto KTP pemohon',
+  'Foto Kartu Keluarga (bila ada)',
+  'Surat keterangan dari pemilik bangunan, bila bangunan disewa',
+  'Titik lokasi bangunan yang akan dipasang',
+]
+---
+
+<Base preconnect={[INFO_PELANGGAN_API]} title="Pendaftaran sambungan baru" description="Daftar sambungan air bersih baru Perumda Tirta Patriot Kota Bekasi secara online, lalu pantau status permohonan Anda.">
+  <PageHead
+    title="Pendaftaran sambungan baru"
+    lead="Ajukan sambungan air bersih untuk rumah atau tempat usaha Anda di Kota Bekasi."
+    crumbs={[{ title: 'Beranda', href: '/' }, { title: 'Layanan pelanggan', href: '/pelanggan' }]}
+  />
+
+  <div class="wrap mt-10">
+    <!-- status permohonan (?nomor=...) -->
+    <section data-status hidden tabindex="-1" aria-live="polite" class="max-w-[52rem]"></section>
+
+    <div class="grid gap-14 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]" data-form-area>
+      <section aria-labelledby="daftar-judul">
+        <h2 id="daftar-judul" class="text-2xl font-extrabold">Formulir pendaftaran</h2>
+
+        <ol class="mt-5 grid grid-cols-4 gap-2" aria-label="Tahapan" data-stepper>
+          {steps.map((title, index) => (
+            <li class="border-t-4 border-garis pt-2 text-sm text-redup transition-colors duration-500 ease-out data-[state=current]:border-patriot data-[state=current]:font-semibold data-[state=current]:text-pipa data-[state=done]:border-patriot" data-state={index === 0 ? 'current' : 'todo'}>
+              <span class="hidden sm:inline">{title}</span>
+              <span class="sm:hidden">{index + 1}</span>
+            </li>
+          ))}
+        </ol>
+        <p class="sr-only" aria-live="polite" data-step-announce>Langkah 1 dari 4: Data pemohon</p>
+
+        <form class="mt-8 grid gap-6" novalidate data-daftar-form>
+          <!-- 1. data pemohon -->
+          <fieldset data-step="0" class="grid gap-5">
+            <legend class="mb-2 text-xl font-bold">Data pemohon</legend>
+            <div class="field">
+              <label for="d-nama">Nama lengkap</label>
+              <input id="d-nama" name="customer_name" class="input" autocomplete="name" maxlength="100" required aria-describedby="d-nama-hint">
+              <p id="d-nama-hint" class="hint">Sesuai KTP.</p>
+            </div>
+            <div class="field">
+              <label for="d-nik">Nomor KTP (NIK)</label>
+              <input id="d-nik" name="identity_number" class="input num" inputmode="numeric" autocomplete="off" maxlength="16" pattern="\d{16}" required aria-describedby="d-nik-hint">
+              <p id="d-nik-hint" class="hint">16 digit angka.</p>
+            </div>
+            <div class="grid gap-5 sm:grid-cols-2">
+              <div class="field">
+                <label for="d-lahir">Tanggal lahir</label>
+                <input id="d-lahir" name="birth_date" class="input" type="date" autocomplete="bday" required>
+              </div>
+              <div class="field">
+                <label for="d-kelamin">Jenis kelamin</label>
+                <select id="d-kelamin" name="gender" class="input" required>
+                  <option value="">Pilih</option>
+                  <option>Laki-Laki</option>
+                  <option>Perempuan</option>
+                </select>
+              </div>
+            </div>
+            <div class="grid gap-5 sm:grid-cols-2">
+              <div class="field">
+                <label for="d-telepon">Nomor telepon atau WhatsApp</label>
+                <input id="d-telepon" name="phone_number" class="input num" type="tel" inputmode="tel" autocomplete="tel" maxlength="15" required aria-describedby="d-telepon-hint">
+                <p id="d-telepon-hint" class="hint">Petugas akan menghubungi nomor ini.</p>
+              </div>
+              <div class="field">
+                <label for="d-email">Email <span class="font-normal text-redup">(tidak wajib)</span></label>
+                <input id="d-email" name="email" class="input" type="email" autocomplete="email" maxlength="100">
+              </div>
+            </div>
+            <div class="grid gap-5 sm:grid-cols-2">
+              <div class="field">
+                <label for="d-pekerjaan">Pekerjaan</label>
+                <select id="d-pekerjaan" name="applicant_job" class="input" required>
+                  <option value="">Pilih</option>
+                  <option>PNS/TNI/POLRI</option>
+                  <option>BUMN/BUMD/Pegawai Swasta</option>
+                  <option>Wiraswasta/Pengusaha</option>
+                  <option>Dokter/Bidan/Profesi Lain</option>
+                  <option>Ibu Rumah Tangga/Non Job</option>
+                  <option>Lainnya</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="d-penghuni">Jumlah penghuni</label>
+                <input id="d-penghuni" name="number_residents" class="input num" type="number" inputmode="numeric" min="1" max="999" required>
+              </div>
+            </div>
+            <div class="field" data-pekerjaan-lain hidden>
+              <label for="d-pekerjaan-lain">Pekerjaan lainnya</label>
+              <input id="d-pekerjaan-lain" name="other_applicant_job" class="input" maxlength="100">
+            </div>
+          </fieldset>
+
+          <!-- 2. lokasi -->
+          <fieldset data-step="1" class="grid gap-5" hidden>
+            <legend class="mb-2 text-xl font-bold">Lokasi pemasangan</legend>
+            <div class="grid gap-5 sm:grid-cols-2">
+              <div class="field">
+                <label for="d-kecamatan">Kecamatan</label>
+                <select id="d-kecamatan" name="district" class="input" required>
+                  <option value="">Memuat…</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="d-kelurahan">Kelurahan</label>
+                <select id="d-kelurahan" name="subdistrict" class="input" required disabled>
+                  <option value="">Pilih kecamatan dahulu</option>
+                </select>
+              </div>
+            </div>
+            <div class="field">
+              <label for="d-jalan">Nama jalan atau perumahan</label>
+              <input id="d-jalan" name="address" class="input" autocomplete="address-line1" maxlength="150" required>
+            </div>
+            <div class="grid grid-cols-2 gap-5 sm:grid-cols-5">
+              <div class="field"><label for="d-blok">Blok</label><input id="d-blok" name="block" class="input" maxlength="20"></div>
+              <div class="field"><label for="d-no">Nomor</label><input id="d-no" name="no" class="input" maxlength="20"></div>
+              <div class="field"><label for="d-rt">RT</label><input id="d-rt" name="rt" class="input num" inputmode="numeric" maxlength="3"></div>
+              <div class="field"><label for="d-rw">RW</label><input id="d-rw" name="rw" class="input num" inputmode="numeric" maxlength="3"></div>
+              <div class="field col-span-2 sm:col-span-1"><label for="d-pos">Kode pos</label><input id="d-pos" name="postal_code" class="input num" inputmode="numeric" autocomplete="postal-code" maxlength="5"></div>
+            </div>
+            <div class="field">
+              <label for="d-patokan">Patokan <span class="font-normal text-redup">(tidak wajib)</span></label>
+              <input id="d-patokan" name="address_detail" class="input" maxlength="150" placeholder="Contoh: sebelah masjid, pagar hijau">
+            </div>
+            <div class="field">
+              <label for="d-kepemilikan">Status bangunan</label>
+              <select id="d-kepemilikan" name="ownership_status" class="input" required>
+                <option value="">Pilih</option>
+                <option>Milik Pribadi</option>
+                <option>Sewa</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <span class="font-semibold" id="d-titik-label">Titik lokasi bangunan</span>
+              <p class="hint" id="d-titik-hint">Ketuk peta pada letak bangunan Anda, atau gunakan lokasi perangkat saat berada di lokasi.</p>
+              <div class="relative aspect-[4/3] overflow-hidden rounded-lg bg-kabut ring-1 ring-garis" data-picker role="application" aria-labelledby="d-titik-label" aria-describedby="d-titik-hint">
+                <p class="absolute inset-0 grid place-items-center p-6 text-center text-sm text-redup" data-map-status>Memuat peta…</p>
+              </div>
+              <div class="mt-2 flex flex-wrap items-center gap-3">
+                <button type="button" class="btn btn-quiet" data-locate>
+                  <Icon name="mdi:crosshairs-gps" size={20} /> Gunakan lokasi saya
+                </button>
+                <p class="text-sm text-redup" data-coords aria-live="polite">Belum ada titik dipilih.</p>
+              </div>
+              <input type="hidden" name="latitude">
+              <input type="hidden" name="longitude">
+            </div>
+          </fieldset>
+
+          <!-- 3. berkas -->
+          <fieldset data-step="2" class="grid gap-5" hidden>
+            <legend class="mb-2 text-xl font-bold">Berkas</legend>
+            <p class="text-redup">Foto berformat JPG atau PNG. Pastikan tulisan terbaca jelas.</p>
+
+            <div class="field">
+              <span class="font-semibold" id="f-ktp-label">Foto KTP</span>
+              <label class="upload" data-upload="filename_identity" data-required>
+                <input type="file" accept="image/jpeg,image/png" aria-labelledby="f-ktp-label">
+                <Icon name="mdi:card-account-details-outline" size={28} />
+                <span class="text-sm" data-upload-text>Pilih atau ambil foto</span>
+              </label>
+            </div>
+            <div class="field">
+              <span class="font-semibold" id="f-kk-label">Foto Kartu Keluarga <span class="font-normal text-redup">(tidak wajib)</span></span>
+              <label class="upload" data-upload="filename_family">
+                <input type="file" accept="image/jpeg,image/png" aria-labelledby="f-kk-label">
+                <Icon name="mdi:account-group-outline" size={28} />
+                <span class="text-sm" data-upload-text>Pilih atau ambil foto</span>
+              </label>
+            </div>
+            <div class="field" data-surat hidden>
+              <span class="font-semibold" id="f-surat-label">Surat keterangan pemilik bangunan</span>
+              <label class="upload" data-upload="filename_description_letter">
+                <input type="file" accept="image/jpeg,image/png" aria-labelledby="f-surat-label">
+                <Icon name="mdi:file-document-outline" size={28} />
+                <span class="text-sm" data-upload-text>Pilih atau ambil foto</span>
+              </label>
+              <p class="hint">Pernyataan pemilik bahwa bangunan boleh dipasang sambungan air.</p>
+            </div>
+
+            <div class="field">
+              <span class="font-semibold" id="f-ttd-label">Tanda tangan pemohon</span>
+              <canvas class="signature" data-signature tabindex="0" aria-labelledby="f-ttd-label" aria-describedby="f-ttd-hint"></canvas>
+              <div class="flex items-center justify-between gap-3">
+                <p id="f-ttd-hint" class="hint">Tanda tangani di dalam kotak dengan jari atau tetikus.</p>
+                <button type="button" class="btn btn-quiet min-h-9 px-3 text-sm" data-signature-clear>Ulangi</button>
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- 4. periksa -->
+          <fieldset data-step="3" class="grid gap-5" hidden>
+            <legend class="mb-2 text-xl font-bold">Periksa kembali data Anda</legend>
+            <dl class="grid gap-x-8 gap-y-4 sm:grid-cols-2" data-review></dl>
+            <label class="flex items-start gap-3 rounded-lg bg-kabut p-4">
+              <input type="checkbox" name="setuju" class="mt-1 size-4 shrink-0 accent-patriot" required>
+              <span>Saya menyatakan data yang saya isi benar dan bersedia dihubungi petugas untuk survei lokasi.</span>
+            </label>
+          </fieldset>
+
+          <ErrorBox />
+
+          <div class="flex flex-wrap items-center gap-3" data-actions>
+            <button type="button" class="btn btn-quiet" data-prev hidden>
+              <Icon name="mdi:chevron-left" size={20} /> Kembali
+            </button>
+            <button type="submit" class="btn btn-primary px-6" data-next data-idle="Lanjut">
+              <span data-label>Lanjut</span>
+            </button>
+          </div>
+        </form>
+
+        <div data-done hidden tabindex="-1" class="mt-8 rounded-lg bg-lunas-soft p-6">
+          <h3 class="text-xl font-bold text-lunas">Permohonan Anda telah kami terima</h3>
+          <p class="mt-2">Terima kasih. Petugas kami akan menghubungi Anda untuk verifikasi berkas dan jadwal survei lokasi. Simpan nomor pengajuan berikut; setelah verifikasi, Anda akan menerima nomor registrasi untuk mengecek status permohonan.</p>
+          <div class="mt-4 grid justify-items-start gap-1" data-done-number></div>
+          <a class="btn btn-quiet mt-6" href="/">Ke beranda</a>
+        </div>
+      </section>
+
+      <aside class="flex flex-col gap-10">
+        <section id="status" aria-labelledby="status-judul" class="scroll-mt-24 rounded-lg bg-kabut p-5 sm:p-6">
+          <h2 id="status-judul" class="text-xl font-bold">Cek status permohonan</h2>
+          <form action="/pelanggan/pendaftaran" method="get" class="mt-4 grid gap-3">
+            <div class="field">
+              <label for="status-nomor">Nomor registrasi</label>
+              <input id="status-nomor" name="nomor" class="input num" required autocomplete="off" aria-describedby="status-nomor-hint">
+              <p id="status-nomor-hint" class="hint">Nomor 10 digit yang diberikan setelah permohonan diverifikasi.</p>
+            </div>
+            <button class="btn btn-primary justify-self-start" type="submit">Lihat status</button>
+          </form>
+        </section>
+
+        <section aria-labelledby="syarat-judul" class="rounded-lg border border-garis p-5 sm:p-6">
+          <h2 id="syarat-judul" class="text-xl font-bold">Siapkan</h2>
+          <ul class="mt-3 grid gap-2">
+            {persyaratan.map(item => <li class="flex gap-2"><Icon name="mdi:check" size={20} class="mt-0.5 shrink-0 text-patriot" />{item}</li>)}
+          </ul>
+          <a class="link mt-4 inline-block" href="/informasi/peta-layanan#jaringan">Lihat jaringan pipa di sekitar Anda</a>
+        </section>
+
+        <section aria-labelledby="alur-judul">
+          <h2 id="alur-judul" class="text-xl font-bold">Setelah mendaftar</h2>
+          <ol class="mt-4">
+            {alur.map((step, index) => (
+              <li class="relative grid grid-cols-[2rem_1fr] gap-3 pb-6 last:pb-0">
+                {index < alur.length - 1 && <span class="absolute top-9 bottom-1 left-[0.95rem] w-0.5 bg-air-strong" aria-hidden="true" />}
+                <span class="grid size-8 place-items-center rounded-full bg-patriot text-sm font-bold text-white">{index + 1}</span>
+                <div>
+                  <p class="font-bold">{step.title}</p>
+                  <p class="text-redup">{step.text}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </section>
+      </aside>
+    </div>
+
+    <HelpPanel />
+  </div>
+</Base>
+
+<script>
+  import { initPendaftaran, showRegistrationStatus } from '../../scripts/pendaftaran'
+
+  const nomor = new URLSearchParams(location.search).get('nomor')?.trim()
+  if (nomor) {
+    void showRegistrationStatus(nomor)
+  }
+  initPendaftaran()
+</script>

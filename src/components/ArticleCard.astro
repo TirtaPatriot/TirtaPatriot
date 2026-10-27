@@ -1,0 +1,46 @@
+---
+import type { CollectionEntry } from 'astro:content'
+import { Image } from 'astro:assets'
+import kantorPusat from '../assets/kantor-pusat.webp'
+import { coverTransition } from '../lib/artikel'
+import { dateLong } from '../lib/format'
+
+type Props = {
+  article: CollectionEntry<'artikel'>
+  /** tampilan besar untuk artikel utama */
+  lead?: boolean
+  headingLevel?: 'h2' | 'h3'
+  /** muat gambar segera (hanya untuk kartu yang tampil di layar pertama) */
+  eager?: boolean
+}
+
+const { article, lead = false, headingLevel: Heading = 'h3', eager = false } = Astro.props
+const { judul, ringkasan, sampul, terbit } = article.data
+const ratio = lead ? 16 / 10 : 3 / 2
+---
+
+<article class:list={['group relative', lead ? 'grid gap-6 md:grid-cols-[1.35fr_1fr] md:items-center md:gap-10' : 'flex flex-col gap-4']}>
+  <div class:list={['zoom-media bg-air outline-1 -outline-offset-1 outline-pipa/10', lead ? 'rounded-2xl' : 'rounded-xl']} style={`view-transition-name: ${coverTransition(article.id)}`}>
+    <Image
+      src={sampul ?? kantorPusat}
+      alt=""
+      widths={lead ? [480, 720, 960, 1280] : [360, 540, 800]}
+      sizes={lead ? '(min-width: 768px) 56vw, 100vw' : '(min-width: 768px) 33vw, 100vw'}
+      width={lead ? 1280 : 800}
+      height={Math.round((lead ? 1280 : 800) / ratio)}
+      fit="cover"
+      class="w-full object-cover"
+      style={`aspect-ratio: ${ratio}`}
+      quality={72}
+      loading={eager ? 'eager' : 'lazy'}
+      fetchpriority={eager ? 'high' : undefined}
+    />
+  </div>
+  <div>
+    <time datetime={terbit.toISOString()} class="text-sm font-medium text-redup">{dateLong(terbit)}</time>
+    <Heading class:list={['mt-1.5 font-bold transition-colors duration-300 group-hover:text-patriot', lead ? 'text-title' : 'clamp-3 text-lg leading-snug']}>
+      <a href={`/${article.id}`} class="after:absolute after:inset-0">{judul}</a>
+    </Heading>
+    {ringkasan && <p class:list={['mt-2 text-redup', lead ? 'clamp-3 text-lg' : 'clamp-2']}>{ringkasan}</p>}
+  </div>
+</article>

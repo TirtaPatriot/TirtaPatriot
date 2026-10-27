@@ -1,0 +1,32 @@
+---
+import Icon from '../components/Icon.astro'
+import Base from '../layouts/Base.astro'
+
+const shortcuts = [
+  { title: 'Cek tagihan', icon: 'mdi:receipt-text-outline', href: '/pelanggan/tagihan' },
+  { title: 'Pengaduan', icon: 'mdi:message-alert-outline', href: '/pelanggan/pengaduan' },
+  { title: 'Gangguan layanan', icon: 'mdi:water-alert-outline', href: '/informasi/gangguan-layanan' },
+  { title: 'Kontak', icon: 'mdi:phone-outline', href: '/perusahaan/kontak' },
+]
+---
+
+<Base title="Halaman tidak ditemukan" noindex>
+  <div class="wrap py-16 md:py-24">
+    <p class="font-semibold text-patriot">Kesalahan 404</p>
+    <h1 class="mt-2 text-display font-extrabold">Halaman ini tidak ditemukan</h1>
+    <p class="mt-4 max-w-[52ch] text-lg text-redup">
+      Alamatnya mungkin sudah dipindahkan atau salah ketik. Mulai lagi dari beranda, atau langsung ke layanan yang Anda cari.
+    </p>
+    <a class="btn btn-primary mt-8" href="/">Kembali ke beranda</a>
+
+    <ul class="mt-14 grid gap-x-8 border-t border-garis sm:grid-cols-2 lg:grid-cols-4">
+      {shortcuts.map(item => (
+        <li>
+          <a href={item.href} class="flex items-center gap-3 py-5 font-bold hover:text-patriot hover:underline">
+            <Icon name={item.icon} size={26} class="text-patriot" /> {item.title}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</Base>

@@ -1,0 +1,43 @@
+---
+/**
+ * Langkah verifikasi kepemilikan nomor pelanggan untuk layanan mandiri (API Open /web/akses).
+ * Dipasang sebagai fieldset pertama formulir bertahap; logika di src/scripts/layanan.ts (mountVerifikasi).
+ */
+import Icon from './Icon.astro'
+import RecaptchaNote from './RecaptchaNote.astro'
+
+type Props = { id: string }
+const { id } = Astro.props
+---
+
+<fieldset data-step="0" class="grid gap-4" data-verifikasi>
+  <legend class="mb-2 text-xl font-bold">Verifikasi nomor pelanggan</legend>
+
+  <div class="grid gap-5" data-verifikasi-isian>
+    <p class="text-redup">Untuk melindungi data Anda, pastikan nomor pelanggan ini milik Anda.</p>
+    <div class="field">
+      <label for={`${id}-nomor`}>Nomor pelanggan</label>
+      <input id={`${id}-nomor`} name="nomor" class="input num max-w-72" inputmode="numeric" autocomplete="off" maxlength="12" aria-describedby={`${id}-nomor-hint`}>
+      <p id={`${id}-nomor-hint`} class="hint">Tertera pada rekening air, 10 sampai 12 digit.</p>
+    </div>
+    <div class="field">
+      <label for={`${id}-nama`}>Nama pelanggan</label>
+      <input id={`${id}-nama`} name="nama" class="input" autocomplete="off" maxlength="100" aria-describedby={`${id}-nama-hint`}>
+      <p id={`${id}-nama-hint`} class="hint">Sesuai nama pada rekening air.</p>
+    </div>
+    <div class="field">
+      <label for={`${id}-bayar`}>Jumlah pembayaran terakhir (Rp)</label>
+      <input id={`${id}-bayar`} name="bayar" class="input num max-w-72" inputmode="numeric" autocomplete="off" maxlength="12" aria-describedby={`${id}-bayar-hint`}>
+      <p id={`${id}-bayar-hint`} class="hint">Total rekening pada struk pembayaran terakhir, tanpa biaya administrasi bank atau mitra.</p>
+    </div>
+    <RecaptchaNote />
+  </div>
+
+  <div class="flex flex-wrap items-center justify-between gap-3 rounded-lg bg-lunas-soft p-4" data-verifikasi-ok hidden>
+    <p class="flex items-center gap-3">
+      <Icon name="mdi:shield-check-outline" size={24} class="shrink-0 text-lunas" />
+      <span>Nomor <strong class="num" data-verifikasi-nomor></strong> atas nama <strong data-verifikasi-nama></strong> telah terverifikasi.</span>
+    </p>
+    <button type="button" class="link text-sm font-semibold" data-verifikasi-ganti>Ganti nomor</button>
+  </div>
+</fieldset>

@@ -1,0 +1,244 @@
+{
+  "sumber": "erp.billing.golongan_tarif, tarif_air, sk_tarif (status aktif); rumus sesuai bacameter.sf_hitung_kalkulasi",
+  "diambil": "2026-10-27T07:37:48+07:00",
+  "blok": [
+    {
+      "sampai": 10
+    },
+    {
+      "sampai": 20
+    },
+    {
+      "sampai": null
+    }
+  ],
+  "golongan": [
+    {
+      "kode": "1A",
+      "nama": "Sosial Umum",
+      "kelompok": "Sosial",
+      "minimal": 10,
+      "harga": [
+        1300,
+        1300,
+        1300
+      ],
+      "denda": 10000,
+      "dendaPersen": null
+    },
+    {
+      "kode": "1B",
+      "nama": "Sosial Khusus",
+      "kelompok": "Sosial",
+      "minimal": 10,
+      "harga": [
+        1400,
+        1400,
+        1400
+      ],
+      "denda": 10000,
+      "dendaPersen": null
+    },
+    {
+      "kode": "2A",
+      "nama": "Rumah Tangga 1",
+      "kelompok": "Rumah Tangga",
+      "minimal": 10,
+      "harga": [
+        4100,
+        4800,
+        5600
+      ],
+      "denda": 10000,
+      "dendaPersen": null
+    },
+    {
+      "kode": "2B",
+      "nama": "Rumah Tangga 2",
+      "kelompok": "Rumah Tangga",
+      "minimal": 10,
+      "harga": [
+        4400,
+        6700,
+        7400
+      ],
+      "denda": 10000,
+      "dendaPersen": null
+    },
+    {
+      "kode": "2C",
+      "nama": "Rumah Tangga 3",
+      "kelompok": "Rumah Tangga",
+      "minimal": 10,
+      "harga": [
+        6300,
+        10400,
+        13200
+      ],
+      "denda": 10000,
+      "dendaPersen": null
+    },
+    {
+      "kode": "2D",
+      "nama": "Rumah Tangga 4",
+      "kelompok": "Rumah Tangga",
+      "minimal": 10,
+      "harga": [
+        10400,
+        13200,
+        14500
+      ],
+      "denda": 10000,
+      "dendaPersen": null
+    },
+    {
+      "kode": "3A",
+      "nama": "Instansi / Kantor Pemerintah",
+      "kelompok": "Instansi Pemerintah",
+      "minimal": 10,
+      "harga": [
+        4400,
+        6700,
+        7400
+      ],
+      "denda": 10000,
+      "dendaPersen": null
+    },
+    {
+      "kode": "4A",
+      "nama": "Niaga Kecil",
+      "kelompok": "Niaga",
+      "minimal": 10,
+      "harga": [
+        10400,
+        13200,
+        14500
+      ],
+      "denda": 30000,
+      "dendaPersen": null
+    },
+    {
+      "kode": "4B",
+      "nama": "Niaga Sedang",
+      "kelompok": "Niaga",
+      "minimal": 10,
+      "harga": [
+        13200,
+        14500,
+        16200
+      ],
+      "denda": 50000,
+      "dendaPersen": null
+    },
+    {
+      "kode": "4C",
+      "nama": "Niaga Besar",
+      "kelompok": "Niaga",
+      "minimal": 10,
+      "harga": [
+        14500,
+        16200,
+        17900
+      ],
+      "denda": null,
+      "dendaPersen": 2.5
+    },
+    {
+      "kode": "5A",
+      "nama": "Industri Kecil",
+      "kelompok": "Industri",
+      "minimal": 10,
+      "harga": [
+        16200,
+        17900,
+        18900
+      ],
+      "denda": null,
+      "dendaPersen": 2.5
+    },
+    {
+      "kode": "5B",
+      "nama": "Industri Sedang",
+      "kelompok": "Industri",
+      "minimal": 10,
+      "harga": [
+        17900,
+        18900,
+        19900
+      ],
+      "denda": null,
+      "dendaPersen": 2.5
+    },
+    {
+      "kode": "5C",
+      "nama": "Industri Besar",
+      "kelompok": "Industri",
+      "minimal": 10,
+      "harga": [
+        18900,
+        19900,
+        20900
+      ],
+      "denda": null,
+      "dendaPersen": 2.5
+    }
+  ],
+  "meter": [
+    {
+      "ukuran": "1/2",
+      "admin": 6000
+    },
+    {
+      "ukuran": "3/4",
+      "admin": 19500
+    },
+    {
+      "ukuran": "1",
+      "admin": 28600
+    },
+    {
+      "ukuran": "1 1/4",
+      "admin": 32600
+    },
+    {
+      "ukuran": "1 1/2",
+      "admin": 55000
+    },
+    {
+      "ukuran": "1 3/4",
+      "admin": 92200
+    },
+    {
+      "ukuran": "2",
+      "admin": 114600
+    },
+    {
+      "ukuran": "3",
+      "admin": 123800
+    },
+    {
+      "ukuran": "4",
+      "admin": 263500
+    },
+    {
+      "ukuran": "6",
+      "admin": 286500
+    },
+    {
+      "ukuran": "8",
+      "admin": 575200
+    },
+    {
+      "ukuran": "12",
+      "admin": 1235000
+    },
+    {
+      "ukuran": "16",
+      "admin": 1350000
+    }
+  ],
+  "materai": {
+    "batas": 5000000,
+    "nominal": 10000
+  }
+}

@@ -1,0 +1,36 @@
+---
+type Props = {
+  id: string
+  name?: string
+  label: string
+  hint?: string
+  autofocus?: boolean
+  /** gaya untuk latar gelap (hero beranda) */
+  dark?: boolean
+  /** sel muncul bergiliran saat halaman dibuka */
+  intro?: boolean
+}
+
+const { id, name = 'nomor', label, hint, autofocus = false, dark = false, intro = false } = Astro.props
+const cells = Array.from({ length: 12 }, (_, index) => index)
+---
+
+<div class="field">
+  <label for={id} class:list={[dark && 'text-white']}>{label}</label>
+  <div class:list={['meter-field', dark && 'on-dark', intro && 'intro']}>
+    {cells.map(index => <span class:list={['cell', index >= 9 && 'dec', index === 0 && 'next']} style={`--i: ${index}`} aria-hidden="true" />)}
+    <input
+      id={id}
+      name={name}
+      type="text"
+      inputmode="numeric"
+      pattern="[0-9]*"
+      autocomplete="off"
+      maxlength="14"
+      required
+      autofocus={autofocus}
+      aria-describedby={hint ? `${id}-hint` : undefined}
+    >
+  </div>
+  {hint && <p id={`${id}-hint`} class:list={['hint', dark && 'text-white/70!']}>{hint}</p>}
+</div>

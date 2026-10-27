@@ -3,7 +3,7 @@ import { describe, expect, it } from 'bun:test'
 import { fromParse5 } from 'hast-util-from-parse5'
 import { toHtml } from 'hast-util-to-html'
 import { parseFragment } from 'parse5'
-import rehypeContentGuard, { isSafeUrl } from '../app/mdc/rehype-content-guard'
+import rehypeContentGuard, { isSafeUrl } from '../src/lib/rehype-content-guard'
 
 /** Jalankan plugin pada fragmen HTML dan kembalikan HTML hasilnya. */
 function guard (html: string) {

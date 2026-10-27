@@ -1,0 +1,58 @@
+---
+import type { CollectionEntry } from 'astro:content'
+import { getCollection, render } from 'astro:content'
+import type { GetStaticPaths } from 'astro'
+import PageHead from '../../../components/PageHead.astro'
+import Base from '../../../layouts/Base.astro'
+
+export const getStaticPaths = (async () => {
+  const docs = await getCollection('legal')
+  return docs.map(doc => ({ params: { slug: doc.id }, props: { doc } }))
+}) satisfies GetStaticPaths
+
+type Props = { doc: CollectionEntry<'legal'> }
+
+const { doc } = Astro.props
+const { Content } = await render(doc)
+const { title, seoTitle, description, subtitle, badge, effective, partyLabel, party, links } = doc.data
+---
+
+<Base title={seoTitle.replace(/ - Perumda Tirta Patriot$/, '')} description={description}>
+  <PageHead
+    title={title}
+    lead={subtitle}
+    crumbs={[{ title: 'Beranda', href: '/' }, { title: 'Kebijakan privasi', href: '/informasi/privacy-policy' }]}
+    narrow
+  >
+    <dl class="enter mt-8 grid gap-x-6 gap-y-1 rounded-xl bg-white/8 p-5 text-sm ring-1 ring-white/12 sm:grid-cols-[auto_1fr]" style="--i: 4">
+      {effective && (
+        <>
+          <dt class="font-semibold">Tanggal efektif</dt>
+          <dd class="text-white/80">{effective}</dd>
+        </>
+      )}
+      <dt class="font-semibold">{partyLabel}</dt>
+      <dd class="text-white/80">{party}</dd>
+      {badge && (
+        <>
+          <dt class="font-semibold">Berlaku untuk</dt>
+          <dd class="text-white/80">{badge}</dd>
+        </>
+      )}
+      {links && links.length > 0 && (
+        <>
+          <dt class="font-semibold">Dokumen terkait</dt>
+          <dd class="flex flex-wrap gap-x-4">
+            {links.map(link => <a class="font-semibold text-aqua-soft underline underline-offset-2 hover:text-white" href={link.href}>{link.title}</a>)}
+          </dd>
+        </>
+      )}
+    </dl>
+  </PageHead>
+
+  <div class="wrap wrap-narrow mt-10">
+    <div class="content">
+      <Content />
+    </div>
+  </div>
+</Base>

@@ -1,0 +1,108 @@
+---
+import ErrorBox from '../../components/ErrorBox.astro'
+import HelpPanel from '../../components/HelpPanel.astro'
+import Icon from '../../components/Icon.astro'
+import PageHead from '../../components/PageHead.astro'
+import VerifikasiPelanggan from '../../components/VerifikasiPelanggan.astro'
+import Base from '../../layouts/Base.astro'
+import { API_URL } from '../../scripts/api'
+
+const steps = ['Verifikasi', 'Foto meter', 'Rumah dan lokasi']
+---
+
+<Base preconnect={[API_URL]} title="Catat meter mandiri" description="Laporkan angka meter air Anda sendiri dengan foto langsung dari kamera, untuk rekening Perumda Tirta Patriot Kota Bekasi.">
+  <PageHead
+    title="Catat meter mandiri"
+    lead="Laporkan angka meter air Anda sendiri. Foto diambil langsung dari kamera di lokasi meter."
+    crumbs={[{ title: 'Beranda', href: '/' }, { title: 'Layanan pelanggan', href: '/pelanggan' }]}
+  />
+
+  <div class="wrap mt-8">
+    <div class="grid gap-14 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
+      <section aria-labelledby="catat-judul">
+        <h2 id="catat-judul" class="sr-only">Formulir catat meter</h2>
+        <ol class="grid grid-cols-3 gap-2" aria-label="Tahapan" data-stepper>
+          {steps.map((title, index) => (
+            <li class="border-t-4 border-garis pt-2 text-sm text-redup transition-colors duration-500 ease-out data-[state=current]:border-patriot data-[state=current]:font-semibold data-[state=current]:text-pipa data-[state=done]:border-patriot" data-state={index === 0 ? 'current' : 'todo'}>
+              {title}
+            </li>
+          ))}
+        </ol>
+        <p class="sr-only" aria-live="polite" data-step-announce>Langkah 1 dari 3: Verifikasi</p>
+
+        <form class="mt-8 grid gap-6" novalidate data-catat-form>
+          <VerifikasiPelanggan id="catat" />
+
+          <fieldset data-step="1" class="grid gap-5" hidden>
+            <legend class="mb-2 text-xl font-bold">Foto angka meter</legend>
+            <div class="grid gap-3" data-jadwal aria-live="polite"></div>
+            <p class="text-redup">Arahkan kamera ke angka meter hingga terbaca jelas. Foto hanya dapat diambil langsung dari kamera.</p>
+            <div class="grid gap-3" data-shot="meter">
+              <img class="hidden aspect-[4/3] w-full rounded-lg object-cover ring-1 ring-garis" alt="Foto meter yang diambil" data-shot-preview>
+              <button type="button" class="btn btn-primary justify-self-start" data-shot-open><Icon name="mdi:camera-outline" size={20} /> <span data-shot-label>Buka kamera</span></button>
+            </div>
+            <dl class="grid grid-cols-2 gap-4 rounded-lg bg-kabut p-4">
+              <div><dt class="text-sm text-redup">Stand bulan lalu</dt><dd class="num text-xl font-bold" data-first-meter>–</dd></div>
+              <div><dt class="text-sm text-redup">Pemakaian</dt><dd class="num text-xl font-bold" data-usage>–</dd></div>
+            </dl>
+            <div class="field">
+              <label for="c-stand">Angka meter saat ini (m³)</label>
+              <input id="c-stand" name="stand" class="input num max-w-56 text-xl" inputmode="numeric" maxlength="7" required aria-describedby="c-stand-hint">
+              <p id="c-stand-hint" class="hint">Tulis angka hitam saja, tanpa angka merah di belakangnya.</p>
+            </div>
+          </fieldset>
+
+          <fieldset data-step="2" class="grid gap-5" hidden>
+            <legend class="mb-2 text-xl font-bold">Foto rumah dan lokasi</legend>
+            <p class="text-redup">Foto tampak depan rumah, termasuk nomor rumah bila ada.</p>
+            <div class="grid gap-3" data-shot="rumah">
+              <img class="hidden aspect-[4/3] w-full rounded-lg object-cover ring-1 ring-garis" alt="Foto rumah yang diambil" data-shot-preview>
+              <button type="button" class="btn btn-primary justify-self-start" data-shot-open><Icon name="mdi:camera-outline" size={20} /> <span data-shot-label>Buka kamera</span></button>
+            </div>
+            <div class="flex flex-wrap items-center gap-3 rounded-lg bg-kabut p-4">
+              <Icon name="mdi:map-marker-outline" size={24} class="text-patriot" />
+              <p class="flex-1 text-sm" data-location aria-live="polite">Lokasi belum diambil.</p>
+              <button type="button" class="btn btn-quiet" data-locate>Ambil lokasi</button>
+            </div>
+            <div class="field">
+              <label for="c-ket">Keterangan <span class="font-normal text-redup">(tidak wajib)</span></label>
+              <textarea id="c-ket" name="keterangan" class="input" maxlength="250" placeholder="Contoh: meter berembun, angka agak buram"></textarea>
+            </div>
+          </fieldset>
+
+          <ErrorBox />
+
+          <div class="flex flex-wrap items-center gap-3">
+            <button type="button" class="btn btn-quiet" data-prev hidden><Icon name="mdi:chevron-left" size={20} /> Kembali</button>
+            <button type="submit" class="btn btn-primary px-6" data-next data-idle="Lanjut"><span data-label>Lanjut</span></button>
+          </div>
+        </form>
+
+        <div data-done hidden tabindex="-1" class="mt-8 rounded-lg bg-lunas-soft p-6">
+          <h3 class="text-xl font-bold text-lunas">Laporan meter Anda telah kami terima</h3>
+          <p class="mt-2">Terima kasih. Angka meter <strong data-done-stand></strong> m³ telah kami simpan.</p>
+          <p class="mt-2" data-done-catatan></p>
+          <a class="btn btn-quiet mt-6" href="/pelanggan">Ke layanan pelanggan</a>
+        </div>
+      </section>
+
+      <aside class="flex flex-col gap-6 self-start rounded-2xl border border-garis p-6">
+        <h2 class="text-xl font-bold">Ketentuan</h2>
+        <ul class="grid gap-3">
+          <li class="flex gap-2"><Icon name="mdi:calendar-check-outline" size={20} class="mt-0.5 shrink-0 text-patriot" />Catat pada tanggal yang sama dengan pencatatan bulan lalu, paling jauh selisih 2 hari, agar pemakaian setiap bulan tetap sebanding.</li>
+          <li class="flex gap-2"><Icon name="mdi:camera-outline" size={20} class="mt-0.5 shrink-0 text-patriot" />Foto meter dan rumah diambil langsung dari kamera, dengan cap tanggal dan jam.</li>
+          <li class="flex gap-2"><Icon name="mdi:crosshairs-gps" size={20} class="mt-0.5 shrink-0 text-patriot" />Izinkan akses kamera dan lokasi di browser Anda.</li>
+          <li class="flex gap-2"><Icon name="mdi:account-check-outline" size={20} class="mt-0.5 shrink-0 text-patriot" />Bila petugas mencatat meter Anda bulan ini, rekening memakai angka petugas.</li>
+        </ul>
+      </aside>
+    </div>
+
+    <HelpPanel />
+  </div>
+</Base>
+
+<script>
+  import { initCatatMeter } from '../../scripts/catat-meter'
+
+  void initCatatMeter()
+</script>

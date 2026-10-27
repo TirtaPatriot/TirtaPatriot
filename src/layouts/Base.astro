@@ -1,0 +1,109 @@
+---
+import { Font, getImage } from 'astro:assets'
+import kantorPusat from '../assets/kantor-pusat.webp'
+import SiteFooter from '../components/SiteFooter.astro'
+import SiteHeader from '../components/SiteHeader.astro'
+import { ORGANIZATION_LD, SITE_DESCRIPTION, SITE_NAME } from '../lib/site'
+import '../styles/global.css'
+
+type Props = {
+  /** judul halaman tanpa nama situs; kosongkan untuk beranda */
+  title?: string
+  description?: string
+  /** URL gambar absolut untuk pratinjau tautan (Open Graph) */
+  image?: string
+  type?: 'website' | 'article'
+  publishedTime?: Date
+  noindex?: boolean
+  /** asal API yang dipanggil browser di halaman ini, untuk preconnect */
+  preconnect?: string[]
+}
+
+const { title, description = SITE_DESCRIPTION, image, type = 'website', publishedTime, noindex = false, preconnect = [] } = Astro.props
+
+const fullTitle = title ? `${title} | ${SITE_NAME}` : `${SITE_NAME} Kota Bekasi`
+const canonical = new URL(Astro.url.pathname, Astro.site)
+// bawaan: foto kantor pusat dari CMS, dipotong ke ukuran pratinjau tautan
+const ogImage = image ?? new URL((await getImage({ src: kantorPusat, width: 1200, height: 630, fit: 'cover', format: 'jpg' })).src, Astro.site).toString()
+const isHome = Astro.url.pathname === '/'
+
+const chatwootToken = import.meta.env.PUBLIC_CHATWOOT_WEBSITE_TOKEN
+const chatwootUrl = import.meta.env.PUBLIC_CHATWOOT_BASE_URL
+---
+
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{fullTitle}</title>
+    <meta name="description" content={description}>
+    <link rel="canonical" href={canonical}>
+    {noindex && <meta name="robots" content="noindex">}
+
+    <meta name="theme-color" content="#0b6fb8">
+    <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+    <link rel="icon" href="/favicon-32x32.png" type="image/png" sizes="32x32">
+    <link rel="apple-touch-icon" href="/apple-touch-icon-180x180.png">
+    <link rel="manifest" href="/manifest.webmanifest">
+    <meta name="apple-mobile-web-app-title" content="Tirta Patriot">
+    <link rel="sitemap" href="/sitemap-index.xml">
+    {preconnect.map(origin => <link rel="preconnect" href={new URL(origin).origin} crossorigin="anonymous">)}
+
+    <meta property="og:site_name" content={SITE_NAME}>
+    <meta property="og:locale" content="id_ID">
+    <meta property="og:type" content={type}>
+    <meta property="og:title" content={title ?? SITE_NAME}>
+    <meta property="og:description" content={description}>
+    <meta property="og:url" content={canonical}>
+    <meta property="og:image" content={ogImage}>
+    {publishedTime && <meta property="article:published_time" content={publishedTime.toISOString()}>}
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@TirtaPatriot">
+
+    <Font cssVariable="--font-jakarta" preload />
+
+    {isHome && <script type="application/ld+json" set:html={JSON.stringify(ORGANIZATION_LD)} />}
+    <slot name="head" />
+  </head>
+
+  <body class="flex min-h-dvh flex-col">
+    <a class="sr-only z-50 rounded-md bg-patriot px-4 py-2 font-semibold text-white focus:not-sr-only focus:fixed focus:top-3 focus:left-3" href="#isi">
+      Langsung ke konten
+    </a>
+
+    <SiteHeader />
+
+    <main id="isi" class="flex-1">
+      <slot />
+    </main>
+
+    <SiteFooter />
+
+    <!-- penampil gambar konten (lihat src/scripts/zoom.ts) -->
+    <dialog id="zoom" class="m-auto max-h-[94vh] max-w-[min(94vw,80rem)] overflow-visible bg-transparent p-0 backdrop:bg-pipa/85">
+      <form method="dialog">
+        <button class="absolute -top-3 -right-3 grid size-10 place-items-center rounded-full bg-white text-pipa shadow" aria-label="Tutup">
+          <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24"><path fill="currentColor" d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" /></svg>
+        </button>
+      </form>
+      <img class="block max-h-[90vh] max-w-full rounded-lg" alt="">
+    </dialog>
+
+    <script>
+      import '../scripts/zoom'
+    </script>
+
+    {chatwootToken && chatwootUrl && (
+      <script is:inline define:vars={{ chatwootToken, chatwootUrl }}>
+        window.chatwootSettings = { locale: 'id', theme: 'light', launcherTitle: 'Hubungi Kami' }
+        const s = document.createElement('script')
+        s.src = `${chatwootUrl}/packs/js/sdk.js`
+        s.defer = true
+        s.async = true
+        s.addEventListener('load', () => window.chatwootSDK.run({ websiteToken: chatwootToken, baseUrl: chatwootUrl }))
+        document.body.appendChild(s)
+      </script>
+    )}
+  </body>
+</html>

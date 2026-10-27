@@ -1,0 +1,22 @@
+{
+  "diambil": "2026-10-27T05:30:00.000Z",
+  "sumber": "erp.billing (billing, billing_loket), erp.info_pelanggan.channel",
+  "bank": [
+    { "id": "bank-btn", "nama": "Bank BTN" },
+    { "id": "bank-bjb", "nama": "Bank BJB" },
+    { "id": "bank-bjb-syariah", "nama": "Bank BJB Syariah" },
+    { "id": "pos-indonesia", "nama": "Pos Indonesia" },
+    { "id": "bank-mandiri", "nama": "Bank Mandiri" }
+  ],
+  "virtualAccount": [
+    { "id": "bank-bjb", "nama": "Bank BJB" },
+    { "id": "bank-btn", "nama": "Bank BTN" },
+    { "id": "bank-mandiri", "nama": "Bank Mandiri" },
+    { "id": "bank-bnc", "nama": "Bank Neo Commerce" },
+    { "id": "bank-bsi", "nama": "Bank Syariah Indonesia" },
+    { "id": "bank-bni", "nama": "BNI" },
+    { "id": "bank-bri", "nama": "BRI" },
+    { "id": "bank-permata", "nama": "Permata Bank" }
+  ],
+  "loket": ["Tunai", "QRIS", "Kartu debit"]
+}

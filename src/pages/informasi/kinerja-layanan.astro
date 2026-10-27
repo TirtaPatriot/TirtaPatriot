@@ -1,0 +1,143 @@
+---
+import BarList from '../../components/BarList.astro'
+import ColumnChart from '../../components/ColumnChart.astro'
+import Odometer from '../../components/Odometer.astro'
+import PageHead from '../../components/PageHead.astro'
+import kinerja from '../../data/kinerja.json'
+import Base from '../../layouts/Base.astro'
+import { dateLong } from '../../lib/format'
+import { AKSEN, angka, bulan, DUA_TINGKAT } from '../../lib/viz'
+
+const { pelanggan, pengaduan, airTerjual, sambunganBaru } = kinerja
+const aduan = pengaduan.bulanan
+const terakhir = aduan.at(-2)! // bulan penuh terakhir; bulan berjalan belum lengkap
+const masukTotal = aduan.reduce((sum, row) => sum + row.masuk, 0)
+const selesaiTotal = aduan.reduce((sum, row) => sum + row.selesai, 0)
+const bulanBerjalan = (value: string) => value === pengaduan.bulanBerjalan
+---
+
+<Base title="Kinerja layanan" description="Jumlah pelanggan, penanganan pengaduan, air terjual, dan sambungan baru Perumda Tirta Patriot Kota Bekasi dalam angka.">
+  <PageHead
+    title="Kinerja layanan"
+    lead="Gambaran pelayanan kami kepada pelanggan di Kota Bekasi."
+    crumbs={[{ title: 'Beranda', href: '/' }, { title: 'Informasi' }]}
+  />
+
+  <div class="wrap mt-10">
+    <p class="text-sm text-redup">Data per {dateLong(kinerja.diambil)}.</p>
+
+    <!-- pelanggan -->
+    <section class="mt-10 grid gap-12 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]" aria-labelledby="pelanggan-judul">
+      <div>
+        <h2 id="pelanggan-judul" class="text-title font-extrabold">Pelanggan aktif</h2>
+        <p class="mt-6 text-[clamp(2.2rem,1.6rem+2vw,3rem)]">
+          <Odometer value={String(pelanggan.aktif)} label="Pelanggan aktif" />
+        </p>
+        <p class="mt-3 max-w-[44ch] text-redup">Tersebar di {pelanggan.kecamatan.length} kecamatan Kota Bekasi.</p>
+
+        <dl class="mt-8 grid grid-cols-2 gap-x-8 gap-y-4 sm:grid-cols-3">
+          {pelanggan.kelompok.map(item => (
+            <div>
+              <dt class="text-sm text-redup">{item.nama}</dt>
+              <dd class="text-xl font-bold">{angka(item.jumlah)}</dd>
+            </div>
+          ))}
+        </dl>
+        <a href="/informasi/peta-layanan" class="link mt-8 inline-block">Lihat sebarannya di peta layanan</a>
+      </div>
+
+      <BarList
+        title="Pelanggan aktif per kecamatan"
+        
+        items={pelanggan.kecamatan.map(item => ({ label: item.nama, value: item.jumlah }))}
+      />
+    </section>
+
+    <!-- pengaduan -->
+    <section class="mt-24 border-t border-garis pt-14" aria-labelledby="aduan-judul">
+      <h2 id="aduan-judul" class="text-title font-extrabold">Penanganan pengaduan</h2>
+      
+
+      <dl class="mt-8 grid gap-6 sm:grid-cols-3">
+        <div class="rounded-2xl bg-kabut p-5">
+          <dt class="text-sm text-redup">Pengaduan diterima, {bulan(aduan[0]!.bulan, true).split(' ')[0]}–{bulan(aduan.at(-1)!.bulan, true)}</dt>
+          <dd class="mt-1 text-3xl font-extrabold">{angka(masukTotal)}</dd>
+        </div>
+        <div class="rounded-2xl bg-kabut p-5">
+          <dt class="text-sm text-redup">Sudah ditutup pada periode yang sama</dt>
+          <dd class="mt-1 text-3xl font-extrabold">{angka(selesaiTotal)} <span class="text-base font-semibold text-redup">({angka((selesaiTotal / masukTotal) * 100)}%)</span></dd>
+        </div>
+        <div class="rounded-2xl bg-kabut p-5">
+          <dt class="text-sm text-redup">Selesai dalam 3 hari, {bulan(terakhir.bulan, true)}</dt>
+          <dd class="mt-1 text-3xl font-extrabold">{angka(terakhir.dalam3Hari * 100)}%</dd>
+        </div>
+      </dl>
+
+      <div class="mt-12 grid gap-14 lg:grid-cols-2">
+        <ColumnChart
+          title="Pengaduan masuk dan ditutup"
+          
+          categories={aduan.map(row => bulan(row.bulan) + (bulanBerjalan(row.bulan) ? '*' : ''))}
+          categoryLabels={aduan.map(row => bulan(row.bulan, true) + (bulanBerjalan(row.bulan) ? ' (berjalan)' : ''))}
+          series={[
+            { name: 'Masuk', color: DUA_TINGKAT[0], values: aduan.map(row => row.masuk) },
+            { name: 'Ditutup', color: DUA_TINGKAT[1], values: aduan.map(row => row.selesai) },
+          ]}
+          notes={[{ index: aduan.length - 1, text: 'bulan berjalan.' }]}
+        />
+        <ColumnChart
+          title="Median waktu penyelesaian"
+          caption="Dalam hari, sejak pengaduan diterima hingga selesai ditangani."
+          categories={aduan.map(row => bulan(row.bulan) + (bulanBerjalan(row.bulan) ? '*' : ''))}
+          categoryLabels={aduan.map(row => bulan(row.bulan, true) + (bulanBerjalan(row.bulan) ? ' (berjalan)' : ''))}
+          series={[{ name: 'Median', color: AKSEN, values: aduan.map(row => row.medianHari) }]}
+          unit=" hari"
+          digits={1}
+          labelIndexes={aduan.map((_, i) => i)}
+          notes={[{ index: aduan.length - 1, text: 'angka sementara.' }]}
+        />
+      </div>
+
+      <div class="mt-14 max-w-2xl">
+        <BarList
+          title="Jenis pengaduan terbanyak"
+          caption={`Persentase dari seluruh pengaduan ${pengaduan.periodeJenis}.`}
+          items={pengaduan.jenis.map(item => ({ label: item.nama, value: item.persen }))}
+          unit="%"
+          digits={1}
+        />
+      </div>
+    </section>
+
+    <!-- air terjual & sambungan baru -->
+    <section class="mt-24 border-t border-garis pt-14" aria-labelledby="volume-judul">
+      <h2 id="volume-judul" class="text-title font-extrabold">Air terjual dan sambungan baru</h2>
+      <div class="mt-10 grid gap-14 lg:grid-cols-2">
+        <ColumnChart
+          title="Air terjual per bulan"
+          caption="Dalam m³ per periode rekening."
+          categories={airTerjual.bulanan.map(row => bulan(row.periode))}
+          categoryLabels={airTerjual.bulanan.map(row => bulan(row.periode, true))}
+          series={[{ name: 'Air terjual', color: AKSEN, values: airTerjual.bulanan.map(row => row.m3) }]}
+          unit=" m³"
+          labelIndexes={[airTerjual.bulanan.length - 1]}
+          notes={[{ index: airTerjual.bulanan.findIndex(row => row.periode === '2026-08'), text: airTerjual.catatan }]}
+        />
+        <ColumnChart
+          title="Sambungan baru diaktifkan"
+          
+          categories={sambunganBaru.bulanan.map(row => bulan(row.bulan))}
+          categoryLabels={sambunganBaru.bulanan.map(row => bulan(row.bulan, true))}
+          series={[{ name: 'Sambungan baru', color: AKSEN, values: sambunganBaru.bulanan.map(row => row.jumlah) }]}
+          labelIndexes={[sambunganBaru.bulanan.length - 1]}
+          notes={[{ index: sambunganBaru.bulanan.findIndex(row => row.bulan === '2025-12'), text: sambunganBaru.catatan }]}
+        />
+      </div>
+    </section>
+  </div>
+</Base>
+
+<script>
+  import '../../scripts/charts'
+  import '../../scripts/odometer'
+</script>

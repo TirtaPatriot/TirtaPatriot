@@ -1,10 +1,6 @@
-# Nuxt dev/build outputs
-.output
-.data
-.nuxt
-.nitro
-.cache
+# Astro build output & generated types
 dist
+.astro
 
 # Node dependencies
 node_modules
@@ -23,3 +19,6 @@ logs
 .env.*
 !.env.example
 service-account.json
+
+# pengaturan Claude Code pribadi
+.claude/settings.local.json

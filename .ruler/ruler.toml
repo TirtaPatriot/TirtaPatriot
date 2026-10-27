@@ -9,3 +9,6 @@ url = "https://mcp.vuetifyjs.com/mcp"
 # https://github.com/vuetifyjs/mcp#authentication
 # [mcp_servers.vuetify.headers]
 # Authorization = "Bearer <YOUR_API_KEY>"
+
+[mcp_servers.astro-docs]
+url = "https://mcp.docs.astro.build/mcp"

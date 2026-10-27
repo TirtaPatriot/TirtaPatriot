@@ -1,0 +1,25 @@
+---
+const items = [
+  'Periksalah fasilitas air bersih yang terpasang di rumah, sebab kebocoran akan mempengaruhi besarnya rekening air setiap bulan.',
+  'Tempatkan meter air di lokasi yang aman dan mudah dibaca oleh petugas catat meter Perumda Tirta Patriot.',
+  'Sampaikanlah laporan jika terjadi kebocoran instalasi jaringan.',
+  'Penuhi kewajiban Anda sebagai pelanggan.',
+  'Mintalah bukti-bukti administrasi.',
+  'Untuk menghindari tagihan air yang melonjak, biarkan petugas kami membaca langsung meter air Anda.',
+]
+
+type Props = { title?: string, compact?: boolean }
+const { title = 'Himbauan untuk pelanggan', compact = false } = Astro.props
+---
+
+<section aria-labelledby="himbauan-judul">
+  <h2 id="himbauan-judul" class="text-xl font-bold">{title}</h2>
+  <ul class:list={['mt-4 grid gap-x-10 gap-y-3', !compact && 'md:grid-cols-2']}>
+    {items.map(item => (
+      <li class="flex gap-3">
+        <span class="mt-2.5 size-2 shrink-0 rounded-full bg-patriot" aria-hidden="true" />
+        <span>{item}</span>
+      </li>
+    ))}
+  </ul>
+</section>
