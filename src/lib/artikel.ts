@@ -1,7 +1,7 @@
 import type { CollectionEntry } from 'astro:content'
 import { getCollection } from 'astro:content'
 
-export type Jenis = CollectionEntry<'artikel'>['data']['jenis']
+export type Jenis = 'berita' | 'edukasi'
 
 export const JENIS: Record<Jenis, { title: string, lead: string, empty: string }> = {
   berita: {
@@ -16,9 +16,14 @@ export const JENIS: Record<Jenis, { title: string, lead: string, empty: string }
   },
 }
 
-/** Artikel satu jenis, terbaru lebih dulu. */
+/** Jenis artikel dari id koleksi ("berita/<slug>"). */
+export function jenisOf (article: CollectionEntry<'artikel'>): Jenis {
+  return article.id.split('/')[0] as Jenis
+}
+
+/** Artikel terbit satu jenis, terbaru lebih dulu. */
 export async function getArtikel (jenis: Jenis): Promise<CollectionEntry<'artikel'>[]> {
-  const entries = await getCollection('artikel', entry => entry.data.jenis === jenis)
+  const entries = await getCollection('artikel', entry => !entry.data.draf && jenisOf(entry) === jenis)
   return entries.toSorted((a, b) => b.data.terbit.getTime() - a.data.terbit.getTime())
 }
 

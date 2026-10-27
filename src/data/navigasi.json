@@ -1,0 +1,60 @@
+[
+  {
+    "id": "beranda",
+    "judul": "Beranda",
+    "tautan": "/",
+    "anak": []
+  },
+  {
+    "id": "perusahaan",
+    "judul": "Perusahaan",
+    "tautan": null,
+    "anak": [
+      {
+        "judul": "Manajemen",
+        "tautan": "/perusahaan/manajemen"
+      },
+      {
+        "judul": "Visi & Misi",
+        "tautan": "/perusahaan/visi-misi"
+      },
+      {
+        "judul": "Sejarah",
+        "tautan": "/perusahaan/sejarah"
+      },
+      {
+        "judul": "Kontak",
+        "tautan": "/perusahaan/kontak"
+      }
+    ]
+  },
+  {
+    "id": "informasi",
+    "judul": "Informasi",
+    "tautan": null,
+    "anak": [
+      {
+        "judul": "Gangguan Layanan",
+        "tautan": "/informasi/gangguan-layanan"
+      },
+      {
+        "judul": "Tempat Pembayaran",
+        "tautan": "/informasi/tempat-pembayaran"
+      },
+      {
+        "judul": "Berita",
+        "tautan": "/berita"
+      },
+      {
+        "judul": "Edukasi",
+        "tautan": "/edukasi"
+      }
+    ]
+  },
+  {
+    "id": "pelelangan",
+    "judul": "Pelelangan",
+    "tautan": "https://e-proc.tirtapatriot.co.id/announcement",
+    "anak": []
+  }
+]

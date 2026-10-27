@@ -45,4 +45,4 @@ https://tirtapatriot.netlify.app/* https://tirtapatriot.co.id/:splat 301!
 /terms-of-service/oca-google	/informasi/privacy-policy/oca-google-tos	301
 
 # Lampiran lama
-/berita/daftar-sementara-peserta-seleksi-calon-direktur-bidang-teknik-perusahaan-umum-daerah-air-minum-tirta-patriot-periode-2026-2031/C1E28AB9-A2A1-42C4-AA1A-E5235AAB8924.pdf https://cms.tirtapatriot.net/assets/C1E28AB9-A2A1-42C4-AA1A-E5235AAB8924.pdf 301!
+/berita/daftar-sementara-peserta-seleksi-calon-direktur-bidang-teknik-perusahaan-umum-daerah-air-minum-tirta-patriot-periode-2026-2031/C1E28AB9-A2A1-42C4-AA1A-E5235AAB8924.pdf /berkas/c1e28ab9-a2a1-42c4-aa1a-e5235aab8924.pdf 301!

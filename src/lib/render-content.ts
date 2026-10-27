@@ -79,7 +79,7 @@ function enhance (node: RootContent | ElementContent): ElementContent[] {
   return [node]
 }
 
-function rehypeContentEnhance () {
+export function rehypeContentEnhance () {
   return (tree: Root) => {
     tree.children = tree.children.flatMap(child => enhance(child))
   }

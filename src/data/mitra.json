@@ -1,0 +1,93 @@
+[
+  {
+    "id": "pos-indonesia",
+    "nama": "Pos Indonesia",
+    "url": "https://posindonesia.co.id",
+    "aktif": true,
+    "logo": "../assets/mitra/pos-indonesia.png"
+  },
+  {
+    "id": "shopee",
+    "nama": "Shopee",
+    "url": "https://shopee.co.id",
+    "aktif": false,
+    "logo": "../assets/mitra/shopee.png"
+  },
+  {
+    "id": "indomaret",
+    "nama": "Indomaret",
+    "url": "https://indomaret.co.id",
+    "aktif": false,
+    "logo": "../assets/mitra/indomaret.png"
+  },
+  {
+    "id": "tokopedia",
+    "nama": "Tokopedia",
+    "url": "https://tokopedia.com",
+    "aktif": false,
+    "logo": "../assets/mitra/tokopedia.png"
+  },
+  {
+    "id": "alfamart",
+    "nama": "Alfamart",
+    "url": "https://alfamart.co.id",
+    "aktif": false,
+    "logo": "../assets/mitra/alfamart.png"
+  },
+  {
+    "id": "griya-bayar",
+    "nama": "Griya Bayar",
+    "url": "https://griyabayar.com",
+    "aktif": false,
+    "logo": "../assets/mitra/griya-bayar.png"
+  },
+  {
+    "id": "masago",
+    "nama": "Masago",
+    "url": "https://masago.id",
+    "aktif": false,
+    "logo": "../assets/mitra/masago.png"
+  },
+  {
+    "id": "bank-mandiri",
+    "nama": "Bank Mandiri",
+    "url": "https://bankmandiri.co.id",
+    "aktif": false,
+    "logo": "../assets/mitra/bank-mandiri.png"
+  },
+  {
+    "id": "onpays",
+    "nama": "Onpays",
+    "url": "https://onpays.id",
+    "aktif": false,
+    "logo": "../assets/mitra/onpays.png"
+  },
+  {
+    "id": "bank-bca",
+    "nama": "Bank BCA",
+    "url": "https://bca.co.id",
+    "aktif": false,
+    "logo": "../assets/mitra/bank-bca.png"
+  },
+  {
+    "id": "gojek",
+    "nama": "Gojek",
+    "url": "https://gojek.co.id",
+    "aktif": false,
+    "logo": "../assets/mitra/gojek.png"
+  },
+  {
+    "id": "bank-bjb",
+    "nama": "Bank BJB",
+    "url": "https://bankbjb.co.id",
+    "aktif": false,
+    "logo": "../assets/mitra/bank-bjb.png"
+  },
+  {
+    "id": "linkaja",
+    "nama": "LinkAja",
+    "url": "https://linkaja.id",
+    "aktif": false,
+    "logo": "../assets/mitra/linkaja.png"
+  }
+]

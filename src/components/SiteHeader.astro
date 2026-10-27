@@ -2,7 +2,13 @@
 import { getCollection } from 'astro:content'
 import Icon from './Icon.astro'
 
-const navigation = (await getCollection('navigasi')).map(entry => entry.data).toSorted((a, b) => a.order - b.order)
+// urutan mengikuti berkas src/data/navigasi.json
+const navigation = (await getCollection('navigasi')).map(({ data }) => ({
+  title: data.judul,
+  href: data.tautan ?? '',
+  external: /^https?:/.test(data.tautan ?? ''),
+  children: data.anak.map(child => ({ title: child.judul, href: child.tautan, external: /^https?:/.test(child.tautan) })),
+}))
 const path = Astro.url.pathname.replace(/\/+$/, '') || '/'
 
 function isCurrent (href: string): boolean {

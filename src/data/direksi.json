@@ -1,0 +1,20 @@
+[
+  {
+    "id": "ali-imam-faryadi-s-e",
+    "nama": "ALI IMAM FARYADI, S.E.",
+    "jabatan": "DIREKTUR UTAMA",
+    "foto": "../assets/direksi/1070.webp"
+  },
+  {
+    "id": "muhaimin-s-e",
+    "nama": "MUHAIMIN, S.E.",
+    "jabatan": "DIREKTUR BIDANG UMUM",
+    "foto": "../assets/direksi/1053.webp"
+  },
+  {
+    "id": "asri-fianti-asmar-s-ab-m-ap",
+    "nama": "ASRI FIANTI ASMAR, S.AB., M.AP.",
+    "jabatan": "DIREKTUR BIDANG USAHA",
+    "foto": "../assets/direksi/1080.webp"
+  }
+]

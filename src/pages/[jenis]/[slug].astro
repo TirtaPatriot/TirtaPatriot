@@ -2,17 +2,17 @@
 import type { CollectionEntry } from 'astro:content'
 import { getCollection, render } from 'astro:content'
 import type { GetStaticPaths } from 'astro'
+import { getImage, Image } from 'astro:assets'
+import kantorPusat from '../../assets/kantor-pusat.webp'
 import ArticleCard from '../../components/ArticleCard.astro'
-import CmsImage from '../../components/CmsImage.astro'
 import Icon from '../../components/Icon.astro'
 import Base from '../../layouts/Base.astro'
-import { coverTransition, getArtikel, JENIS } from '../../lib/artikel'
-import { assetUrl } from '../../lib/directus'
+import { coverTransition, getArtikel, JENIS, jenisOf } from '../../lib/artikel'
 import { dateLong } from '../../lib/format'
 import { plainText } from '../../lib/render-content'
 
 export const getStaticPaths = (async () => {
-  const articles = await getCollection('artikel')
+  const articles = await getCollection('artikel', entry => !entry.data.draf)
   return articles.map(article => {
     const [jenis, ...rest] = article.id.split('/')
     return { params: { jenis, slug: rest.join('/') }, props: { article } }
@@ -23,9 +23,12 @@ type Props = { article: CollectionEntry<'artikel'> }
 
 const { article } = Astro.props
 const { Content } = await render(article)
-const { judul, ringkasan, cover, terbit, jenis } = article.data
+const { judul, ringkasan, sampul, terbit } = article.data
+const jenis = jenisOf(article)
 const meta = JENIS[jenis]
-const description = ringkasan || plainText(article.rendered?.html) || meta.lead
+const description = ringkasan ? plainText(ringkasan) : plainText(article.rendered?.html) || meta.lead
+const cover = sampul ?? kantorPusat
+const ogImage = await getImage({ src: cover, width: 1200, height: 630, fit: 'cover', format: 'jpg' })
 
 const related = (await getArtikel(jenis)).filter(entry => entry.id !== article.id).slice(0, 3)
 
@@ -41,7 +44,7 @@ const shareTargets = [
 <Base
   title={judul}
   description={description}
-  image={assetUrl(cover, { width: 1200, height: 630, fit: 'cover', format: 'jpg' })}
+  image={new URL(ogImage.src, Astro.site).toString()}
   type="article"
   publishedTime={terbit}
 >
@@ -60,7 +63,7 @@ const shareTargets = [
 
     <div class="wrap mt-8 max-w-[60rem]">
       <div class="overflow-hidden rounded-2xl bg-air outline-1 -outline-offset-1 outline-pipa/10" style={`view-transition-name: ${coverTransition(article.id)}`}>
-        <CmsImage src={cover} alt="" ratio={16 / 9} widths={[640, 960, 1440]} sizes="(min-width: 960px) 60rem, 100vw" class="w-full" eager />
+        <Image src={cover} alt="" widths={[640, 960, 1440]} sizes="(min-width: 960px) 60rem, 100vw" width={1440} height={810} fit="cover" class="aspect-video w-full object-cover" loading="eager" />
       </div>
     </div>
 

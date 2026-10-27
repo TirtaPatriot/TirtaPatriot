@@ -3,9 +3,9 @@ import { getCollection } from 'astro:content'
 import OfficeList from '../../components/OfficeList.astro'
 import PageHead from '../../components/PageHead.astro'
 import Base from '../../layouts/Base.astro'
-import { assetUrl } from '../../lib/directus'
+import { Image } from 'astro:assets'
 
-const mitra = (await getCollection('mitra')).map(entry => entry.data)
+const mitra = (await getCollection('mitra')).map(entry => entry.data).filter(partner => partner.aktif)
 ---
 
 <Base title="Tempat pembayaran" description="Mitra pembayaran dan unit pelayanan resmi untuk membayar rekening air Perumda Tirta Patriot Kota Bekasi.">
@@ -23,7 +23,7 @@ const mitra = (await getCollection('mitra')).map(entry => entry.data)
           {mitra.map(partner => (
             <li>
               <a href={partner.url} rel="noopener" target="_blank" class="grid aspect-[3/2] place-items-center rounded-lg border border-garis bg-white p-4 hover:border-patriot">
-                <img src={assetUrl(partner.logo, { width: 240, format: 'png' })} alt={partner.name} width="240" height="160" loading="lazy" decoding="async" class="max-h-full w-auto object-contain">
+                <Image src={partner.logo} alt={partner.nama} width={240} class="max-h-full w-auto object-contain" />
               </a>
             </li>
           ))}

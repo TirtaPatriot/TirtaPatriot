@@ -1,0 +1,79 @@
+[
+  {
+    "id": "01",
+    "nama": "TELUK BUYUNG",
+    "alamat": "JL. PERJUANGAN DALAM NO.99 RT.003/011, KEL.MARGA MULYA, KEC. BEKASI UTARA, KOTA BEKASI, JAWA BARAT, 17142",
+    "lat": -6.2296581,
+    "lng": 106.9992423
+  },
+  {
+    "id": "02",
+    "nama": "JATISARI",
+    "alamat": "JL. SURYA DHARMA KEL. JATISARI, KEC. JATIASIH, KOTA BEKASI, JAWA BARAT",
+    "lat": -6.202818,
+    "lng": 106.57
+  },
+  {
+    "id": "03",
+    "nama": "PONDOK HIJAU",
+    "alamat": "JL. GANDARIA SELATAN BLOK F RT.002/024 KEL.PENGASINAN, KEC. RAWALUMBU KOTA BEKASI, JAWA BARAT, 17115",
+    "lat": -6.270488637,
+    "lng": 107.014207874
+  },
+  {
+    "id": "04",
+    "nama": "RAWA LUMBU",
+    "alamat": "JL. TRI SATYA NO 5, KEL. BOJONG RAWALUMBU, KEC. RAWALUMBU, KOTA BEKASI, JAWA BARAT, 17116",
+    "lat": -6.164817,
+    "lng": 106.5954
+  },
+  {
+    "id": "05",
+    "nama": "RAWA TEMBAGA",
+    "alamat": "JL. WIJAYA 1, KEL. JAKASAMPURNA, KEC. BEKASI BARAT, KOTA BEKASI, JAWA BARAT, 17145",
+    "lat": -6.150335,
+    "lng": 106.57326
+  },
+  {
+    "id": "07",
+    "nama": "KEMANG PRATAMA",
+    "alamat": "JL. DUTA RAYA NO. 1, KEL. BOJONG RAWALUMBU, KEC. RAWALUMBU, KOTA BEKASI, JAWA BARAT",
+    "lat": -6.163223,
+    "lng": 106.59034
+  },
+  {
+    "id": "10",
+    "nama": "VIDA",
+    "alamat": " JL. TIRTA UTAMA NO 1, KAWASAN BUMIPALA, VIDA BEKASI, KEL. PADURENAN, KEC. MUSTIKA JAYA, KOTA BEKASI, JAWA BARAT, 17156",
+    "lat": -6.31341,
+    "lng": 107.01633
+  },
+  {
+    "id": "11",
+    "nama": "PURI GADING",
+    "alamat": "JL. PURI GADING, PRM. PURI GADING, KEL. JATIMELATI, KEC. PONDOK MELATI, KOTA BEKASI, JAWA BARAT, 17425",
+    "lat": -6.316382982,
+    "lng": 106.941269168
+  },
+  {
+    "id": "15",
+    "nama": "WISMA ASRI",
+    "alamat": "JL. PRIMA HARAPAN REGENCY, RT.009/RW.015, KEL. HARAPAN BARU, KEC. BEKASI UTARA, KOTA BEKASI, JAWA BARAT, 17123",
+    "lat": -6.209586545,
+    "lng": 107.015988029
+  },
+  {
+    "id": "18",
+    "nama": "SETIA MEKAR",
+    "alamat": "JL. NUSANTARA RAYA NO.20, RT.007/RW.011, KEL. AREN JAYA, KEC. BEKASI TIMUR, KOTA BEKASI, JAWA BARAT, 17111",
+    "lat": -6.2437,
+    "lng": 107.03063
+  },
+  {
+    "id": "20",
+    "nama": "HARAPAN BARU",
+    "alamat": "JL. JAMBU AIR RAYA NO.1, RT.008/RW.1, KEL. KOTA BARU, KEC. BEKASI BARAT, KOTA BEKASI, JAWA BARAT, 17139",
+    "lat": -6.210902737,
+    "lng": 106.963317989
+  }
+]

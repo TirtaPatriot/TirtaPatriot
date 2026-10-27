@@ -1,8 +1,9 @@
 ---
 import type { CollectionEntry } from 'astro:content'
+import { Image } from 'astro:assets'
+import kantorPusat from '../assets/kantor-pusat.webp'
 import { coverTransition } from '../lib/artikel'
 import { dateLong } from '../lib/format'
-import CmsImage from './CmsImage.astro'
 
 type Props = {
   article: CollectionEntry<'artikel'>
@@ -12,19 +13,23 @@ type Props = {
 }
 
 const { article, lead = false, headingLevel: Heading = 'h3' } = Astro.props
-const { judul, ringkasan, cover, terbit } = article.data
+const { judul, ringkasan, sampul, terbit } = article.data
+const ratio = lead ? 16 / 10 : 3 / 2
 ---
 
 <article class:list={['group relative', lead ? 'grid gap-6 md:grid-cols-[1.35fr_1fr] md:items-center md:gap-10' : 'flex flex-col gap-4']}>
   <div class:list={['zoom-media bg-air outline-1 -outline-offset-1 outline-pipa/10', lead ? 'rounded-2xl' : 'rounded-xl']} style={`view-transition-name: ${coverTransition(article.id)}`}>
-    <CmsImage
-      src={cover}
+    <Image
+      src={sampul ?? kantorPusat}
       alt=""
-      ratio={lead ? 16 / 10 : 3 / 2}
       widths={lead ? [640, 960, 1280] : [400, 640, 800]}
       sizes={lead ? '(min-width: 768px) 56vw, 100vw' : '(min-width: 768px) 33vw, 100vw'}
-      class="w-full"
-      eager={lead}
+      width={lead ? 1280 : 800}
+      height={Math.round((lead ? 1280 : 800) / ratio)}
+      fit="cover"
+      class="w-full object-cover"
+      style={`aspect-ratio: ${ratio}`}
+      loading={lead ? 'eager' : 'lazy'}
     />
   </div>
   <div>

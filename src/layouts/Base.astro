@@ -1,8 +1,8 @@
 ---
-import { Font } from 'astro:assets'
+import { Font, getImage } from 'astro:assets'
+import kantorPusat from '../assets/kantor-pusat.webp'
 import SiteFooter from '../components/SiteFooter.astro'
 import SiteHeader from '../components/SiteHeader.astro'
-import { assetUrl, DEFAULT_COVER } from '../lib/directus'
 import { ORGANIZATION_LD, SITE_DESCRIPTION, SITE_NAME } from '../lib/site'
 import '../styles/global.css'
 
@@ -22,7 +22,7 @@ const { title, description = SITE_DESCRIPTION, image, type = 'website', publishe
 const fullTitle = title ? `${title} | ${SITE_NAME}` : `${SITE_NAME} Kota Bekasi`
 const canonical = new URL(Astro.url.pathname, Astro.site)
 // bawaan: foto kantor pusat dari CMS, dipotong ke ukuran pratinjau tautan
-const ogImage = image ?? assetUrl(DEFAULT_COVER, { width: 1200, height: 630, fit: 'cover', format: 'jpg' })
+const ogImage = image ?? new URL((await getImage({ src: kantorPusat, width: 1200, height: 630, fit: 'cover', format: 'jpg' })).src, Astro.site).toString()
 const isHome = Astro.url.pathname === '/'
 
 const chatwootToken = import.meta.env.PUBLIC_CHATWOOT_WEBSITE_TOKEN

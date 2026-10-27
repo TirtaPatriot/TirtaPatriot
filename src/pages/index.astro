@@ -1,22 +1,21 @@
 ---
 import { getCollection } from 'astro:content'
 import ArticleCard from '../components/ArticleCard.astro'
-import CmsImage from '../components/CmsImage.astro'
+import { Image } from 'astro:assets'
+import hero from '../assets/hero.webp'
 import Himbauan from '../components/Himbauan.astro'
 import Icon from '../components/Icon.astro'
 import MeterField from '../components/MeterField.astro'
 import Odometer from '../components/Odometer.astro'
 import Waves from '../components/Waves.astro'
 import Base from '../layouts/Base.astro'
+import { getArtikel } from '../lib/artikel'
 import { dateTimeShort } from '../lib/format'
 import { APP_LINKS } from '../lib/site'
 
-const berita = (await getCollection('artikel', entry => entry.data.jenis === 'berita'))
-  .toSorted((a, b) => b.data.terbit.getTime() - a.data.terbit.getTime())
-  .slice(0, 4)
+const berita = (await getArtikel('berita')).slice(0, 4)
 
 const [utama, ...lainnya] = berita
-const slide = (await getCollection('korsel')).toSorted((a, b) => a.data.order - b.data.order)[0]
 const statistik = (await getCollection('statistik')).toSorted((a, b) => a.data.order - b.data.order)
 const gangguan = (await getCollection('gangguan')).map(entry => ({ id: entry.id, ...entry.data }))
 
@@ -65,17 +64,18 @@ const services = [
         </svg>
         <div class="bloom relative aspect-[5/6]">
           <div class="absolute inset-0 translate-x-4 translate-y-3 bg-aqua/25 [clip-path:url(#tetesan)]" aria-hidden="true"></div>
-          {slide ? (
-            <CmsImage
-              src={slide.data.image}
-              alt={slide.data.title}
-              ratio={5 / 6}
-              widths={[480, 720, 960]}
-              sizes="(min-width: 1024px) 34vw, 26rem"
-              class="relative h-full w-full [clip-path:url(#tetesan)]"
-              eager
-            />
-          ) : <div class="relative h-full w-full bg-patriot [clip-path:url(#tetesan)]" />}
+          <Image
+            src={hero}
+            alt="Kantor pusat Perumda Tirta Patriot"
+            widths={[480, 720, 960]}
+            sizes="(min-width: 1024px) 34vw, 26rem"
+            width={960}
+            height={1152}
+            fit="cover"
+            class="relative h-full w-full object-cover [clip-path:url(#tetesan)]"
+            loading="eager"
+            fetchpriority="high"
+          />
         </div>
 
         <div
