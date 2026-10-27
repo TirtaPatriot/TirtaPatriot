@@ -6,7 +6,7 @@
 import { defineCollection } from 'astro:content'
 import { file, glob } from 'astro/loaders'
 import { z } from 'astro/zod'
-import { fetchGangguan } from './lib/info-pelanggan'
+import { fetchGangguan, isSelesai } from './lib/info-pelanggan'
 import { renderContent } from './lib/render-content'
 
 /** Berita & edukasi: Markdown di src/content/artikel/{berita,edukasi}/<slug>.md, id = "berita/<slug>". */
@@ -93,7 +93,7 @@ const gangguan = defineCollection({
         logger.warn(`gangguan tidak dimuat: ${String(error)}`)
       }
       for (const item of items) {
-        const data = await parseData({ id: item.id, data: { title: item.title, tanggal: item.date, image: item.cover_image || item.image || null } })
+        const data = await parseData({ id: item.id, data: { title: item.title, tanggal: item.date, image: item.cover_image || item.image || null, selesai: isSelesai(item) } })
         store.set({ id: item.id, data, rendered: { html: await renderContent(item.description, 'html') } })
       }
       logger.info(`${items.length} gangguan aktif`)
@@ -103,6 +103,7 @@ const gangguan = defineCollection({
     title: z.string(),
     tanggal: z.string(),
     image: z.string().nullable(),
+    selesai: z.boolean(),
   }),
 })
 

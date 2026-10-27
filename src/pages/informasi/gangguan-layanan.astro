@@ -6,11 +6,13 @@ import PageHead from '../../components/PageHead.astro'
 import ServiceMap from '../../components/ServiceMap.astro'
 import Base from '../../layouts/Base.astro'
 
-const gangguan = await Promise.all((await getCollection('gangguan')).map(async entry => ({
+// yang masih berlangsung lebih dulu; yang sudah selesai tetap tampil sampai masa tayangnya habis
+const gangguan = (await Promise.all((await getCollection('gangguan')).map(async entry => ({
   id: entry.id,
   ...entry.data,
   Content: (await render(entry)).Content,
-})))
+})))).toSorted((a, b) => Number(a.selesai) - Number(b.selesai))
+const berlangsung = gangguan.filter(item => !item.selesai)
 ---
 
 <Base preconnect={[INFO_PELANGGAN_API]} title="Gangguan layanan" description="Informasi gangguan layanan air bersih Perumda Tirta Patriot Kota Bekasi yang sedang berlangsung, sama dengan yang tayang di aplikasi Tirta Patriot Mobile.">
@@ -21,8 +23,8 @@ const gangguan = await Promise.all((await getCollection('gangguan')).map(async e
   />
 
   <div class="wrap mt-10 grid gap-14 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:items-start">
-    <section aria-label="Gangguan yang sedang berlangsung">
-      <div class="notice notice-ok p-6" data-gangguan-empty hidden={gangguan.length > 0}>
+    <section class="grid gap-8" aria-label="Gangguan yang sedang berlangsung">
+      <div class="notice notice-ok p-6" data-gangguan-empty hidden={berlangsung.length > 0}>
         <Icon name="mdi:water-check-outline" size={28} />
         <div>
           <h2 class="text-xl font-bold">Saat ini tidak ada gangguan</h2>
@@ -33,10 +35,12 @@ const gangguan = await Promise.all((await getCollection('gangguan')).map(async e
 
       <div class="grid gap-8" data-gangguan-list hidden={gangguan.length === 0}>
         {gangguan.map(item => (
-          <article class="overflow-hidden rounded-2xl border border-garis" data-gangguan-id={item.id}>
+          <article class="overflow-hidden rounded-2xl border border-garis" data-gangguan-id={item.id} data-selesai={item.selesai ? '' : undefined}>
             {item.image && <img src={item.image} alt="" loading="lazy" decoding="async" class="aspect-[2/1] w-full object-cover" />}
             <div class="p-5 sm:p-6">
-              <p class="flex items-center gap-2 text-sm font-bold text-meter"><span class="live-dot" aria-hidden="true" />Sedang berlangsung</p>
+              {item.selesai
+                ? <p class="flex items-center gap-2 text-sm font-bold text-lunas" data-gangguan-status><span class="inline-block size-2.5 rounded-full bg-current" aria-hidden="true" />Sudah normal kembali</p>
+                : <p class="flex items-center gap-2 text-sm font-bold text-meter" data-gangguan-status><span class="live-dot" aria-hidden="true" />Sedang berlangsung</p>}
               <h2 class="mt-1 text-xl font-bold">{item.title}</h2>
               <p class="mt-1 text-sm text-redup">Diumumkan {item.tanggal}</p>
               <div class="content mt-4"><item.Content /></div>
@@ -45,7 +49,7 @@ const gangguan = await Promise.all((await getCollection('gangguan')).map(async e
         ))}
       </div>
 
-      <p class="mt-8 text-sm text-redup">
+      <p class="text-sm text-redup">
         Ikuti juga pengumuman gangguan lewat <a class="link" href="https://whatsapp.com/channel/0029VaaWmpGId7nRB1BLj52w" rel="noopener" target="_blank">saluran WhatsApp</a> dan <a class="link" href="https://t.me/PerumdaTirtaPatriot" rel="noopener" target="_blank">kanal Telegram</a> kami.
       </p>
     </section>

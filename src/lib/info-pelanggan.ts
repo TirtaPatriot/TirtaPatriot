@@ -21,6 +21,14 @@ export function isGangguan (item: Pengumuman): boolean {
   return /gangguan|pemadaman|perbaikan pipa/i.test(item.title) || Boolean(item.status)
 }
 
+/**
+ * Pengumuman bertipe "gangguan_layanan" di back-office punya status_gangguan `on_progress`, dan Humas dapat
+ * mencentang "Selesai" (`selesai`) begitu layanan normal, sebelum tanggal akhir tayangnya lewat.
+ */
+export function isSelesai (item: Pick<Pengumuman, 'status'>): boolean {
+  return item.status === 'selesai'
+}
+
 export async function fetchPengumuman (): Promise<Pengumuman[]> {
   // /news hanya mengembalikan entri yang sedang tayang (bukan arsip), tanpa paginasi; limit dihitung per baris tipe
   // sebelum disaring menjadi gangguan, jadi beri ruang lega (API membatasi maksimal 1000)

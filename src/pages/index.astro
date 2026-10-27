@@ -27,7 +27,8 @@ const statistik = [
   { nama: 'Kecamatan terlayani', nilai: kinerja.pelanggan.kecamatan.length },
   { nama: 'Kantor pelayanan', nilai: kantor.length },
 ]
-const gangguan = (await getCollection('gangguan')).map(entry => ({ id: entry.id, ...entry.data }))
+// gangguan yang sudah ditandai selesai tidak dihitung di panel status
+const gangguan = (await getCollection('gangguan')).map(entry => ({ id: entry.id, ...entry.data })).filter(item => !item.selesai)
 
 const services = [
   { title: 'Lapor gangguan', text: 'Air mati, keruh, atau pipa bocor di sekitar rumah.', icon: 'mdi:message-alert-outline', href: '/pelanggan/pengaduan' },
