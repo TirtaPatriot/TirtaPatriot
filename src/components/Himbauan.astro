@@ -8,13 +8,13 @@ const items = [
   'Untuk menghindari tagihan air yang melonjak, biarkan petugas kami membaca langsung meter air Anda.',
 ]
 
-type Props = { title?: string }
-const { title = 'Himbauan untuk pelanggan' } = Astro.props
+type Props = { title?: string, compact?: boolean }
+const { title = 'Himbauan untuk pelanggan', compact = false } = Astro.props
 ---
 
 <section aria-labelledby="himbauan-judul">
   <h2 id="himbauan-judul" class="text-xl font-bold">{title}</h2>
-  <ul class="mt-4 grid gap-x-10 gap-y-3 md:grid-cols-2">
+  <ul class:list={['mt-4 grid gap-x-10 gap-y-3', !compact && 'md:grid-cols-2']}>
     {items.map(item => (
       <li class="flex gap-3">
         <span class="mt-2.5 size-2 shrink-0 rounded-full bg-patriot" aria-hidden="true" />

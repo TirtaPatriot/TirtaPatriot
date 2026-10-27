@@ -28,12 +28,12 @@ const channels = [
 <Base title="Kontak" description="Hubungi Perumda Tirta Patriot Kota Bekasi lewat telepon, WhatsApp, email, media sosial, atau kunjungi unit pelayanan terdekat.">
   <PageHead
     title="Hubungi kami"
-    lead={`Tim Humas dan Layanan Pelanggan siap membantu ${HOURS.charAt(0).toLowerCase()}${HOURS.slice(1)}. Kanal digital kami terbuka setiap saat.`}
+    lead={`Tim Humas dan Layanan Pelanggan siap membantu setiap ${HOURS}. Kanal digital kami terbuka kapan saja.`}
     crumbs={[{ title: 'Beranda', href: '/' }, { title: 'Perusahaan' }]}
   />
 
   <div class="wrap mt-10">
-    <ul class="grid gap-x-10 gap-y-6 sm:grid-cols-2 lg:grid-cols-4">
+    <ul class="grid gap-x-10 gap-y-6 sm:grid-cols-2">
       {CONTACTS.map(contact => (
         <li>
           <p class="flex items-center gap-2 text-redup"><Icon name={contact.icon} size={20} /> {contact.title}</p>
