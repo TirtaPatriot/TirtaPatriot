@@ -1,4 +1,5 @@
 ---
+import { INFO_PELANGGAN_API } from '../../lib/info-pelanggan'
 import { getCollection, render } from 'astro:content'
 import Icon from '../../components/Icon.astro'
 import PageHead from '../../components/PageHead.astro'
@@ -12,7 +13,7 @@ const gangguan = await Promise.all((await getCollection('gangguan')).map(async e
 })))
 ---
 
-<Base title="Gangguan layanan" description="Informasi gangguan layanan air bersih Perumda Tirta Patriot Kota Bekasi yang sedang berlangsung, sama dengan yang tayang di aplikasi Tirta Patriot Mobile.">
+<Base preconnect={[INFO_PELANGGAN_API]} title="Gangguan layanan" description="Informasi gangguan layanan air bersih Perumda Tirta Patriot Kota Bekasi yang sedang berlangsung, sama dengan yang tayang di aplikasi Tirta Patriot Mobile.">
   <PageHead
     title="Gangguan layanan"
     lead="Informasi pekerjaan perbaikan dan gangguan aliran air yang sedang kami tangani. Kami mohon maaf atas ketidaknyamanan yang ditimbulkan."

@@ -83,6 +83,7 @@ const offices = kantor.map(item => ({ ...item, nama: titleCase(item.nama), xy: p
           stroke-width="2"
           stroke-linejoin="round"
           class="map-area"
+          role="img"
           style={`--i: ${i}`}
           tabindex="0"
           data-tip={`${area.nama}|${angka(area.jumlah)} pelanggan aktif`}
@@ -100,7 +101,7 @@ const offices = kantor.map(item => ({ ...item, nama: titleCase(item.nama), xy: p
 
     <g data-kantor>
       {offices.map(office => (
-        <g class="map-office" tabindex="0" data-tip={`${office.nama}|${office.hari}, ${office.jam}`} aria-label={`${office.nama}, ${office.alamat}`}>
+        <g class="map-office" tabindex="0" role="img" data-tip={`${office.nama}|${office.hari}, ${office.jam}`} aria-label={`${office.nama}, ${office.alamat}`}>
           <circle cx={office.xy[0]} cy={office.xy[1]} r="14" fill="transparent" />
           <circle cx={office.xy[0]} cy={office.xy[1]} r="6" fill="#0a2a5e" stroke="#fff" stroke-width="2.5" />
         </g>

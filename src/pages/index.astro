@@ -1,4 +1,5 @@
 ---
+import { INFO_PELANGGAN_API } from '../lib/info-pelanggan'
 import { getCollection } from 'astro:content'
 import ArticleCard from '../components/ArticleCard.astro'
 import { Image } from 'astro:assets'
@@ -31,12 +32,12 @@ const gangguan = (await getCollection('gangguan')).map(entry => ({ id: entry.id,
 const services = [
   { title: 'Lapor gangguan', text: 'Air mati, keruh, atau pipa bocor di sekitar rumah.', icon: 'mdi:message-alert-outline', href: '/pelanggan/pengaduan' },
   { title: 'Lacak pengaduan', text: 'Pantau penanganan dengan nomor tiket Anda.', icon: 'mdi:ticket-confirmation-outline', href: '/pelanggan/pengaduan#lacak' },
-  { title: 'Pasang baru', text: 'Lima tahap sampai meter air terpasang.', icon: 'mdi:pipe', href: '/pelanggan/pendaftaran' },
+  { title: 'Pasang baru', text: 'Daftar sambungan air secara online.', icon: 'mdi:pipe', href: '/pelanggan/pendaftaran' },
   { title: 'Tempat bayar', text: 'Mitra resmi dan unit pelayanan terdekat.', icon: 'mdi:storefront-outline', href: '/informasi/tempat-pembayaran' },
 ]
 ---
 
-<Base description="Cek tagihan air, lapor gangguan, dan pantau informasi layanan air bersih Perumda Tirta Patriot Kota Bekasi.">
+<Base preconnect={[INFO_PELANGGAN_API]} description="Cek tagihan air, lapor gangguan, dan pantau informasi layanan air bersih Perumda Tirta Patriot Kota Bekasi.">
   <!-- hero: cek tagihan adalah hal pertama yang dicari pelanggan -->
   <section class="relative isolate overflow-hidden bg-pipa text-white">
     <div class="absolute inset-0 -z-10 bg-[radial-gradient(60rem_40rem_at_85%_-10%,rgb(11_111_184/55%),transparent_70%)]" aria-hidden="true"></div>
@@ -81,6 +82,7 @@ const services = [
             width={960}
             height={1152}
             fit="cover"
+            quality={75}
             class="relative h-full w-full object-cover [clip-path:url(#tetesan)]"
             loading="eager"
             fetchpriority="high"

@@ -15,9 +15,11 @@ type Props = {
   type?: 'website' | 'article'
   publishedTime?: Date
   noindex?: boolean
+  /** asal API yang dipanggil browser di halaman ini, untuk preconnect */
+  preconnect?: string[]
 }
 
-const { title, description = SITE_DESCRIPTION, image, type = 'website', publishedTime, noindex = false } = Astro.props
+const { title, description = SITE_DESCRIPTION, image, type = 'website', publishedTime, noindex = false, preconnect = [] } = Astro.props
 
 const fullTitle = title ? `${title} | ${SITE_NAME}` : `${SITE_NAME} Kota Bekasi`
 const canonical = new URL(Astro.url.pathname, Astro.site)
@@ -46,6 +48,7 @@ const chatwootUrl = import.meta.env.PUBLIC_CHATWOOT_BASE_URL
     <link rel="manifest" href="/manifest.webmanifest">
     <meta name="apple-mobile-web-app-title" content="Tirta Patriot">
     <link rel="sitemap" href="/sitemap-index.xml">
+    {preconnect.map(origin => <link rel="preconnect" href={new URL(origin).origin} crossorigin="anonymous">)}
 
     <meta property="og:site_name" content={SITE_NAME}>
     <meta property="og:locale" content="id_ID">

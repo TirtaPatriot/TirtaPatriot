@@ -77,10 +77,17 @@ function bindUploads (form: HTMLFormElement, files: Map<string, string>): void {
     const text = box.querySelector<HTMLElement>('[data-upload-text]')!
     const key = box.dataset.upload!
 
+    // unggahan yang sudah diganti pemohon tidak boleh menimpa hasil unggahan terbaru
+    let attempt = 0
     input.addEventListener('change', async () => {
+      const current = ++attempt
       const file = input.files?.[0]
       files.delete(key)
-      box.querySelector('img')?.remove()
+      const old = box.querySelector('img')
+      if (old) {
+        URL.revokeObjectURL(old.src)
+        old.remove()
+      }
       if (!file) {
         box.dataset.state = ''
         text.textContent = 'Pilih atau ambil foto'
@@ -91,7 +98,11 @@ function bindUploads (form: HTMLFormElement, files: Map<string, string>): void {
       text.textContent = 'Mengunggah…'
       try {
         const blob = await compress(file)
-        files.set(key, await upload(blob))
+        const filename = await upload(blob)
+        if (current !== attempt) {
+          return
+        }
+        files.set(key, filename)
         const preview = document.createElement('img')
         preview.alt = ''
         preview.src = URL.createObjectURL(blob)
@@ -99,6 +110,9 @@ function bindUploads (form: HTMLFormElement, files: Map<string, string>): void {
         box.dataset.state = 'done'
         text.textContent = `${file.name} terunggah. Ketuk untuk mengganti.`
       } catch (caught) {
+        if (current !== attempt) {
+          return
+        }
         box.dataset.state = ''
         box.setAttribute('aria-invalid', 'true')
         text.textContent = caught instanceof Error && !(caught instanceof ApiError) ? caught.message : 'Unggahan gagal. Ketuk untuk mencoba lagi.'
@@ -169,14 +183,21 @@ function bindSignature (canvas: HTMLCanvasElement): { isEmpty: () => boolean, to
 }
 
 async function fillOptions (select: HTMLSelectElement, path: string, placeholder: string): Promise<void> {
+  // permintaan terakhir yang menang bila pilihan induk diganti cepat
+  select.dataset.source = path
   select.disabled = true
   select.replaceChildren(new Option('Memuat…', ''))
   try {
     const options = await ip<Option[]>(path)
+    if (select.dataset.source !== path) {
+      return
+    }
     select.replaceChildren(new Option(placeholder, ''), ...(options ?? []).map(option => new Option(option.label, option.id)))
     select.disabled = false
   } catch {
-    select.replaceChildren(new Option('Gagal memuat. Muat ulang halaman.', ''))
+    if (select.dataset.source === path) {
+      select.replaceChildren(new Option('Gagal memuat. Muat ulang halaman.', ''))
+    }
   }
 }
 
@@ -242,6 +263,7 @@ export function initPendaftaran (): void {
     if (district.value) {
       void fillOptions(subdistrict, `/reference/sub-district?district_id=${encodeURIComponent(district.value)}`, 'Pilih kelurahan')
     } else {
+      subdistrict.dataset.source = ''
       subdistrict.disabled = true
       subdistrict.replaceChildren(new Option('Pilih kecamatan dahulu', ''))
     }

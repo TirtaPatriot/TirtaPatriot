@@ -106,11 +106,12 @@ const angka = (value: number) => new Intl.NumberFormat('id-ID').format(value)
       <h2 id="tabel-judul" class="text-title font-extrabold">Tarif per golongan</h2>
       <p class="mt-2 max-w-[62ch] text-redup">Harga per m³ berlaku bertingkat, dengan pemakaian minimal 10 m³ setiap bulan.</p>
 
-      <div class="mt-6 overflow-x-auto rounded-2xl border border-garis">
+      <p class="mt-4 flex items-center gap-1.5 text-sm text-redup sm:hidden" aria-hidden="true"><Icon name="mdi:gesture-swipe-horizontal" size={18} /> Geser tabel ke samping untuk melihat semua kolom.</p>
+      <div class="mt-6 overflow-x-auto rounded-2xl border border-garis max-sm:mt-2">
         <table class="w-full min-w-[40rem] border-collapse text-left">
           <thead class="bg-kabut text-sm">
             <tr>
-              <th scope="col" class="px-5 py-3 font-semibold">Golongan</th>
+              <th scope="col" class="sticky left-0 z-10 bg-kabut px-5 py-3 font-semibold max-sm:shadow-[1px_0_0_var(--color-garis)]">Golongan</th>
               <th scope="col" class="px-5 py-3 text-right font-semibold">0–10 m³</th>
               <th scope="col" class="px-5 py-3 text-right font-semibold">11–20 m³</th>
               <th scope="col" class="px-5 py-3 text-right font-semibold">Di atas 20 m³</th>
@@ -119,10 +120,10 @@ const angka = (value: number) => new Intl.NumberFormat('id-ID').format(value)
           </thead>
           {kelompok.map(nama => (
             <tbody>
-              <tr><th scope="rowgroup" colspan="5" class="border-t border-garis bg-white px-5 pt-5 pb-1 text-sm font-bold text-patriot">{nama}</th></tr>
+              <tr><th scope="rowgroup" colspan="5" class="border-t border-garis bg-white px-5 pt-5 pb-1 text-sm font-bold text-patriot"><span class="sticky left-5">{nama}</span></th></tr>
               {TARIF.golongan.filter(item => item.kelompok === nama).map(item => (
-                <tr class="border-t border-garis/60 transition-colors hover:bg-air/60">
-                  <th scope="row" class="px-5 py-3 font-semibold"><span class="mr-2 text-redup">{item.kode}</span>{item.nama}</th>
+                <tr class="group border-t border-garis/60 transition-colors hover:bg-air">
+                  <th scope="row" class="sticky left-0 z-10 bg-white px-5 py-3 font-semibold transition-colors group-hover:bg-air max-sm:min-w-44 max-sm:shadow-[1px_0_0_var(--color-garis)]"><span class="mr-2 text-redup">{item.kode}</span>{item.nama}</th>
                   {item.harga.map(harga => <td class="num px-5 py-3 text-right">{angka(harga)}</td>)}
                   <td class="num px-5 py-3 text-right text-redup">{item.dendaPersen ? `${String(item.dendaPersen).replace('.', ',')}%` : angka(item.denda ?? 0)}</td>
                 </tr>

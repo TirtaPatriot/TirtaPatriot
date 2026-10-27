@@ -63,7 +63,7 @@ const shareTargets = [
 
     <div class="wrap mt-8 max-w-[60rem]">
       <div class="overflow-hidden rounded-2xl bg-air outline-1 -outline-offset-1 outline-pipa/10" style={`view-transition-name: ${coverTransition(article.id)}`}>
-        <Image src={cover} alt="" widths={[640, 960, 1440]} sizes="(min-width: 960px) 60rem, 100vw" width={1440} height={810} fit="cover" class="aspect-video w-full object-cover" loading="eager" />
+        <Image src={cover} alt="" widths={[480, 720, 960, 1440]} sizes="(min-width: 960px) 60rem, 100vw" width={1440} height={810} fit="cover" quality={72} class="aspect-video w-full object-cover" loading="eager" fetchpriority="high" />
       </div>
     </div>
 

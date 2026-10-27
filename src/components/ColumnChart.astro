@@ -87,7 +87,7 @@ const chartId = `chart-${Math.abs([...title].reduce((h, c) => (h * 31 + c.charCo
             </text>
           )}
           <text x={pad.left + band * i + band / 2} y={H - 10} text-anchor="middle" class="fill-redup text-[11px]">{label}</text>
-          <rect x={pad.left + band * i} y={pad.top} width={band} height={plotH + 4} fill="transparent" class="chart-hit" tabindex="0" aria-label={`${categoryLabels[i]}: ${series.map(s => `${s.name} ${fmt(s.values[i] ?? 0)}`).join(', ')}`} />
+          <rect x={pad.left + band * i} y={pad.top} width={band} height={plotH + 4} fill="transparent" class="chart-hit" tabindex="0" role="img" aria-label={`${categoryLabels[i]}: ${series.map(s => `${s.name} ${fmt(s.values[i] ?? 0)}`).join(', ')}`} />
         </g>
       )
     })}

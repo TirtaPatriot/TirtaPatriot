@@ -10,9 +10,11 @@ type Props = {
   /** tampilan besar untuk artikel utama */
   lead?: boolean
   headingLevel?: 'h2' | 'h3'
+  /** muat gambar segera (hanya untuk kartu yang tampil di layar pertama) */
+  eager?: boolean
 }
 
-const { article, lead = false, headingLevel: Heading = 'h3' } = Astro.props
+const { article, lead = false, headingLevel: Heading = 'h3', eager = false } = Astro.props
 const { judul, ringkasan, sampul, terbit } = article.data
 const ratio = lead ? 16 / 10 : 3 / 2
 ---
@@ -22,14 +24,16 @@ const ratio = lead ? 16 / 10 : 3 / 2
     <Image
       src={sampul ?? kantorPusat}
       alt=""
-      widths={lead ? [640, 960, 1280] : [400, 640, 800]}
+      widths={lead ? [480, 720, 960, 1280] : [360, 540, 800]}
       sizes={lead ? '(min-width: 768px) 56vw, 100vw' : '(min-width: 768px) 33vw, 100vw'}
       width={lead ? 1280 : 800}
       height={Math.round((lead ? 1280 : 800) / ratio)}
       fit="cover"
       class="w-full object-cover"
       style={`aspect-ratio: ${ratio}`}
-      loading={lead ? 'eager' : 'lazy'}
+      quality={72}
+      loading={eager ? 'eager' : 'lazy'}
+      fetchpriority={eager ? 'high' : undefined}
     />
   </div>
   <div>

@@ -1,4 +1,5 @@
 ---
+import { API_URL } from '../../scripts/api'
 import ErrorBox from '../../components/ErrorBox.astro'
 import HelpPanel from '../../components/HelpPanel.astro'
 import Himbauan from '../../components/Himbauan.astro'
@@ -11,7 +12,7 @@ import Base from '../../layouts/Base.astro'
 const steps = ['Nomor pelanggan', 'Verifikasi nama', 'Data pelapor', 'Kendala']
 ---
 
-<Base title="Pengaduan pelanggan" description="Laporkan kendala sambungan rumah dan aliran air, lalu pantau penanganannya dengan nomor tiket pengaduan Perumda Tirta Patriot Kota Bekasi.">
+<Base preconnect={[API_URL]} title="Pengaduan pelanggan" description="Laporkan kendala sambungan rumah dan aliran air, lalu pantau penanganannya dengan nomor tiket pengaduan Perumda Tirta Patriot Kota Bekasi.">
   <PageHead
     title="Pengaduan pelanggan"
     lead="Laporkan kendala sambungan air di rumah Anda. Setiap laporan mendapat nomor tiket untuk memantau penanganannya."

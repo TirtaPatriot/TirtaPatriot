@@ -1,4 +1,5 @@
 ---
+import { INFO_PELANGGAN_API } from '../../lib/info-pelanggan'
 import ErrorBox from '../../components/ErrorBox.astro'
 import HelpPanel from '../../components/HelpPanel.astro'
 import Icon from '../../components/Icon.astro'
@@ -22,7 +23,7 @@ const persyaratan = [
 ]
 ---
 
-<Base title="Pendaftaran sambungan baru" description="Daftar sambungan air bersih baru Perumda Tirta Patriot Kota Bekasi secara online, lalu pantau status permohonan Anda.">
+<Base preconnect={[INFO_PELANGGAN_API]} title="Pendaftaran sambungan baru" description="Daftar sambungan air bersih baru Perumda Tirta Patriot Kota Bekasi secara online, lalu pantau status permohonan Anda.">
   <PageHead
     title="Pendaftaran sambungan baru"
     lead="Ajukan sambungan air bersih untuk rumah atau tempat usaha Anda di Kota Bekasi."

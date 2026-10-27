@@ -38,7 +38,7 @@ const title = page.currentPage > 1 ? `${meta.title}, halaman ${page.currentPage}
       </div>
     )}
 
-    {showLead && <ArticleCard article={first} lead headingLevel="h2" />}
+    {showLead && <ArticleCard article={first} lead headingLevel="h2" eager />}
 
     {grid.length > 0 && (
       <div class:list={['grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-3', showLead && 'mt-12 border-t border-garis pt-10']}>

@@ -1,6 +1,6 @@
 ---
 import { getCollection } from 'astro:content'
-import { Image } from 'astro:assets'
+import { getImage, Image } from 'astro:assets'
 import sotk from '../../assets/halaman/sotk.jpg'
 import Icon from '../../components/Icon.astro'
 import PageHead from '../../components/PageHead.astro'
@@ -10,6 +10,8 @@ import { titleCase } from '../../lib/format'
 
 // urutan mengikuti src/data/direksi.json (Direktur Utama lebih dulu); loader file() tidak menjamin urutan
 const order = direksiJson.map(item => item.id)
+// bagan ukuran penuh sebagai WebP (JPEG aslinya 1,1 MB)
+const sotkPenuh = await getImage({ src: sotk, format: 'webp', quality: 85 })
 const direksi = (await getCollection('direksi')).toSorted((a, b) => order.indexOf(a.id) - order.indexOf(b.id)).map(entry => entry.data)
 ---
 
@@ -42,7 +44,7 @@ const direksi = (await getCollection('direksi')).toSorted((a, b) => order.indexO
       <div class="mt-6 overflow-x-auto rounded-lg border border-garis p-3">
         <Image src={sotk} alt="Bagan susunan organisasi dan tata kerja Perumda Tirta Patriot" widths={[1100, 1600, 2200]} sizes="(min-width: 1152px) 72rem, 44rem" class="h-auto max-w-none min-w-[44rem] lg:w-full lg:min-w-0" />
       </div>
-      <a class="link mt-4 inline-flex items-center gap-1.5" href={sotk.src} rel="noopener" target="_blank">
+      <a class="link mt-4 inline-flex items-center gap-1.5" href={sotkPenuh.src} rel="noopener" target="_blank">
         <Icon name="mdi:open-in-new" size={18} /> Buka gambar ukuran penuh
       </a>
     </section>

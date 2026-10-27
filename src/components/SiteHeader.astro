@@ -1,5 +1,7 @@
 ---
+import { Image } from 'astro:assets'
 import { getCollection } from 'astro:content'
+import wordmark from '../assets/logo-wordmark.png'
 import navigasiJson from '../data/navigasi.json'
 import Icon from './Icon.astro'
 
@@ -26,7 +28,7 @@ const linkClass = 'inline-flex min-h-11 items-center gap-1.5 rounded-md px-3 fon
 <header class="site-header sticky top-0 z-40 border-b border-transparent bg-white/85 backdrop-blur-md backdrop-saturate-150 transition-[border-color,box-shadow] duration-300 data-[scrolled]:border-garis data-[scrolled]:shadow-[0_8px_24px_-16px_rgb(10_42_94/35%)]" style="view-transition-name: site-header" data-site-header>
   <div class="wrap flex h-16 items-center justify-between gap-4">
     <a href="/" class="shrink-0" aria-label="Beranda Perumda Tirta Patriot">
-      <img src="/logo-wordmark.png" alt="Perumda Tirta Patriot" width="125" height="40" class="h-10 w-auto">
+      <Image src={wordmark} alt="" width={125} height={40} densities={[1, 2]} class="h-10 w-auto" loading="eager" />
     </a>
 
     <nav aria-label="Menu utama" class="hidden lg:block">
