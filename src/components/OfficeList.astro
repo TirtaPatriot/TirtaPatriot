@@ -1,12 +1,17 @@
 ---
 import { getCollection } from 'astro:content'
+import kantorJson from '../data/kantor.json'
 import { titleCase } from '../lib/format'
 import Icon from './Icon.astro'
 
 type Props = { searchable?: boolean }
 const { searchable = false } = Astro.props
 
-const offices = (await getCollection('kantor')).map(entry => ({ id: entry.id, ...entry.data }))
+// urutan mengikuti src/data/kantor.json (kantor pusat lebih dulu); loader file() tidak menjamin urutan
+const order = kantorJson.map(item => item.id)
+const offices = (await getCollection('kantor'))
+  .toSorted((a, b) => order.indexOf(a.id) - order.indexOf(b.id))
+  .map(entry => ({ id: entry.id, ...entry.data }))
 ---
 
 <div data-office-list>

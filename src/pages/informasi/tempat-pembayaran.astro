@@ -1,12 +1,20 @@
 ---
+import type { ImageMetadata } from 'astro'
+import { Image } from 'astro:assets'
 import { getCollection } from 'astro:content'
+import Icon from '../../components/Icon.astro'
 import OfficeList from '../../components/OfficeList.astro'
 import PageHead from '../../components/PageHead.astro'
-import Base from '../../layouts/Base.astro'
-import { Image } from 'astro:assets'
 import mitraJson from '../../data/mitra.json'
+import pembayaran from '../../data/pembayaran.json'
+import Base from '../../layouts/Base.astro'
+import { APP_LINKS } from '../../lib/site'
 
-// urutan mengikuti src/data/mitra.json (loader file() tidak menjamin urutan)
+// logo bank & mitra di src/assets/mitra/<id>.png; bank dan virtual account dari ERP (bun run data)
+const logos = import.meta.glob<{ default: ImageMetadata }>('../../assets/mitra/*.png', { eager: true })
+const logo = (id: string) => logos[`../../assets/mitra/${id}.png`]?.default
+
+// gerai & aplikasi: urutan mengikuti src/data/mitra.json (loader file() tidak menjamin urutan)
 const order = mitraJson.map(item => item.id)
 const mitra = (await getCollection('mitra'))
   .toSorted((a, b) => order.indexOf(a.id) - order.indexOf(b.id))
@@ -14,22 +22,38 @@ const mitra = (await getCollection('mitra'))
   .filter(partner => partner.aktif)
 ---
 
-<Base title="Tempat pembayaran" description="Mitra pembayaran dan unit pelayanan resmi untuk membayar rekening air Perumda Tirta Patriot Kota Bekasi.">
+<Base title="Tempat pembayaran" description="Bank, mitra, virtual account, dan loket kantor untuk membayar rekening air Perumda Tirta Patriot Kota Bekasi.">
   <PageHead
     title="Tempat pembayaran"
-    lead="Bayar rekening air di mitra resmi kami, atau datang langsung ke unit pelayanan terdekat."
+    lead="Rekening air dapat dibayar melalui bank, gerai, dan aplikasi mitra kami, atau langsung di loket kantor Tirta Patriot."
     crumbs={[{ title: 'Beranda', href: '/' }, { title: 'Informasi' }]}
   />
 
-  <div class="wrap mt-10">
+  <div class="wrap mt-10 grid gap-16">
+    <section aria-labelledby="bank-judul">
+      <h2 id="bank-judul" class="text-2xl font-extrabold">Bank dan mitra resmi</h2>
+      <p class="mt-1 text-redup">Gunakan nomor pelanggan Anda di teller, ATM, mobile banking, atau loket mitra berikut.</p>
+      <ul class="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+        {pembayaran.bank.map(bank => {
+          const src = logo(bank.id)
+          return (
+            <li class="grid aspect-[3/2] place-items-center rounded-lg border border-garis bg-white p-4">
+              {src ? <Image src={src} alt={bank.nama} height={144} class="h-16 w-full object-contain sm:h-18" /> : <span class="font-bold">{bank.nama}</span>}
+            </li>
+          )
+        })}
+      </ul>
+    </section>
+
     {mitra.length > 0 && (
       <section aria-labelledby="mitra-judul">
-        <h2 id="mitra-judul" class="text-2xl font-extrabold">Mitra pembayaran</h2>
-        <ul class="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+        <h2 id="mitra-judul" class="text-2xl font-extrabold">Juga tersedia di</h2>
+        <p class="mt-1 text-redup">Gerai dan aplikasi yang melayani pembayaran rekening air Tirta Patriot.</p>
+        <ul class="mt-6 grid grid-cols-3 gap-3 sm:grid-cols-4 lg:grid-cols-5">
           {mitra.map(partner => (
             <li>
-              <a href={partner.url} rel="noopener" target="_blank" class="grid aspect-[3/2] place-items-center rounded-lg border border-garis bg-white p-4 hover:border-patriot">
-                <Image src={partner.logo} alt={partner.nama} width={240} class="h-14 w-full object-contain" />
+              <a href={partner.url} rel="noopener" target="_blank" class="grid aspect-[3/2] place-items-center rounded-lg border border-garis bg-white p-3 transition-colors hover:border-patriot">
+                <Image src={partner.logo} alt={partner.nama} height={112} class="h-12 w-full object-contain sm:h-14" />
               </a>
             </li>
           ))}
@@ -37,9 +61,32 @@ const mitra = (await getCollection('mitra'))
       </section>
     )}
 
-    <section class="mt-14 border-t border-garis pt-10" aria-labelledby="unit-judul">
-      <h2 id="unit-judul" class="mb-2 text-2xl font-extrabold">Unit pelayanan</h2>
-      <p class="mb-6 text-redup">Pembayaran langsung dilayani pada jam operasional.</p>
+    <section class="grid gap-8 rounded-2xl bg-air p-6 sm:p-8 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:items-center" aria-labelledby="va-judul">
+      <div>
+        <h2 id="va-judul" class="text-2xl font-extrabold">Virtual account di aplikasi</h2>
+        <p class="mt-2">Buat kode pembayaran di aplikasi Tirta Patriot Mobile, lalu bayar melalui bank pilihan Anda.</p>
+        <div class="mt-5 flex flex-wrap gap-2">
+          <a class="btn btn-primary" href={APP_LINKS.play} rel="noopener" target="_blank"><Icon name="mdi:google-play" size={20} /> Google Play</a>
+          {APP_LINKS.appStore && <a class="btn btn-quiet bg-white" href={APP_LINKS.appStore} rel="noopener" target="_blank"><Icon name="mdi:apple" size={20} /> App Store</a>}
+        </div>
+      </div>
+      <ul class="grid grid-cols-2 gap-2 sm:grid-cols-4">
+        {pembayaran.virtualAccount.map(bank => {
+          const src = logo(bank.id)
+          return (
+            <li class="grid aspect-[2/1] place-items-center rounded-lg bg-white p-3">
+              {src ? <Image src={src} alt={bank.nama} height={80} class="h-9 w-full object-contain" /> : <span class="text-sm font-bold">{bank.nama}</span>}
+            </li>
+          )
+        })}
+      </ul>
+    </section>
+
+    <section aria-labelledby="unit-judul">
+      <h2 id="unit-judul" class="text-2xl font-extrabold">Loket kantor Tirta Patriot</h2>
+      <p class="mt-1 mb-6 text-redup">
+        Setiap kantor pelayanan menerima pembayaran {pembayaran.loket.map(item => (item === item.toUpperCase() ? item : item.toLowerCase())).join(', ').replace(/, ([^,]+)$/, ', dan $1')} pada jam operasional.
+      </p>
       <OfficeList searchable />
     </section>
   </div>

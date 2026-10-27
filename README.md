@@ -52,6 +52,7 @@ Situs tidak lagi bergantung pada CMS Directus (cms.tirtapatriot.net).
 | Sejarah, visi-misi, dokumen legal | `src/content/halaman/`, `src/content/legal/` | ubah Markdown lalu commit |
 | Navigasi, mitra pembayaran, direksi | `src/data/*.json` | ubah JSON lalu commit |
 | Tarif, kantor pelayanan, kinerja layanan | snapshot dari ERP (MSSQL) di `src/data/{tarif,kantor,kinerja}.json` | `bun run data` dari jaringan internal, lalu commit |
+| Tempat pembayaran: bank/mitra resmi dan virtual account | snapshot dari ERP (`billing.billing_loket` dengan transaksi 60 hari terakhir, `info_pelanggan.channel`) di `src/data/pembayaran.json`; logo di `src/assets/mitra/<id>.png` | `bun run data`; gerai & aplikasi lain di `src/data/mitra.json` diubah manual |
 | Batas kecamatan & zona layanan | snapshot dari PostGIS (`jaringan.bataskecamatan`, `jaringan.bataslayanan`), disederhanakan, di `src/data/geo/` | jarang berubah; ekspor ulang bila batas diperbarui |
 | Gangguan layanan | API Informasi Pelanggan (`GET /news`, sama dengan aplikasi Tirta Patriot Mobile) | otomatis: dimuat saat build **dan** langsung di browser |
 | Cek tagihan & pengaduan | API layanan pelanggan `https://open.tirtapatriot.net/web` | – |

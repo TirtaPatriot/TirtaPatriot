@@ -4,10 +4,13 @@ import { Image } from 'astro:assets'
 import sotk from '../../assets/halaman/sotk.jpg'
 import Icon from '../../components/Icon.astro'
 import PageHead from '../../components/PageHead.astro'
+import direksiJson from '../../data/direksi.json'
 import Base from '../../layouts/Base.astro'
 import { titleCase } from '../../lib/format'
 
-const direksi = (await getCollection('direksi')).map(entry => entry.data)
+// urutan mengikuti src/data/direksi.json (Direktur Utama lebih dulu); loader file() tidak menjamin urutan
+const order = direksiJson.map(item => item.id)
+const direksi = (await getCollection('direksi')).toSorted((a, b) => order.indexOf(a.id) - order.indexOf(b.id)).map(entry => entry.data)
 ---
 
 <Base title="Manajemen" description="Jajaran direksi serta susunan organisasi dan tata kerja Perumda Tirta Patriot Kota Bekasi.">

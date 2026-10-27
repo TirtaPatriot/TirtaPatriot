@@ -4,12 +4,14 @@ import Icon from '../../components/Icon.astro'
 import PageHead from '../../components/PageHead.astro'
 import PipaMap from '../../components/PipaMap.astro'
 import ServiceMap from '../../components/ServiceMap.astro'
+import kantorJson from '../../data/kantor.json'
 import kinerja from '../../data/kinerja.json'
 import Base from '../../layouts/Base.astro'
 import { titleCase } from '../../lib/format'
 import { angka } from '../../lib/viz'
 
-const kantor = (await getCollection('kantor')).map(entry => entry.data)
+const order = kantorJson.map(item => item.id)
+const kantor = (await getCollection('kantor')).toSorted((a, b) => order.indexOf(a.id) - order.indexOf(b.id)).map(entry => entry.data)
 const ZONA = ['Kantor pusat', 'Zona 1', 'Zona 2', 'Zona 3', 'Zona 4']
 const grouped = [null, 1, 2, 3, 4].map(zona => ({ zona, items: kantor.filter(item => item.zona === zona) }))
 ---

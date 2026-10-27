@@ -2,7 +2,7 @@
  * Perbarui snapshot data operasional situs dari database ERP (MSSQL), hanya agregat:
  *   MSSQL_SERVER=... MSSQL_USER=... MSSQL_PASSWORD=... bun scripts/export-data.ts
  *
- * Menulis src/data/tarif.json, src/data/kantor.json, dan src/data/kinerja.json. Jalankan dari jaringan
+ * Menulis src/data/tarif.json, kantor.json, kinerja.json, dan pembayaran.json. Jalankan dari jaringan
  * internal dengan akun baca-saja (mis. mcp_readonly_user), lalu commit hasilnya; build situs berikutnya
  * memakai data baru. Query di bawah sama dengan yang dipakai saat data pertama kali diambil.
  * Tidak ada data pelanggan perorangan yang dibaca ke luar database.
@@ -174,6 +174,63 @@ await write('kinerja', {
     catatan: 'termasuk pemindahan data pelanggan.',
     bulanan: aktivasi.map(row => ({ bulan: row.bulan, jumlah: Number(row.jumlah) })),
   },
+})
+
+// tempat pembayaran: kanal bank/mitra host-to-host yang menerima pembayaran dalam 60 hari terakhir
+// (billing.billing_loket, urut menurut jumlah transaksi) dan virtual account aktif di aplikasi Tirta Patriot Mobile
+// (info_pelanggan.channel). Nama di ERP berupa kode, jadi dipetakan ke nama dan logo di src/assets/mitra/.
+const KANAL: Record<string, { id: string, nama: string }> = {
+  'btn01': { id: 'bank-btn', nama: 'Bank BTN' },
+  'bjbs': { id: 'bank-bjb-syariah', nama: 'Bank BJB Syariah' },
+  'BJB3 (Aurora)': { id: 'bank-bjb', nama: 'Bank BJB' },
+  'BKBJB': { id: 'bank-bjb', nama: 'Bank BJB' },
+  'BKMDR': { id: 'bank-mandiri', nama: 'Bank Mandiri' },
+  'PTPOS': { id: 'pos-indonesia', nama: 'Pos Indonesia' },
+}
+const VA: Record<string, { id: string, nama: string }> = {
+  BJB: { id: 'bank-bjb', nama: 'Bank BJB' },
+  BNC: { id: 'bank-bnc', nama: 'Bank Neo Commerce' },
+  BNI: { id: 'bank-bni', nama: 'BNI' },
+  BRI: { id: 'bank-bri', nama: 'BRI' },
+  BSI: { id: 'bank-bsi', nama: 'Bank Syariah Indonesia' },
+  BTN: { id: 'bank-btn', nama: 'Bank BTN' },
+  MANDIRI: { id: 'bank-mandiri', nama: 'Bank Mandiri' },
+  PERMATA: { id: 'bank-permata', nama: 'Permata Bank' },
+}
+const kanal = await rows<{ nama: string, transaksi: number }>(`
+  SELECT RTRIM(bl.nama) nama, COUNT(*) transaksi
+  FROM billing.billing b JOIN billing.billing_loket bl ON bl.id = b.id_loket
+  WHERE b.type_pembayaran = 1 AND bl.aktif = 1 AND b.tanggal_bayar >= DATEADD(day, -60, GETDATE())
+  GROUP BY RTRIM(bl.nama)`)
+const va = await rows<{ name: string }>(`SELECT name FROM info_pelanggan.channel WHERE is_active = '1' AND type = 'VA'`)
+
+const bank = new Map<string, { id: string, nama: string, transaksi: number }>()
+for (const row of kanal) {
+  const known = KANAL[row.nama]
+  if (!known) {
+    console.warn('kanal pembayaran belum dipetakan:', row.nama)
+    continue
+  }
+  const entry = bank.get(known.id) ?? { ...known, transaksi: 0 }
+  entry.transaksi += Number(row.transaksi)
+  bank.set(known.id, entry)
+}
+const vaBank = new Map<string, { id: string, nama: string }>()
+for (const row of va) {
+  const known = VA[row.name.split(/\s+/)[0]!.toUpperCase()]
+  if (known) {
+    vaBank.set(known.id, known)
+  } else {
+    console.warn('virtual account belum dipetakan:', row.name)
+  }
+}
+
+await write('pembayaran', {
+  diambil,
+  sumber: 'erp.billing (billing, billing_loket), erp.info_pelanggan.channel',
+  bank: [...bank.values()].toSorted((a, b) => b.transaksi - a.transaksi).map(({ id, nama }) => ({ id, nama })),
+  virtualAccount: [...vaBank.values()].toSorted((a, b) => a.nama.localeCompare(b.nama, 'id')),
+  loket: ['Tunai', 'QRIS', 'Kartu debit'],
 })
 
 await pool.close()

@@ -1,12 +1,5 @@
 [
   {
-    "id": "pos-indonesia",
-    "nama": "Pos Indonesia",
-    "url": "https://posindonesia.co.id",
-    "aktif": true,
-    "logo": "../assets/mitra/pos-indonesia.png"
-  },
-  {
     "id": "shopee",
     "nama": "Shopee",
     "url": "https://shopee.co.id",
@@ -49,13 +42,6 @@
     "logo": "../assets/mitra/masago.png"
   },
   {
-    "id": "bank-mandiri",
-    "nama": "Bank Mandiri",
-    "url": "https://bankmandiri.co.id",
-    "aktif": true,
-    "logo": "../assets/mitra/bank-mandiri.png"
-  },
-  {
     "id": "onpays",
     "nama": "Onpays",
     "url": "https://onpays.id",
@@ -75,13 +61,6 @@
     "url": "https://gojek.co.id",
     "aktif": true,
     "logo": "../assets/mitra/gojek.png"
-  },
-  {
-    "id": "bank-bjb",
-    "nama": "Bank BJB",
-    "url": "https://bankbjb.co.id",
-    "aktif": true,
-    "logo": "../assets/mitra/bank-bjb.png"
   },
   {
     "id": "linkaja",
