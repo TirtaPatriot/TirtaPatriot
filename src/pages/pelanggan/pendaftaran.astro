@@ -233,7 +233,7 @@ const persyaratan = [
 
         <div data-done hidden tabindex="-1" class="mt-8 rounded-lg bg-lunas-soft p-6">
           <h3 class="text-xl font-bold text-lunas">Permohonan Anda telah kami terima</h3>
-          <p class="mt-2">Terima kasih. Petugas kami akan menghubungi Anda untuk verifikasi berkas dan jadwal survei lokasi.</p>
+          <p class="mt-2">Terima kasih. Petugas kami akan menghubungi Anda untuk verifikasi berkas dan jadwal survei lokasi. Simpan nomor pengajuan berikut; setelah verifikasi, Anda akan menerima nomor registrasi untuk mengecek status permohonan.</p>
           <div class="mt-4 grid justify-items-start gap-1" data-done-number></div>
           <a class="btn btn-quiet mt-6" href="/">Ke beranda</a>
         </div>
@@ -245,8 +245,8 @@ const persyaratan = [
           <form action="/pelanggan/pendaftaran" method="get" class="mt-4 grid gap-3">
             <div class="field">
               <label for="status-nomor">Nomor registrasi</label>
-              <input id="status-nomor" name="nomor" class="input num" inputmode="numeric" required autocomplete="off" aria-describedby="status-nomor-hint">
-              <p id="status-nomor-hint" class="hint">Diberikan petugas setelah permohonan diverifikasi.</p>
+              <input id="status-nomor" name="nomor" class="input num" required autocomplete="off" aria-describedby="status-nomor-hint">
+              <p id="status-nomor-hint" class="hint">Nomor 10 digit yang diberikan setelah permohonan diverifikasi.</p>
             </div>
             <button class="btn btn-primary justify-self-start" type="submit">Lihat status</button>
           </form>
