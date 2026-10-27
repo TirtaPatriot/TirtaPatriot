@@ -1,6 +1,6 @@
 /** Cek tagihan: kirim nomor pelanggan ke API lalu tampilkan rincian tagihan. */
 import { api, ApiError, recaptchaToken, warmRecaptcha } from './api'
-import { el, setBusy, showError } from './dom'
+import { el, masked, setBusy, showError } from './dom'
 
 type Pelanggan = {
   nomor?: string
@@ -36,10 +36,10 @@ const isAir = (item: ItemTagihan) => !item.kategori || item.kategori === 'AIR'
 const show = (value: unknown) => (value === undefined || value === null || value === '' ? '–' : String(value))
 
 function customerBlock (pelanggan: Pelanggan = {}): HTMLElement {
-  const alamat = [pelanggan.alamat, pelanggan.kelurahan, pelanggan.kecamatan].filter(Boolean).join(', ') || '–'
+  const alamat = masked([pelanggan.alamat, pelanggan.kelurahan, pelanggan.kecamatan].filter(Boolean).join(', ')) || '–'
   const rows: [string, string][] = [
     ['Nomor pelanggan', show(pelanggan.nomor)],
-    ['Nama', show(pelanggan.nama)],
+    ['Nama', masked(show(pelanggan.nama))],
     ['Alamat', alamat],
   ]
 

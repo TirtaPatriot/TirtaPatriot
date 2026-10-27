@@ -1,25 +1,25 @@
 /**
- * Pengajuan perubahan data pelanggan (API Info Pelanggan, akun wajib):
- *  - GET  /references/submission-type-forms                         → jenis pengajuan dan isiannya
- *  - GET  /submission/generate-number?type=&customer_number=         → periode, biaya, tunggakan (isian baca-saja)
- *  - POST /submission/insert { customer_number, submission_id, description, forms: [{ code, value }], attachment: [] }
- *  - GET  /submission/list                                           → riwayat pengajuan akun
+ * Pengajuan perubahan data pelanggan lewat API Open (token layanan dari langkah verifikasi):
+ *  - GET  /pengajuan/jenis              → jenis pengajuan dan isiannya
+ *  - GET  /pengajuan/siapkan?jenis=     → periode realisasi, biaya, tunggakan (isian baca-saja)
+ *  - POST /pengajuan { jenis, isian: { alamat_baru?, nama_baru?, keterangan? }, deskripsi, lampiran: [data URL] }
+ *  - GET  /pengajuan                    → riwayat pengajuan nomor pelanggan
  */
 import { rupiah } from '../lib/tarif'
-import { apiMessage, ip, requireSession } from './akun'
-import { mountCustomerPicker, renderAccountBar } from './akun-ui'
+import { api } from './api'
 import { el, setBusy, showError } from './dom'
+import { blobToDataUrl, getSesi, layanan, mountVerifikasi, pesanGalat, SesiBerakhir } from './layanan'
 import { bringIntoView, enter } from './motion'
 import { ticketDisplay } from './pengaduan'
 import { bindUploads } from './unggah'
 import { createWizard } from './wizard'
 
-const TITLES = ['Pelanggan', 'Jenis pengajuan', 'Lampiran']
+const TITLES = ['Verifikasi', 'Jenis pengajuan', 'Lampiran']
 
 type Field = { code: string, label: string, type: 'periode' | 'currency' | 'text' | string, is_readonly: string }
-type Jenis = { id: string, code: string, label: string, forms: Field[] }
-type Prefill = Record<string, string | number | null> & { customer_name?: string }
-type Riwayat = { id: number, customer_number: string, type: string, number: string, status: string, status_reason: string, description: string }
+type Jenis = { id: string, label: string, isian: Field[] }
+type Prefill = Record<string, string | number | null>
+type Riwayat = { nomor: string, tanggal: string, jenis: string | null, status: string, alasan: string | null }
 
 const BULAN = new Intl.DateTimeFormat('id-ID', { month: 'long', year: 'numeric' })
 const periode = (value: unknown) => {
@@ -30,29 +30,32 @@ const periode = (value: unknown) => {
 const tidy = (label: string) => label.charAt(0) + label.slice(1).toLowerCase().replace(/\bpemertintah\b/, 'pemerintah')
 
 export async function initUbahData (): Promise<void> {
-  const session = requireSession()
   const form = document.querySelector<HTMLFormElement>('[data-ubah-form]')
-  if (!session || !form) {
+  if (!form) {
     return
   }
-  renderAccountBar(session)
-  void loadHistory()
+  // riwayat dimuat sekali per nomor pelanggan yang terverifikasi
+  let riwayatNomor = getSesi()?.nomor ?? ''
+  if (riwayatNomor) {
+    void loadHistory()
+  }
 
   const error = form.querySelector<HTMLElement>(':scope > [data-error]')
   const next = form.querySelector<HTMLButtonElement>('[data-next]')
   const typesBox = form.querySelector<HTMLElement>('[data-types]')!
   const fieldsBox = form.querySelector<HTMLElement>('[data-fields]')!
   const files = new Map<string, string>()
-  bindUploads(form.querySelector<HTMLElement>('[data-attachments]')!, files)
+  // lampiran disimpan di browser dan dikirim bersama pengajuan
+  bindUploads(form.querySelector<HTMLElement>('[data-attachments]')!, files, blobToDataUrl)
 
   const state = { customer: '', jenis: null as Jenis | null, prefill: null as Prefill | null, prefillFor: '' }
   const wizard = createWizard(form, TITLES, { lastLabel: 'Kirim pengajuan' })
-  const selected = await mountCustomerPicker(form.querySelector<HTMLElement>('[data-picker]')!, 'nopel-ubah')
+  const verifikasi = mountVerifikasi(form.querySelector<HTMLElement>('[data-verifikasi]')!)
 
   // jenis pengajuan
   let jenisList: Jenis[] = []
   try {
-    jenisList = await ip<Jenis[]>('/references/submission-type-forms')
+    jenisList = await api<Jenis[]>('/pengajuan/jenis')
     typesBox.replaceChildren(...jenisList.map(jenis => {
       const radio = el('input', 'mt-1 size-4 shrink-0 accent-patriot')
       radio.type = 'radio'
@@ -78,12 +81,12 @@ export async function initUbahData (): Promise<void> {
     const key = `${jenis.id}:${state.customer}`
     try {
       if (state.prefillFor !== key) {
-        state.prefill = await ip<Prefill>(`/submission/generate-number?type=${encodeURIComponent(jenis.id)}&customer_number=${encodeURIComponent(state.customer)}`, { auth: true })
+        state.prefill = await layanan<Prefill>(`/pengajuan/siapkan?jenis=${encodeURIComponent(jenis.id)}`)
         state.prefillFor = key
       }
     } catch (caught) {
       state.prefill = null
-      fieldsBox.replaceChildren(el('p', 'notice notice-error', apiMessage(caught, 'Data pengajuan belum dapat disiapkan. Silakan coba lagi.')))
+      fieldsBox.replaceChildren(el('p', 'notice notice-error', pesanGalat(caught, 'Data pengajuan belum dapat disiapkan. Silakan coba lagi.')))
       return
     }
     if (state.jenis !== jenis) {
@@ -95,7 +98,7 @@ export async function initUbahData (): Promise<void> {
   function renderFields (jenis: Jenis, prefill: Prefill): void {
     const readonly: HTMLElement[] = []
     const inputs: HTMLElement[] = []
-    for (const field of jenis.forms) {
+    for (const field of jenis.isian) {
       const known = prefill[field.code]
       if (field.type === 'periode' || field.type === 'currency') {
         const shown = field.type === 'periode' ? periode(known) : rupiah(Number(known ?? 0))
@@ -119,7 +122,7 @@ export async function initUbahData (): Promise<void> {
     )
   }
 
-  const formValues = () => (state.jenis?.forms ?? [])
+  const formValues = () => (state.jenis?.isian ?? [])
     .filter(field => field.type !== 'periode' && field.type !== 'currency')
     .map(field => ({ code: field.code, label: tidy(field.label), value: (form!.elements.namedItem(`f-${field.code}`) as HTMLInputElement | null)?.value.trim() ?? '' }))
 
@@ -143,27 +146,17 @@ export async function initUbahData (): Promise<void> {
     if (form!.querySelector('[data-upload][data-state="busy"]')) {
       throw new Error('Tunggu hingga semua lampiran selesai diunggah.')
     }
-    const prefill = state.prefill ?? {}
-    const forms = [
-      ...state.jenis!.forms.filter(field => field.type === 'periode' || field.type === 'currency').map(field => ({ code: field.code, value: prefill[field.code] ?? null })),
-      ...formValues().map(({ code, value }) => ({ code, value })),
-    ]
-    if (prefill.nomor_berita_acara) {
-      forms.push({ code: 'nomor_berita_acara', value: prefill.nomor_berita_acara })
-    }
-    const result = await ip<{ message?: string }>('/submission/insert', {
+    const isian = Object.fromEntries(formValues().map(({ code, value }) => [code, value]))
+    const result = await layanan<{ nomor?: string }>('/pengajuan', {
       method: 'POST',
-      auth: true,
       body: {
-        customer_number: state.customer,
-        submission_id: state.jenis!.id,
-        description: (form!.elements.namedItem('deskripsi') as HTMLTextAreaElement).value.trim(),
-        forms,
-        attachment: [...files.values()],
+        jenis: state.jenis!.id,
+        isian,
+        deskripsi: (form!.elements.namedItem('deskripsi') as HTMLTextAreaElement).value.trim(),
+        lampiran: [...files.values()],
       },
     })
-    // pesan berhasil: "Pengajuan berhasil terkirim (NOMOR)"
-    return /\(([^)]+)\)\s*$/.exec(result?.message ?? '')?.[1] ?? ''
+    return result?.nomor ?? ''
   }
 
   form.addEventListener('submit', async event => {
@@ -175,11 +168,15 @@ export async function initUbahData (): Promise<void> {
     setBusy(next, true, wizard.step === TITLES.length - 1 ? 'Mengirim…' : 'Memeriksa…')
     try {
       if (wizard.step === 0) {
-        const customer = selected()
-        if (!customer) {
-          throw new Error('Pilih atau tambahkan nomor pelanggan terlebih dahulu.')
+        const sesi = await verifikasi.lanjut()
+        if (sesi.nomor !== state.customer) {
+          state.prefillFor = ''
         }
-        state.customer = customer
+        if (sesi.nomor !== riwayatNomor) {
+          riwayatNomor = sesi.nomor
+          void loadHistory()
+        }
+        state.customer = sesi.nomor
         if (state.jenis) {
           void loadFields()
         }
@@ -211,7 +208,11 @@ export async function initUbahData (): Promise<void> {
         void loadHistory()
       }
     } catch (caught) {
-      showError(error, caught instanceof Error && !('status' in caught) ? caught.message : apiMessage(caught, 'Pengajuan belum berhasil dikirim. Silakan coba lagi dalam beberapa saat.'))
+      if (caught instanceof SesiBerakhir) {
+        verifikasi.reset()
+        void wizard.go(0)
+      }
+      showError(error, pesanGalat(caught, 'Pengajuan belum berhasil dikirim. Silakan coba lagi dalam beberapa saat.'))
     } finally {
       setBusy(next, false)
     }
@@ -225,22 +226,24 @@ async function loadHistory (): Promise<void> {
   if (!box) {
     return
   }
+  box.replaceChildren(el('p', 'text-redup', 'Memuat…'))
   try {
-    const items = await ip<Riwayat[]>('/submission/list', { auth: true })
+    const items = await layanan<Riwayat[]>('/pengajuan')
     if (!items?.length) {
-      box.replaceChildren(el('p', 'text-redup', 'Belum ada pengajuan.'))
+      box.replaceChildren(el('p', 'text-redup', 'Belum ada pengajuan untuk nomor ini.'))
       return
     }
-    box.replaceChildren(...items.toSorted((a, b) => b.id - a.id).slice(0, 10).map(item => {
-      const ditolak = /tolak/i.test(item.status)
-      const selesai = /selesai|setuju|terima|disetujui/i.test(item.status)
+    const tanggal = new Intl.DateTimeFormat('id-ID', { dateStyle: 'medium', timeZone: 'Asia/Jakarta' })
+    box.replaceChildren(...items.map(item => {
+      const ditolak = item.status === 'Ditolak'
+      const diterima = item.status === 'Diterima'
       return el('article', 'rounded-lg border border-garis p-4',
         el('p', 'flex flex-wrap items-center justify-between gap-2',
-          el('strong', '', item.type),
-          el('span', `rounded-full px-2.5 py-0.5 text-xs font-bold ${ditolak ? 'bg-meter-soft text-meter' : selesai ? 'bg-lunas-soft text-lunas' : 'bg-awas-soft text-awas'}`, item.status || 'Diproses'),
+          el('strong', '', item.jenis ?? 'Pengajuan'),
+          el('span', `rounded-full px-2.5 py-0.5 text-xs font-bold ${ditolak ? 'bg-meter-soft text-meter' : diterima ? 'bg-lunas-soft text-lunas' : 'bg-awas-soft text-awas'}`, item.status),
         ),
-        el('p', 'num mt-1 text-sm text-redup', `${item.number} · No. pelanggan ${item.customer_number}`),
-        ditolak && item.status_reason && item.status_reason !== '-' ? el('p', 'mt-2 text-sm', `Alasan: ${item.status_reason}`) : null,
+        el('p', 'num mt-1 text-sm text-redup', `${item.nomor} · ${item.tanggal ? tanggal.format(new Date(item.tanggal)) : ''}`),
+        ditolak && item.alasan ? el('p', 'mt-2 text-sm', `Alasan: ${item.alasan}`) : null,
       )
     }))
   } catch {

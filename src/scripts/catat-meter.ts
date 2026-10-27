@@ -1,31 +1,27 @@
 /**
- * Catat meter mandiri (API Info Pelanggan, akun wajib):
- *  - GET  /self-meter-report/validation?customer_number=  → { history: { first_meter } } atau 400 dengan alasan
- *  - POST /files/upload (tamu)                             → nama berkas foto meter dan foto rumah
- *  - POST /self-meter-report/insert { customer_number, last_meter, latitude, longitude, description, file_meter_photo, file_house_photo }
- * Foto hanya dari kamera langsung (kamera.ts), lokasi GPS wajib.
+ * Catat meter mandiri lewat API Open (token layanan dari langkah verifikasi):
+ *  - GET  /catat-meter  → { boleh, pesan, periode, stand_awal }
+ *  - POST /catat-meter  { stand, latitude, longitude, keterangan, foto_meter, foto_rumah (data URL) }
+ * Foto hanya dari kamera langsung (kamera.ts), lokasi GPS wajib. Aturan jadwal dan stand diperiksa ulang di server.
  */
 import { angka } from '../lib/viz'
-import { apiMessage, ip, requireSession, uploadFile } from './akun'
-import { mountCustomerPicker, renderAccountBar } from './akun-ui'
 import { setBusy, showError } from './dom'
 import { cameraSupported, currentPosition, takePhoto, type Capture } from './kamera'
+import { blobToDataUrl, layanan, mountVerifikasi, pesanGalat, SesiBerakhir } from './layanan'
 import { bringIntoView, enter } from './motion'
 import { createWizard } from './wizard'
 
-const TITLES = ['Pelanggan', 'Foto meter', 'Rumah dan lokasi']
+const TITLES = ['Verifikasi', 'Foto meter', 'Rumah dan lokasi']
 /** pemakaian di atas angka ini diminta dipastikan ulang (kemungkinan salah ketik) */
 const WAJAR = 150
 
-type Validasi = { history?: { first_meter?: number | string | null } }
+type Kelayakan = { boleh: boolean, pesan: string, periode: number, stand_awal: number }
 
-export async function initCatatMeter (): Promise<void> {
-  const session = requireSession()
+export function initCatatMeter (): void {
   const form = document.querySelector<HTMLFormElement>('[data-catat-form]')
-  if (!session || !form) {
+  if (!form) {
     return
   }
-  renderAccountBar(session)
 
   const error = form.querySelector<HTMLElement>(':scope > [data-error]')
   const next = form.querySelector<HTMLButtonElement>('[data-next]')
@@ -43,10 +39,10 @@ export async function initCatatMeter (): Promise<void> {
   }
 
   const wizard = createWizard(form, TITLES, { lastLabel: 'Kirim laporan' })
-  const selected = await mountCustomerPicker(form.querySelector<HTMLElement>('[data-picker]')!, 'nopel-catat')
+  const verifikasi = mountVerifikasi(form.querySelector<HTMLElement>('[data-verifikasi]')!)
 
   if (!cameraSupported()) {
-    showError(error, 'Browser ini tidak dapat membuka kamera. Gunakan Chrome atau Safari terbaru di ponsel, atau aplikasi Tirta Patriot Mobile.')
+    showError(error, 'Browser ini tidak dapat membuka kamera. Gunakan Chrome atau Safari terbaru di ponsel.')
   }
 
   // pemakaian dihitung saat angka diketik
@@ -99,12 +95,12 @@ export async function initCatatMeter (): Promise<void> {
   form.querySelector<HTMLButtonElement>('[data-locate]')!.addEventListener('click', () => void locate())
 
   async function validateCustomer (): Promise<void> {
-    const customer = selected()
-    if (!customer) {
-      throw new Error('Pilih atau tambahkan nomor pelanggan terlebih dahulu.')
+    const sesi = await verifikasi.lanjut()
+    const cek = await layanan<Kelayakan>('/catat-meter')
+    if (!cek.boleh) {
+      throw new Error(cek.pesan)
     }
-    const result = await ip<Validasi>(`/self-meter-report/validation?customer_number=${encodeURIComponent(customer)}`, { auth: true })
-    if (customer !== state.customer) {
+    if (sesi.nomor !== state.customer) {
       // foto lama memuat cap nomor pelanggan sebelumnya
       for (const capture of Object.values(state.photos)) {
         if (capture) {
@@ -117,8 +113,8 @@ export async function initCatatMeter (): Promise<void> {
         box.querySelector('[data-shot-label]')!.textContent = 'Buka kamera'
       }
     }
-    state.customer = customer
-    state.firstMeter = Number(result?.history?.first_meter ?? 0) || 0
+    state.customer = sesi.nomor
+    state.firstMeter = Number(cek.stand_awal) || 0
     firstMeterOut.textContent = `${angka(state.firstMeter)} m³`
     updateUsage()
   }
@@ -153,18 +149,16 @@ export async function initCatatMeter (): Promise<void> {
         throw new Error('Lokasi diperlukan untuk laporan ini. Izinkan akses lokasi, lalu tekan Ambil lokasi.')
       }
     }
-    const [meterFile, houseFile] = await Promise.all([uploadFile(state.photos.meter!.blob), uploadFile(state.photos.rumah.blob)])
-    await ip('/self-meter-report/insert', {
+    const [fotoMeter, fotoRumah] = await Promise.all([blobToDataUrl(state.photos.meter!.blob), blobToDataUrl(state.photos.rumah.blob)])
+    await layanan('/catat-meter', {
       method: 'POST',
-      auth: true,
       body: {
-        customer_number: state.customer,
-        last_meter: standInput.value,
-        latitude: String(state.position!.coords.latitude),
-        longitude: String(state.position!.coords.longitude),
-        description: (form!.elements.namedItem('keterangan') as HTMLTextAreaElement).value.trim(),
-        file_meter_photo: meterFile,
-        file_house_photo: houseFile,
+        stand: Number(standInput.value),
+        latitude: state.position!.coords.latitude,
+        longitude: state.position!.coords.longitude,
+        keterangan: (form!.elements.namedItem('keterangan') as HTMLTextAreaElement).value.trim(),
+        foto_meter: fotoMeter,
+        foto_rumah: fotoRumah,
       },
     })
   }
@@ -197,7 +191,11 @@ export async function initCatatMeter (): Promise<void> {
         bringIntoView(done)
       }
     } catch (caught) {
-      showError(error, caught instanceof Error && !('status' in caught) ? caught.message : apiMessage(caught, 'Laporan belum berhasil dikirim. Silakan coba lagi dalam beberapa saat.'))
+      if (caught instanceof SesiBerakhir) {
+        verifikasi.reset()
+        void wizard.go(0)
+      }
+      showError(error, pesanGalat(caught, 'Laporan belum berhasil dikirim. Silakan coba lagi dalam beberapa saat.'))
     } finally {
       setBusy(next, false)
     }

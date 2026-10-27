@@ -63,15 +63,15 @@ type ApiInit = {
   body?: Record<string, unknown> | Blob
   /** alamat API lain, mis. Info Pelanggan; bawaan API layanan pelanggan */
   base?: string
-  /** JWT akun Tirta Patriot Mobile; API Info Pelanggan membacanya dari header `token` */
-  token?: string
+  /** token layanan mandiri API Open, dikirim sebagai `Authorization: Bearer` */
+  bearer?: string
 }
 
 export async function api<T> (path: string, init: ApiInit = {}): Promise<T> {
   const { body } = init
   const headers: Record<string, string> = { Accept: 'application/json' }
-  if (init.token) {
-    headers.token = init.token
+  if (init.bearer) {
+    headers.Authorization = `Bearer ${init.bearer}`
   }
   if (body) {
     headers['Content-Type'] = body instanceof Blob ? body.type || 'application/octet-stream' : 'application/json'

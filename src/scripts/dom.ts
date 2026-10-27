@@ -19,6 +19,11 @@ export function el<K extends keyof HTMLElementTagNameMap> (
   return node
 }
 
+/** Nama tersamar dari API memakai bintang lebar (＊) yang tidak ada di font situs; tampilkan sebagai titik. */
+export function masked (text: string): string {
+  return text.replace(/[＊*]/g, '•')
+}
+
 /** Tampilkan atau sembunyikan kotak pesan galat di dalam formulir. */
 export function showError (box: HTMLElement | null, message: string): void {
   if (!box) {

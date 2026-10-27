@@ -9,7 +9,7 @@
  */
 import { dateLong } from '../lib/format'
 import { api, ApiError, recaptchaToken, warmRecaptcha } from './api'
-import { el, setBusy, showError } from './dom'
+import { el, masked, setBusy, showError } from './dom'
 import { bringIntoView, enter, swapPanels } from './motion'
 
 const STEP_TITLES = ['Nomor pelanggan', 'Verifikasi nama', 'Data pelapor', 'Kendala']
@@ -144,7 +144,7 @@ export function initPengaduan (): void {
       method: 'POST',
       body: { 'nomor': nomor, 'g-recaptcha-response': await recaptchaToken('aduan') },
     })
-    state.masked = result?.nama ?? ''
+    state.masked = masked(result?.nama ?? '')
     state.maskedFor = nomor
 
     const echoNomor = form!.querySelector('[data-echo-nomor]')

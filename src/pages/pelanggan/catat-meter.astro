@@ -3,13 +3,14 @@ import ErrorBox from '../../components/ErrorBox.astro'
 import HelpPanel from '../../components/HelpPanel.astro'
 import Icon from '../../components/Icon.astro'
 import PageHead from '../../components/PageHead.astro'
+import VerifikasiPelanggan from '../../components/VerifikasiPelanggan.astro'
 import Base from '../../layouts/Base.astro'
-import { INFO_PELANGGAN_API } from '../../lib/info-pelanggan'
+import { API_URL } from '../../scripts/api'
 
-const steps = ['Pelanggan', 'Foto meter', 'Rumah dan lokasi']
+const steps = ['Verifikasi', 'Foto meter', 'Rumah dan lokasi']
 ---
 
-<Base preconnect={[INFO_PELANGGAN_API]} title="Catat meter mandiri" description="Laporkan angka meter air Anda sendiri dengan foto langsung dari kamera, untuk rekening Perumda Tirta Patriot Kota Bekasi.">
+<Base preconnect={[API_URL]} title="Catat meter mandiri" description="Laporkan angka meter air Anda sendiri dengan foto langsung dari kamera, untuk rekening Perumda Tirta Patriot Kota Bekasi.">
   <PageHead
     title="Catat meter mandiri"
     lead="Laporkan angka meter air Anda sendiri. Foto diambil langsung dari kamera di lokasi meter."
@@ -17,8 +18,6 @@ const steps = ['Pelanggan', 'Foto meter', 'Rumah dan lokasi']
   />
 
   <div class="wrap mt-8">
-    <div class="mb-8 flex flex-wrap items-center justify-between gap-3 border-b border-garis pb-4" data-account hidden></div>
-
     <div class="grid gap-14 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
       <section aria-labelledby="catat-judul">
         <h2 id="catat-judul" class="sr-only">Formulir catat meter</h2>
@@ -29,13 +28,10 @@ const steps = ['Pelanggan', 'Foto meter', 'Rumah dan lokasi']
             </li>
           ))}
         </ol>
-        <p class="sr-only" aria-live="polite" data-step-announce>Langkah 1 dari 3: Pelanggan</p>
+        <p class="sr-only" aria-live="polite" data-step-announce>Langkah 1 dari 3: Verifikasi</p>
 
         <form class="mt-8 grid gap-6" novalidate data-catat-form>
-          <fieldset data-step="0" class="grid gap-4">
-            <legend class="mb-2 text-xl font-bold">Pilih nomor pelanggan</legend>
-            <div data-picker><p class="text-redup">Memuat…</p></div>
-          </fieldset>
+          <VerifikasiPelanggan id="catat" />
 
           <fieldset data-step="1" class="grid gap-5" hidden>
             <legend class="mb-2 text-xl font-bold">Foto angka meter</legend>

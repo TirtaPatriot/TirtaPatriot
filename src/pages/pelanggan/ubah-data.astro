@@ -3,13 +3,14 @@ import ErrorBox from '../../components/ErrorBox.astro'
 import HelpPanel from '../../components/HelpPanel.astro'
 import Icon from '../../components/Icon.astro'
 import PageHead from '../../components/PageHead.astro'
+import VerifikasiPelanggan from '../../components/VerifikasiPelanggan.astro'
 import Base from '../../layouts/Base.astro'
-import { INFO_PELANGGAN_API } from '../../lib/info-pelanggan'
+import { API_URL } from '../../scripts/api'
 
-const steps = ['Pelanggan', 'Jenis pengajuan', 'Lampiran']
+const steps = ['Verifikasi', 'Jenis pengajuan', 'Lampiran']
 ---
 
-<Base preconnect={[INFO_PELANGGAN_API]} title="Perubahan data pelanggan" description="Ajukan perubahan alamat, nama pelanggan, dan layanan lain secara online, lalu pantau status pengajuan Anda.">
+<Base preconnect={[API_URL]} title="Perubahan data pelanggan" description="Ajukan perubahan alamat, nama pelanggan, dan layanan lain secara online, lalu pantau status pengajuan Anda.">
   <PageHead
     title="Perubahan data pelanggan"
     lead="Ajukan perubahan alamat, nama pelanggan, dan layanan lain tanpa datang ke kantor."
@@ -17,8 +18,6 @@ const steps = ['Pelanggan', 'Jenis pengajuan', 'Lampiran']
   />
 
   <div class="wrap mt-8">
-    <div class="mb-8 flex flex-wrap items-center justify-between gap-3 border-b border-garis pb-4" data-account hidden></div>
-
     <div class="grid gap-14 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
       <section aria-labelledby="ajuan-judul">
         <h2 id="ajuan-judul" class="text-2xl font-extrabold">Pengajuan baru</h2>
@@ -29,13 +28,10 @@ const steps = ['Pelanggan', 'Jenis pengajuan', 'Lampiran']
             </li>
           ))}
         </ol>
-        <p class="sr-only" aria-live="polite" data-step-announce>Langkah 1 dari 3: Pelanggan</p>
+        <p class="sr-only" aria-live="polite" data-step-announce>Langkah 1 dari 3: Verifikasi</p>
 
         <form class="mt-8 grid gap-6" novalidate data-ubah-form>
-          <fieldset data-step="0" class="grid gap-4">
-            <legend class="mb-2 text-xl font-bold">Pilih nomor pelanggan</legend>
-            <div data-picker><p class="text-redup">Memuat…</p></div>
-          </fieldset>
+          <VerifikasiPelanggan id="ubah" />
 
           <fieldset data-step="1" class="grid gap-5" hidden>
             <legend class="mb-2 text-xl font-bold">Apa yang ingin diubah?</legend>
@@ -80,7 +76,7 @@ const steps = ['Pelanggan', 'Jenis pengajuan', 'Lampiran']
 
       <aside class="self-start" aria-labelledby="riwayat-judul">
         <h2 id="riwayat-judul" class="text-xl font-bold">Pengajuan Anda</h2>
-        <div class="mt-4 grid gap-3" data-history aria-live="polite"><p class="text-redup">Memuat…</p></div>
+        <div class="mt-4 grid gap-3" data-history aria-live="polite"><p class="text-redup">Verifikasi nomor pelanggan untuk melihat pengajuan Anda.</p></div>
       </aside>
     </div>
 

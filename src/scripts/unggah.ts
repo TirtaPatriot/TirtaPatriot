@@ -1,12 +1,22 @@
 /**
- * Kolom unggah foto ([data-upload] berisi input file): foto diperkecil, diunggah sebagai tamu ke API Info Pelanggan,
- * dan nama berkas hasilnya disimpan di `files` dengan kunci data-upload.
+ * Kolom unggah foto ([data-upload] berisi input file): foto diperkecil lalu disimpan lewat `simpan`, dan hasilnya
+ * (nama berkas atau data URL) dicatat di `files` dengan kunci data-upload.
+ * Bawaan `simpan`: unggah sebagai tamu ke API Info Pelanggan (pendaftaran sambungan baru).
  */
-import { ApiError } from './api'
-import { uploadFile } from './akun'
+import { INFO_PELANGGAN_API } from '../lib/info-pelanggan'
+import { api, ApiError } from './api'
 import { compress } from './kamera'
 
-export function bindUploads (form: HTMLElement, files: Map<string, string>): void {
+/** Unggah ke API Info Pelanggan sebagai tamu; hasilnya nama berkas sementara untuk dikirim bersama formulir. */
+export async function uploadFile (blob: Blob): Promise<string> {
+  const result = await api<{ filename?: string }>('/files/upload', { method: 'POST', body: blob, base: INFO_PELANGGAN_API })
+  if (!result?.filename) {
+    throw new Error('Foto belum tersimpan. Silakan coba lagi.')
+  }
+  return result.filename
+}
+
+export function bindUploads (form: HTMLElement, files: Map<string, string>, simpan: (blob: Blob) => Promise<string> = uploadFile): void {
   for (const box of form.querySelectorAll<HTMLElement>('[data-upload]')) {
     const input = box.querySelector<HTMLInputElement>('input[type=file]')!
     const text = box.querySelector<HTMLElement>('[data-upload-text]')!
@@ -33,7 +43,7 @@ export function bindUploads (form: HTMLElement, files: Map<string, string>): voi
       text.textContent = 'Mengunggah…'
       try {
         const blob = await compress(file)
-        const filename = await uploadFile(blob)
+        const filename = await simpan(blob)
         if (current !== attempt) {
           return
         }

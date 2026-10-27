@@ -12,11 +12,10 @@ import { WHATSAPP_CC } from '../lib/site'
 import { rupiah } from '../lib/tarif'
 import { api, ApiError } from './api'
 import { el, setBusy, showError } from './dom'
-import { uploadFile } from './akun'
 import { bringIntoView, enter, reveal, swapPanels } from './motion'
 import { BEKASI, createMap, whenVisible } from './peta'
 import { ticketDisplay } from './pengaduan'
-import { bindUploads } from './unggah'
+import { bindUploads, uploadFile } from './unggah'
 
 const STEP_TITLES = ['Data pemohon', 'Lokasi pemasangan', 'Berkas', 'Periksa dan kirim']
 
