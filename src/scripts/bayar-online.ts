@@ -52,7 +52,12 @@ function tersimpan (nomor: string): string | null {
   }
 }
 
-const biaya = (kanal: Kanal) => kanal.persen ? `biaya admin ${kanal.persen * 100}%` : `biaya admin ${rupiah(kanal.biaya_admin)}`
+const biaya = (kanal: Kanal) => kanal.persen ? `${kanal.persen * 100}%` : rupiah(kanal.biaya_admin)
+
+// logo bank dari src/assets/mitra/bank-<kode>.png; kanal VA tertutup berkode va<bank>-close
+const LOGO = import.meta.glob<string>('../assets/mitra/bank-*.png', { eager: true, query: '?url', import: 'default' })
+const logoKanal = (kode: string) => LOGO[`../assets/mitra/bank-${/^va([a-z]+)-/.exec(kode)?.[1] ?? ''}.png`]
+const namaPendek = (nama: string) => nama.replace(/\s*(VA|Virtual Account)$/i, '')
 
 function statusNotice (trx: Transaksi): HTMLElement {
   switch (trx.status) {
@@ -83,7 +88,7 @@ function transaksiCard (trx: Transaksi, onBaru: () => void): HTMLElement {
   })
   const rows: Array<[string, string]> = [
     ['Tagihan', rupiah(trx.jumlah)],
-    ['Biaya admin', rupiah(trx.biaya_admin)],
+    ['Biaya layanan', rupiah(trx.biaya_admin)],
     ['Total dibayar', rupiah(trx.total)],
     ['Bayar sebelum', trx.batas ? `${dateTimeShort(trx.batas)} WIB` : '–'],
     ['Kode transaksi', trx.kode],
@@ -173,14 +178,29 @@ export async function mountBayar (container: HTMLElement, nomor: string): Promis
   }
 
   function pilihan (): void {
-    const radios = kanal.map((item, index) => {
-      const input = el('input', 'size-4 accent-patriot')
+    const keterangan = el('p', 'text-sm text-redup')
+    const perbaruiBiaya = (item: Kanal) => {
+      keterangan.textContent = `Biaya layanan ${namaPendek(item.nama)} ${biaya(item)}, ditambahkan ke total pembayaran.`
+    }
+    const pilihanBank = kanal.map((item, index) => {
+      const input = el('input', 'sr-only')
       input.type = 'radio'
       input.name = 'kanal-bayar'
       input.value = item.kode
       input.checked = index === 0
-      return el('label', 'flex cursor-pointer items-center gap-3 rounded-lg border border-garis px-4 py-3 has-[:checked]:border-patriot has-[:checked]:bg-air', input, el('span', 'font-semibold', item.nama), el('span', 'ml-auto text-sm text-redup', biaya(item)))
+      input.addEventListener('change', () => perbaruiBiaya(item))
+      const src = logoKanal(item.kode)
+      let tanda: HTMLElement = el('span', 'text-sm font-bold', namaPendek(item.nama))
+      if (src) {
+        const image = el('img', 'h-7 w-full object-contain')
+        image.src = src
+        image.alt = namaPendek(item.nama)
+        image.loading = 'lazy'
+        tanda = image
+      }
+      return el('label', 'grid h-14 cursor-pointer place-items-center rounded-lg border border-garis bg-white px-3 transition-colors hover:border-patriot/50 has-[:checked]:border-patriot has-[:checked]:bg-air has-[:checked]:ring-1 has-[:checked]:ring-patriot has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-patriot', input, tanda)
     })
+    perbaruiBiaya(kanal[0]!)
     const label = el('span', '', 'Buat kode pembayaran')
     label.dataset.label = ''
     const tombol = el('button', 'btn btn-primary justify-self-start px-6', label)
@@ -202,7 +222,11 @@ export async function mountBayar (container: HTMLElement, nomor: string): Promis
         setBusy(tombol, false)
       }
     })
-    const fieldset = el('fieldset', 'grid gap-2', el('legend', 'mb-2 text-redup', 'Pilih bank untuk virtual account. Biaya admin ditambahkan ke total pembayaran.'), ...radios)
+    const fieldset = el('fieldset', 'grid gap-3',
+      el('legend', 'mb-3 text-redup', 'Pilih bank, lalu bayar dengan virtual account.'),
+      el('div', 'grid grid-cols-2 gap-2 sm:grid-cols-4', ...pilihanBank),
+      keterangan,
+    )
     body.replaceChildren(fieldset, error, tombol)
   }
 
