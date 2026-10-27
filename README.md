@@ -37,7 +37,7 @@ bun run dev
 - `src/lib/` — render konten yang aman, rumus tagihan, API Informasi Pelanggan, format tanggal/angka, token grafik
 - `src/pages/` — rute situs
 - `src/components/` — komponen Astro
-- `src/scripts/` — skrip browser: cek tagihan, pengaduan, pendaftaran sambungan baru, peta interaktif, gangguan langsung dari API, grafik
+- `src/scripts/` — skrip browser: cek tagihan, pengaduan, pendaftaran sambungan baru, akun pelanggan, catat meter mandiri (kamera langsung), perubahan data, peta interaktif, gangguan langsung dari API, grafik
 - `scripts/` — `export-data.ts` (perbarui snapshot ERP), `migrate-directus.ts` (migrasi satu kali)
 - `src/styles/global.css` — token desain dan gaya dasar
 - `public/_redirects` — pengalihan alamat lama (format Netlify)
@@ -57,6 +57,7 @@ Situs tidak lagi bergantung pada CMS Directus (cms.tirtapatriot.net).
 | Gangguan layanan | API Informasi Pelanggan (`GET /news`, sama dengan aplikasi Tirta Patriot Mobile) | otomatis: dimuat saat build **dan** langsung di browser |
 | Cek tagihan & pengaduan | API layanan pelanggan `https://open.tirtapatriot.net/web` | – |
 | Pendaftaran sambungan baru | API Informasi Pelanggan (`/files/upload`, `/new-customer/v2/insert`, `/new-customer/tracking`) | – |
+| Akun pelanggan, catat meter mandiri, perubahan data | API Informasi Pelanggan dengan akun Tirta Patriot Mobile (`/auth/*`, `/self-meter-report/*`, `/submission/*`); token JWT dikirim di header `token` dan disimpan di `sessionStorage`; foto diunggah sebagai tamu | – |
 | Jaringan pipa | vector tile PostGIS `jaringan.pipa` dari `https://tile.api.tirtapatriot.com`, di atas peta dasar OpenFreeMap | langsung dari server tile |
 
 `scripts/migrate-directus.ts` adalah skrip migrasi satu kali dari Directus, disimpan sebagai dokumentasi.

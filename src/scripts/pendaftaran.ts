@@ -12,12 +12,13 @@ import { WHATSAPP_CC } from '../lib/site'
 import { rupiah } from '../lib/tarif'
 import { api, ApiError } from './api'
 import { el, setBusy, showError } from './dom'
+import { uploadFile } from './akun'
 import { bringIntoView, enter, reveal, swapPanels } from './motion'
 import { BEKASI, createMap, whenVisible } from './peta'
 import { ticketDisplay } from './pengaduan'
+import { bindUploads } from './unggah'
 
 const STEP_TITLES = ['Data pemohon', 'Lokasi pemasangan', 'Berkas', 'Periksa dan kirim']
-const MAX_SIDE = 1600
 
 type Option = { id: string, label: string }
 type Field = HTMLInputElement | HTMLSelectElement
@@ -38,87 +39,6 @@ function errorMessage (caught: unknown): string {
     }
   }
   return 'Permohonan belum berhasil dikirim. Silakan coba lagi dalam beberapa saat.'
-}
-
-/** Perkecil foto kamera ponsel sebelum diunggah; hasil JPEG. */
-async function compress (file: File): Promise<Blob> {
-  if (!/^image\/(jpeg|png)$/.test(file.type)) {
-    throw new Error('Gunakan foto berformat JPG atau PNG.')
-  }
-  try {
-    const bitmap = await createImageBitmap(file)
-    const ratio = Math.min(1, MAX_SIDE / Math.max(bitmap.width, bitmap.height))
-    const canvas = document.createElement('canvas')
-    canvas.width = Math.round(bitmap.width * ratio)
-    canvas.height = Math.round(bitmap.height * ratio)
-    const context = canvas.getContext('2d')!
-    context.fillStyle = '#fff'
-    context.fillRect(0, 0, canvas.width, canvas.height)
-    context.drawImage(bitmap, 0, 0, canvas.width, canvas.height)
-    bitmap.close()
-    const blob = await new Promise<Blob | null>(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.85))
-    return blob && blob.size < file.size ? blob : file
-  } catch {
-    return file
-  }
-}
-
-async function upload (blob: Blob): Promise<string> {
-  const result = await ip<{ filename?: string }>('/files/upload', { method: 'POST', body: blob })
-  if (!result?.filename) {
-    throw new Error('Berkas belum tersimpan. Silakan coba lagi.')
-  }
-  return result.filename
-}
-
-function bindUploads (form: HTMLFormElement, files: Map<string, string>): void {
-  for (const box of form.querySelectorAll<HTMLElement>('[data-upload]')) {
-    const input = box.querySelector<HTMLInputElement>('input[type=file]')!
-    const text = box.querySelector<HTMLElement>('[data-upload-text]')!
-    const key = box.dataset.upload!
-
-    // unggahan yang sudah diganti pemohon tidak boleh menimpa hasil unggahan terbaru
-    let attempt = 0
-    input.addEventListener('change', async () => {
-      const current = ++attempt
-      const file = input.files?.[0]
-      files.delete(key)
-      const old = box.querySelector('img')
-      if (old) {
-        URL.revokeObjectURL(old.src)
-        old.remove()
-      }
-      if (!file) {
-        box.dataset.state = ''
-        text.textContent = 'Pilih atau ambil foto'
-        return
-      }
-      box.dataset.state = 'busy'
-      box.removeAttribute('aria-invalid')
-      text.textContent = 'Mengunggah…'
-      try {
-        const blob = await compress(file)
-        const filename = await upload(blob)
-        if (current !== attempt) {
-          return
-        }
-        files.set(key, filename)
-        const preview = document.createElement('img')
-        preview.alt = ''
-        preview.src = URL.createObjectURL(blob)
-        box.querySelector('svg')?.after(preview)
-        box.dataset.state = 'done'
-        text.textContent = `${file.name} terunggah. Ketuk untuk mengganti.`
-      } catch (caught) {
-        if (current !== attempt) {
-          return
-        }
-        box.dataset.state = ''
-        box.setAttribute('aria-invalid', 'true')
-        text.textContent = caught instanceof Error && !(caught instanceof ApiError) ? caught.message : 'Unggahan gagal. Ketuk untuk mencoba lagi.'
-      }
-    })
-  }
 }
 
 /** Kotak tanda tangan sederhana dengan Pointer Events. */
@@ -450,7 +370,7 @@ export function initPendaftaran (): void {
       if (!blob) {
         throw new Error('Tanda tangan belum tersimpan. Silakan ulangi tanda tangan.')
       }
-      state.signatureFile = await upload(blob)
+      state.signatureFile = await uploadFile(blob)
     }
 
     const pribadi = value('ownership_status') !== 'Sewa'
