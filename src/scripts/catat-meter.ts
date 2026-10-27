@@ -5,7 +5,7 @@
  * Foto hanya dari kamera langsung (kamera.ts), lokasi GPS wajib. Aturan jadwal dan stand diperiksa ulang di server.
  */
 import { angka } from '../lib/viz'
-import { setBusy, showError } from './dom'
+import { el, setBusy, showError } from './dom'
 import { cameraSupported, currentPosition, takePhoto, type Capture } from './kamera'
 import { blobToDataUrl, layanan, mountVerifikasi, pesanGalat, SesiBerakhir } from './layanan'
 import { bringIntoView, enter } from './motion'
@@ -15,7 +15,38 @@ const TITLES = ['Verifikasi', 'Foto meter', 'Rumah dan lokasi']
 /** pemakaian di atas angka ini diminta dipastikan ulang (kemungkinan salah ketik) */
 const WAJAR = 150
 
-type Kelayakan = { boleh: boolean, pesan: string, periode: number, stand_awal: number }
+type Kelayakan = {
+  boleh: boolean
+  pesan: string
+  periode: number
+  stand_awal: number
+  ideal: boolean
+  hari_catat: number | null
+  toleransi_hari: number
+  dicatat_petugas: boolean
+  tanggal_petugas: string | null
+}
+
+const TANGGAL = new Intl.DateTimeFormat('id-ID', { day: 'numeric', month: 'long', timeZone: 'Asia/Jakarta' })
+
+/** Pemberitahuan jadwal: tanggal ideal (anjuran, bukan syarat) dan angka petugas yang didahulukan. */
+function jadwalNotices (cek: Kelayakan): HTMLElement[] {
+  const notices: HTMLElement[] = []
+  if (cek.dicatat_petugas) {
+    const tanggal = cek.tanggal_petugas ? ` pada ${TANGGAL.format(new Date(cek.tanggal_petugas))}` : ''
+    notices.push(el('p', 'notice', `Petugas telah mencatat meter Anda bulan ini${tanggal}. Anda tetap dapat melapor; rekening bulan ini memakai angka petugas.`))
+  }
+  if (cek.hari_catat) {
+    const now = new Date()
+    const akhirBulan = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate()
+    const dari = Math.max(1, cek.hari_catat - cek.toleransi_hari)
+    const sampai = Math.min(akhirBulan, cek.hari_catat + cek.toleransi_hari)
+    notices.push(cek.ideal
+      ? el('p', 'notice notice-ok', `Hari ini sesuai jadwal pencatatan Anda (tanggal ${dari}–${sampai}).`)
+      : el('p', 'notice notice-warn', `Idealnya meter dicatat pada tanggal ${dari}–${sampai}, sesuai pencatatan bulan lalu. Bila dicatat di luar tanggal tersebut, pemakaian bulan ini dapat tercatat lebih rendah dan bulan berikutnya lebih tinggi, atau sebaliknya. Laporan tetap dapat dikirim.`))
+  }
+  return notices
+}
 
 export function initCatatMeter (): void {
   const form = document.querySelector<HTMLFormElement>('[data-catat-form]')
@@ -36,6 +67,7 @@ export function initCatatMeter (): void {
     photos: {} as Record<'meter' | 'rumah', Capture | undefined>,
     position: null as GeolocationPosition | null,
     confirmedHighUsage: '',
+    dicatatPetugas: false,
   }
 
   const wizard = createWizard(form, TITLES, { lastLabel: 'Kirim laporan' })
@@ -100,6 +132,8 @@ export function initCatatMeter (): void {
     if (!cek.boleh) {
       throw new Error(cek.pesan)
     }
+    state.dicatatPetugas = cek.dicatat_petugas
+    form!.querySelector('[data-jadwal]')!.replaceChildren(...jadwalNotices(cek))
     if (sesi.nomor !== state.customer) {
       // foto lama memuat cap nomor pelanggan sebelumnya
       for (const capture of Object.values(state.photos)) {
@@ -185,6 +219,9 @@ export function initCatatMeter (): void {
         form.hidden = true
         document.querySelector<HTMLElement>('[data-stepper]')!.hidden = true
         const done = document.querySelector<HTMLElement>('[data-done]')!
+        done.querySelector('[data-done-catatan]')!.textContent = state.dicatatPetugas
+          ? 'Petugas telah mencatat meter Anda bulan ini, sehingga rekening memakai angka petugas. Laporan Anda kami simpan sebagai pembanding.'
+          : 'Angka ini dipakai untuk rekening bulan ini bila petugas tidak mencatat meter Anda.'
         done.querySelector('[data-done-stand]')!.textContent = angka(Number(standInput.value))
         enter(done)
         done.focus({ preventScroll: true })

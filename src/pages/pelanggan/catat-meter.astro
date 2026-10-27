@@ -35,6 +35,7 @@ const steps = ['Verifikasi', 'Foto meter', 'Rumah dan lokasi']
 
           <fieldset data-step="1" class="grid gap-5" hidden>
             <legend class="mb-2 text-xl font-bold">Foto angka meter</legend>
+            <div class="grid gap-3" data-jadwal aria-live="polite"></div>
             <p class="text-redup">Arahkan kamera ke angka meter hingga terbaca jelas. Foto hanya dapat diambil langsung dari kamera.</p>
             <div class="grid gap-3" data-shot="meter">
               <img class="hidden aspect-[4/3] w-full rounded-lg object-cover ring-1 ring-garis" alt="Foto meter yang diambil" data-shot-preview>
@@ -79,7 +80,8 @@ const steps = ['Verifikasi', 'Foto meter', 'Rumah dan lokasi']
 
         <div data-done hidden tabindex="-1" class="mt-8 rounded-lg bg-lunas-soft p-6">
           <h3 class="text-xl font-bold text-lunas">Laporan meter Anda telah kami terima</h3>
-          <p class="mt-2">Terima kasih. Angka meter <strong data-done-stand></strong> m³ akan diproses petugas untuk rekening bulan ini.</p>
+          <p class="mt-2">Terima kasih. Angka meter <strong data-done-stand></strong> m³ telah kami simpan.</p>
+          <p class="mt-2" data-done-catatan></p>
           <a class="btn btn-quiet mt-6" href="/pelanggan">Ke layanan pelanggan</a>
         </div>
       </section>
@@ -87,10 +89,10 @@ const steps = ['Verifikasi', 'Foto meter', 'Rumah dan lokasi']
       <aside class="flex flex-col gap-6 self-start rounded-2xl border border-garis p-6">
         <h2 class="text-xl font-bold">Ketentuan</h2>
         <ul class="grid gap-3">
-          <li class="flex gap-2"><Icon name="mdi:calendar-check-outline" size={20} class="mt-0.5 shrink-0 text-patriot" />Pencatatan mandiri dapat dilakukan pada tanggal yang sama dengan tanggal pencatatan petugas bulan lalu.</li>
+          <li class="flex gap-2"><Icon name="mdi:calendar-check-outline" size={20} class="mt-0.5 shrink-0 text-patriot" />Catat pada tanggal yang sama dengan pencatatan bulan lalu, paling jauh selisih 2 hari, agar pemakaian setiap bulan tetap sebanding.</li>
           <li class="flex gap-2"><Icon name="mdi:camera-outline" size={20} class="mt-0.5 shrink-0 text-patriot" />Foto meter dan rumah diambil langsung dari kamera, dengan cap tanggal dan jam.</li>
           <li class="flex gap-2"><Icon name="mdi:crosshairs-gps" size={20} class="mt-0.5 shrink-0 text-patriot" />Izinkan akses kamera dan lokasi di browser Anda.</li>
-          <li class="flex gap-2"><Icon name="mdi:account-check-outline" size={20} class="mt-0.5 shrink-0 text-patriot" />Bila meter sudah dicatat petugas bulan ini, laporan mandiri tidak diperlukan.</li>
+          <li class="flex gap-2"><Icon name="mdi:account-check-outline" size={20} class="mt-0.5 shrink-0 text-patriot" />Bila petugas mencatat meter Anda bulan ini, rekening memakai angka petugas.</li>
         </ul>
       </aside>
     </div>
