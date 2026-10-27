@@ -1,7 +1,7 @@
 /**
  * Peta interaktif (MapLibre) untuk jaringan pipa dan pemilih lokasi pendaftaran.
  *  - peta dasar: OpenFreeMap "positron" (tanpa kunci API)
- *  - jaringan pipa: vector tile pg_tileserv function layer publik.pipa (PostGIS, lihat sql/2026-10-27_tile_publik.sql);
+ *  - jaringan pipa: vector tile pg_tileserv function layer publik.pipa (PostGIS; SQL-nya di repo internal);
  *    tile hanya berisi garis dan diameter, tanpa pipa dinas
  *  - batas kecamatan: GeoJSON yang sama dengan peta layanan statis
  * MapLibre dimuat saat peta pertama kali terlihat agar halaman tetap ringan.
