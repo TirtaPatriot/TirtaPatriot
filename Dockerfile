@@ -16,8 +16,9 @@ ARG PUBLIC_INFO_PELANGGAN_API=https://pelanggan.api.tirtapatriot.co
 ARG PUBLIC_RECAPTCHA_SITE_KEY=6LdKx-4pAAAAAOxsfOX93guRi0sSreyEkOcsT_vX
 ARG PUBLIC_BASEMAP_STYLE=https://tiles.openfreemap.org/styles/positron
 ARG PUBLIC_PIPA_TILES=https://tile.api.tirtapatriot.com
-ARG PUBLIC_CHATWOOT_WEBSITE_TOKEN=
-ARG PUBLIC_CHATWOOT_BASE_URL=
+# widget obrolan Chatwoot (token website bersifat publik); kirim build-arg kosong untuk menonaktifkan
+ARG PUBLIC_CHATWOOT_WEBSITE_TOKEN=LPKadeqQCpwESm9LQgr4kHVQ
+ARG PUBLIC_CHATWOOT_BASE_URL=https://omni.app.tirtapatriot.com
 ENV PUBLIC_API_URL=$PUBLIC_API_URL \
     PUBLIC_INFO_PELANGGAN_API=$PUBLIC_INFO_PELANGGAN_API \
     PUBLIC_RECAPTCHA_SITE_KEY=$PUBLIC_RECAPTCHA_SITE_KEY \

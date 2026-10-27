@@ -40,9 +40,11 @@ const chatwootUrl = import.meta.env.PUBLIC_CHATWOOT_BASE_URL
     {noindex && <meta name="robots" content="noindex">}
 
     <meta name="theme-color" content="#0b6fb8">
-    <link rel="icon" href="/favicon.ico" sizes="48x48">
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+    <link rel="icon" href="/favicon-32x32.png" type="image/png" sizes="32x32">
     <link rel="apple-touch-icon" href="/apple-touch-icon-180x180.png">
+    <link rel="manifest" href="/manifest.webmanifest">
+    <meta name="apple-mobile-web-app-title" content="Tirta Patriot">
     <link rel="sitemap" href="/sitemap-index.xml">
 
     <meta property="og:site_name" content={SITE_NAME}>
@@ -91,7 +93,7 @@ const chatwootUrl = import.meta.env.PUBLIC_CHATWOOT_BASE_URL
 
     {chatwootToken && chatwootUrl && (
       <script is:inline define:vars={{ chatwootToken, chatwootUrl }}>
-        window.chatwootSettings = { locale: 'id', launcherTitle: 'Hubungi Kami' }
+        window.chatwootSettings = { locale: 'id', theme: 'light', launcherTitle: 'Hubungi Kami' }
         const s = document.createElement('script')
         s.src = `${chatwootUrl}/packs/js/sdk.js`
         s.defer = true
