@@ -26,7 +26,7 @@ const pool = await sql.connect({
   port: Number(env('MSSQL_PORT', '1433')),
   user: env('MSSQL_USER'),
   password: env('MSSQL_PASSWORD'),
-  database: env('MSSQL_DATABASE', 'erp'),
+  database: env('MSSQL_DATABASE'),
   options: { encrypt: env('MSSQL_ENCRYPT', 'false') === 'true', trustServerCertificate: true },
   requestTimeout: 120_000,
 })
@@ -67,7 +67,7 @@ const meter = await rows<MeterRow>(`
 const UKURAN: Record<string, string> = { '0.50': '1/2', '0.75': '3/4', '1.00': '1', '1.25': '1 1/4', '1.50': '1 1/2', '1.75': '1 3/4', '2.00': '2', '3.00': '3', '4.00': '4', '6.00': '6', '8.00': '8', '12.00': '12', '16.00': '16' }
 
 await write('tarif', {
-  sumber: 'erp.billing.golongan_tarif, tarif_air, sk_tarif (status aktif); rumus sesuai bacameter.sf_hitung_kalkulasi',
+  sumber: 'ERP billing.golongan_tarif, tarif_air, sk_tarif (status aktif); rumus sesuai bacameter.sf_hitung_kalkulasi',
   diambil,
   blok: [{ sampai: 10 }, { sampai: 20 }, { sampai: null }],
   golongan: tarif.filter(row => GOLONGAN_PUBLIK.includes(row.kode)).map(row => ({
@@ -152,7 +152,7 @@ const periode = (value: number) => `${String(value).slice(0, 4)}-${String(value)
 
 await write('kinerja', {
   diambil,
-  sumber: 'erp.billing (customer, billing), erp.pengaduan (pengaduan_data, realisasi, jenis_pengaduan); agregat saja',
+  sumber: 'ERP billing (customer, billing), pengaduan (pengaduan_data, realisasi, jenis_pengaduan); agregat saja',
   pelanggan: {
     aktif: Number(aktif),
     definisi: 'billing.customer.status_pelanggan = 1',
@@ -227,7 +227,7 @@ for (const row of va) {
 
 await write('pembayaran', {
   diambil,
-  sumber: 'erp.billing (billing, billing_loket), erp.info_pelanggan.channel',
+  sumber: 'ERP billing (billing, billing_loket), info_pelanggan.channel',
   bank: [...bank.values()].toSorted((a, b) => b.transaksi - a.transaksi).map(({ id, nama }) => ({ id, nama })),
   virtualAccount: [...vaBank.values()].toSorted((a, b) => a.nama.localeCompare(b.nama, 'id')),
   loket: ['Tunai', 'QRIS', 'Kartu debit'],

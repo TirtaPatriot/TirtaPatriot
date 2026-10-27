@@ -65,7 +65,7 @@ Situs tidak lagi bergantung pada CMS Directus (cms.tirtapatriot.net).
 ### Memperbarui data dari ERP
 
 ```bash
-MSSQL_SERVER=… MSSQL_USER=… MSSQL_PASSWORD=… bun run data
+MSSQL_SERVER=… MSSQL_USER=… MSSQL_PASSWORD=… MSSQL_DATABASE=erp bun run data
 ```
 
 Gunakan akun baca-saja. Skrip hanya membaca agregat (jumlah per kecamatan, per bulan, dsb.), tidak ada data pelanggan perorangan. Cocok dijadwalkan bulanan dari server internal (mis. Dokploy) yang lalu meng-commit perubahan ke repo sehingga situs ter-build ulang.
