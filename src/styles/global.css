@@ -706,6 +706,17 @@
   from { opacity: 0; transform: translateY(-6px) scale(0.98); }
 }
 
+@keyframes kilau {
+  from { background-position: 100% 0; }
+  to { background-position: 0 0; }
+}
+@keyframes alir {
+  from { transform: translateX(-110%); }
+  to { transform: translateX(240%); }
+}
+@keyframes putar {
+  to { transform: rotate(360deg); }
+}
 @keyframes ripple {
   0% { transform: scale(1); opacity: 0.55; }
   100% { transform: scale(2.6); opacity: 0; }
@@ -752,6 +763,43 @@
       content: '';
       animation: ripple 2.4s var(--ease-water) infinite;
     }
+  }
+
+  /* pemuatan dari layanan luar: kerangka berkilau, garis aliran, dan cincin putar kecil */
+  .skeleton {
+    border-radius: 0.5rem;
+    background: linear-gradient(100deg, var(--color-kabut) 30%, var(--color-air) 50%, var(--color-kabut) 70%);
+    background-size: 300% 100%;
+    animation: kilau 1.6s var(--ease-water) infinite;
+  }
+
+  .flow-bar {
+    position: relative;
+    height: 3px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: var(--color-air);
+
+    &::after {
+      position: absolute;
+      inset: 0;
+      width: 45%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, transparent, var(--color-patriot), transparent);
+      content: '';
+      animation: alir 1.5s var(--ease-water) infinite;
+    }
+  }
+
+  .spin-ring {
+    display: inline-block;
+    flex-shrink: 0;
+    width: 1.125rem;
+    height: 1.125rem;
+    border: 2px solid var(--color-air-strong);
+    border-top-color: var(--color-patriot);
+    border-radius: 999px;
+    animation: putar 0.8s linear infinite;
   }
 
   /* gelombang berlapis di tepi bawah bagian berwarna */

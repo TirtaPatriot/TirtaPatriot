@@ -59,18 +59,75 @@ const LOGO = import.meta.glob<string>('../assets/mitra/bank-*.png', { eager: tru
 const logoKanal = (kode: string) => LOGO[`../assets/mitra/bank-${/^va([a-z]+)-/.exec(kode)?.[1] ?? ''}.png`]
 const namaPendek = (nama: string) => nama.replace(/\s*(VA|Virtual Account)$/i, '')
 
+const blok = (kelas: string) => el('div', `skeleton ${kelas}`)
+
+/** Kerangka berkilau selama data dari layanan pembayaran dimuat. */
+function kerangka (jenis: 'pilihan' | 'transaksi'): HTMLElement {
+  const isi = jenis === 'pilihan'
+    ? [blok('h-4 w-64'), el('div', 'grid grid-cols-2 gap-2 sm:grid-cols-4', ...Array.from({ length: 8 }, () => blok('h-14'))), blok('h-4 w-80 max-w-full'), blok('h-11 w-56 rounded-full')]
+    : [blok('h-14'), blok('h-4 w-32'), blok('h-9 w-72 max-w-full'), el('div', 'grid gap-3 sm:grid-cols-2', ...Array.from({ length: 4 }, () => blok('h-10')))]
+  const wadah = el('div', jenis === 'pilihan' ? 'grid gap-3' : 'grid gap-4 rounded-2xl border border-garis p-5 sm:p-6', ...isi)
+  wadah.setAttribute('aria-hidden', 'true')
+  return el('div', '', el('p', 'sr-only', jenis === 'pilihan' ? 'Memuat pilihan pembayaran…' : 'Memuat status pembayaran…'), wadah)
+}
+
+const LANGKAH = [
+  { teks: 'Memeriksa tagihan Anda', mulai: 0 },
+  { teks: 'Menyiapkan virtual account', mulai: 1800 },
+  { teks: 'Menyimpan kode pembayaran', mulai: 5000 },
+]
+
+/**
+ * Tahapan saat kode pembayaran dibuat (API Open → PPOB → gateway, bisa beberapa detik). Server tidak mengirim
+ * kemajuan bertahap, jadi langkah maju menurut waktu dan berhenti di langkah terakhir sampai jawaban datang.
+ */
+function prosesPembuatan (bank: string): { panel: HTMLElement, selesai: () => void } {
+  const items = LANGKAH.map((langkah, index) => {
+    const ikon = el('span', 'grid size-5 shrink-0 place-items-center')
+    const teks = el('span', '', index === 1 ? `${langkah.teks} ${bank}` : langkah.teks)
+    return { item: el('li', 'flex items-center gap-3 text-redup transition-colors duration-300', ikon, teks), ikon }
+  })
+  const pengumuman = el('p', 'sr-only')
+  pengumuman.setAttribute('aria-live', 'polite')
+  const panel = el('div', 'grid gap-5 overflow-hidden rounded-2xl border border-garis p-5 sm:p-6',
+    el('div', 'flow-bar -mx-5 -mt-5 sm:-mx-6 sm:-mt-6'),
+    el('p', 'font-semibold', 'Membuat kode pembayaran…'),
+    el('ol', 'grid gap-3', ...items.map(({ item }) => item)),
+    el('p', 'text-sm text-redup', 'Biasanya hanya beberapa detik. Jangan tutup halaman ini.'),
+    pengumuman,
+  )
+
+  const tandai = (aktif: number) => {
+    items.forEach(({ item, ikon }, index) => {
+      item.classList.toggle('text-redup', index > aktif)
+      item.classList.toggle('text-pipa', index <= aktif)
+      item.classList.toggle('font-semibold', index === aktif)
+      ikon.replaceChildren(index < aktif
+        ? el('span', 'grid size-5 place-items-center rounded-full bg-lunas text-xs font-bold text-white', '✓')
+        : index === aktif ? el('span', 'spin-ring') : el('span', 'size-2 rounded-full bg-garis'))
+    })
+    pengumuman.textContent = items[aktif]?.item.textContent ?? ''
+  }
+  tandai(0)
+  const timers = LANGKAH.slice(1).map((langkah, index) => window.setTimeout(() => tandai(index + 1), langkah.mulai))
+  return { panel, selesai: () => timers.forEach(timer => window.clearTimeout(timer)) }
+}
+
 function statusNotice (trx: Transaksi): HTMLElement {
   switch (trx.status) {
     case 'lunas':
       return el('p', 'notice notice-ok', 'Pembayaran berhasil dan tagihan Anda telah lunas. Terima kasih.')
     case 'diproses':
-      return el('p', 'notice', 'Pembayaran diterima dan sedang dibukukan.')
+      return el('p', 'notice items-center', el('span', 'spin-ring'), el('span', '', 'Pembayaran diterima dan sedang dibukukan.'))
     case 'diperiksa':
       return el('p', 'notice notice-warn', `Pembayaran diterima dan sedang diperiksa petugas. Bila tagihan belum berubah dalam 1×24 jam, hubungi kami dengan kode transaksi ${trx.kode}.`)
     case 'kedaluwarsa':
       return el('p', 'notice notice-warn', 'Kode pembayaran ini sudah kedaluwarsa. Silakan buat kode pembayaran baru.')
-    default:
-      return el('p', 'notice', 'Menunggu pembayaran. Halaman ini akan diperbarui otomatis setelah pembayaran diterima.')
+    default: {
+      const titik = el('span', 'live-dot mt-1.5 shrink-0 text-patriot')
+      titik.setAttribute('aria-hidden', 'true')
+      return el('p', 'notice items-start', titik, el('span', '', 'Menunggu pembayaran. Halaman ini diperbarui otomatis setelah pembayaran diterima.'))
+    }
   }
 }
 
@@ -127,12 +184,10 @@ function transaksiCard (trx: Transaksi, onBaru: () => void): HTMLElement {
 /** Tambahkan bagian "Bayar online" ke hasil cek tagihan bila layanan aktif. */
 export async function mountBayar (container: HTMLElement, nomor: string): Promise<void> {
   daftarKanal ??= api<{ aktif: boolean, kanal: Kanal[] }>('/bayar').catch(() => ({ aktif: false, kanal: [] }))
-  const { aktif, kanal } = await daftarKanal
-  if (!aktif || !kanal.length || !container.isConnected) {
-    return
-  }
 
   const body = el('div', 'mt-4 grid gap-4')
+  body.setAttribute('aria-busy', 'true')
+  body.append(kerangka(tersimpan(nomor) ? 'transaksi' : 'pilihan'))
   const errorText = el('p', '')
   errorText.dataset.errorText = ''
   const error = el('div', 'notice notice-error', errorText)
@@ -143,11 +198,24 @@ export async function mountBayar (container: HTMLElement, nomor: string): Promis
   container.append(section)
   enter(section)
 
+  const { aktif, kanal } = await daftarKanal
+  if (!aktif || !kanal.length || !section.isConnected) {
+    section.remove()
+    return
+  }
+  const ganti = (...nodes: HTMLElement[]) => {
+    body.replaceChildren(...nodes)
+    body.removeAttribute('aria-busy')
+    for (const node of nodes) {
+      enter(node)
+    }
+  }
+
   let timer: number | undefined
   const mulai = Date.now()
 
   const tampilTransaksi = (trx: Transaksi) => {
-    body.replaceChildren(transaksiCard(trx, () => {
+    ganti(transaksiCard(trx, () => {
       simpan(nomor, null)
       pilihan()
     }))
@@ -177,7 +245,7 @@ export async function mountBayar (container: HTMLElement, nomor: string): Promis
     }
   }
 
-  function pilihan (): void {
+  function pilihan (dipilihSebelumnya?: string, pesan?: string): void {
     const keterangan = el('p', 'text-sm text-redup')
     const perbaruiBiaya = (item: Kanal) => {
       keterangan.textContent = `Biaya layanan ${namaPendek(item.nama)} ${biaya(item)}, ditambahkan ke total pembayaran.`
@@ -187,7 +255,7 @@ export async function mountBayar (container: HTMLElement, nomor: string): Promis
       input.type = 'radio'
       input.name = 'kanal-bayar'
       input.value = item.kode
-      input.checked = index === 0
+      input.checked = dipilihSebelumnya ? item.kode === dipilihSebelumnya : index === 0
       input.addEventListener('change', () => perbaruiBiaya(item))
       const src = logoKanal(item.kode)
       let tanda: HTMLElement = el('span', 'text-sm font-bold', namaPendek(item.nama))
@@ -200,7 +268,7 @@ export async function mountBayar (container: HTMLElement, nomor: string): Promis
       }
       return el('label', 'grid h-14 cursor-pointer place-items-center rounded-lg border border-garis bg-white px-3 transition-colors hover:border-patriot/50 has-[:checked]:border-patriot has-[:checked]:bg-air has-[:checked]:ring-1 has-[:checked]:ring-patriot has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-patriot', input, tanda)
     })
-    perbaruiBiaya(kanal[0]!)
+    perbaruiBiaya(kanal.find(item => item.kode === dipilihSebelumnya) ?? kanal[0]!)
     const label = el('span', '', 'Buat kode pembayaran')
     label.dataset.label = ''
     const tombol = el('button', 'btn btn-primary justify-self-start px-6', label)
@@ -208,8 +276,12 @@ export async function mountBayar (container: HTMLElement, nomor: string): Promis
     tombol.dataset.idle = 'Buat kode pembayaran'
     tombol.addEventListener('click', async () => {
       const dipilih = section.querySelector<HTMLInputElement>('input[name="kanal-bayar"]:checked')?.value
-      showError(error, '')
+      const bank = namaPendek(kanal.find(item => item.kode === dipilih)?.nama ?? '')
       setBusy(tombol, true, 'Membuat kode…')
+      const proses = prosesPembuatan(bank)
+      body.setAttribute('aria-busy', 'true')
+      ganti(proses.panel)
+      section.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
       try {
         const trx = await api<Transaksi>('/bayar', {
           method: 'POST',
@@ -217,9 +289,9 @@ export async function mountBayar (container: HTMLElement, nomor: string): Promis
         })
         tampilTransaksi(trx)
       } catch (caught) {
-        showError(error, pesanGalat(caught, 'Kode pembayaran belum dapat dibuat. Silakan coba lagi atau bayar di tempat pembayaran resmi.'))
+        pilihan(dipilih, pesanGalat(caught, 'Kode pembayaran belum dapat dibuat. Silakan coba lagi atau bayar di tempat pembayaran resmi.'))
       } finally {
-        setBusy(tombol, false)
+        proses.selesai()
       }
     })
     const fieldset = el('fieldset', 'grid gap-3',
@@ -227,7 +299,8 @@ export async function mountBayar (container: HTMLElement, nomor: string): Promis
       el('div', 'grid grid-cols-2 gap-2 sm:grid-cols-4', ...pilihanBank),
       keterangan,
     )
-    body.replaceChildren(fieldset, error, tombol)
+    ganti(fieldset, error, tombol)
+    showError(error, pesan ?? '')
   }
 
   const kodeLama = tersimpan(nomor)
