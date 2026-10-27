@@ -28,7 +28,7 @@ const steps = ['Nomor pelanggan', 'Verifikasi nama', 'Data pelapor', 'Kendala']
 
         <ol class="mt-5 grid grid-cols-4 gap-2" aria-label="Tahapan" data-stepper>
           {steps.map((title, index) => (
-            <li class="border-t-4 border-garis pt-2 text-sm text-redup data-[state=current]:border-patriot data-[state=current]:font-semibold data-[state=current]:text-pipa data-[state=done]:border-patriot" data-state={index === 0 ? 'current' : 'todo'}>
+            <li class="border-t-4 border-garis pt-2 text-sm text-redup transition-colors duration-500 ease-out data-[state=current]:border-patriot data-[state=current]:font-semibold data-[state=current]:text-pipa data-[state=done]:border-patriot" data-state={index === 0 ? 'current' : 'todo'}>
               <span class="hidden sm:inline">{title}</span>
               <span class="sm:hidden">{index + 1}</span>
             </li>

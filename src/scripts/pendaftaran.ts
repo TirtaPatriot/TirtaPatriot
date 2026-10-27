@@ -12,6 +12,7 @@ import { WHATSAPP_CC } from '../lib/site'
 import { rupiah } from '../lib/tarif'
 import { api, ApiError } from './api'
 import { el, setBusy, showError } from './dom'
+import { bringIntoView, enter, reveal, swapPanels } from './motion'
 import { BEKASI, createMap, whenVisible } from './peta'
 import { ticketDisplay } from './pengaduan'
 
@@ -215,7 +216,7 @@ export function initPendaftaran (): void {
 
   const files = new Map<string, string>()
   const signature = bindSignature(form.querySelector<HTMLCanvasElement>('[data-signature]')!)
-  const state = { step: 0, signatureFile: '' }
+  const state = { step: 0, signatureFile: '', moving: false }
 
   bindUploads(form, files)
   form.querySelector('[data-signature-clear]')?.addEventListener('click', () => {
@@ -226,11 +227,11 @@ export function initPendaftaran (): void {
   // pekerjaan "Lainnya" dan surat keterangan untuk bangunan sewa
   const lain = form.querySelector<HTMLElement>('[data-pekerjaan-lain]')!
   field('applicant_job').addEventListener('change', () => {
-    lain.hidden = value('applicant_job') !== 'Lainnya'
+    reveal(lain, value('applicant_job') === 'Lainnya')
   })
   const surat = form.querySelector<HTMLElement>('[data-surat]')!
   field('ownership_status').addEventListener('change', () => {
-    surat.hidden = value('ownership_status') !== 'Sewa'
+    reveal(surat, value('ownership_status') === 'Sewa')
   })
 
   // kecamatan → kelurahan
@@ -379,11 +380,14 @@ export function initPendaftaran (): void {
     form!.querySelector('[data-review]')?.replaceChildren(...rows.map(([label, text]) => el('div', label === 'Alamat pemasangan' ? 'sm:col-span-2' : '', el('dt', 'text-sm text-redup', label), el('dd', 'font-semibold break-words', text || '–'))))
   }
 
-  function go (step: number): void {
+  async function go (step: number): Promise<void> {
+    if (state.moving || step === state.step) {
+      return
+    }
+    const from = fieldsets[state.step]
+    const direction = step > state.step ? 1 : -1
     state.step = step
-    fieldsets.forEach((fieldset, index) => {
-      fieldset.hidden = index !== step
-    })
+    state.moving = true
     stepper.forEach((item, index) => {
       item.dataset.state = index < step ? 'done' : index === step ? 'current' : 'todo'
       if (index === step) {
@@ -409,7 +413,12 @@ export function initPendaftaran (): void {
       renderReview()
     }
     showError(error, '')
-    form!.scrollIntoView({ block: 'start', behavior: 'smooth' })
+    bringIntoView(form!)
+    try {
+      await swapPanels(form!, from, fieldsets[step]!, direction)
+    } finally {
+      state.moving = false
+    }
     fieldsets[step]?.querySelector<HTMLElement>('input:not([type=hidden]), select')?.focus({ preventScroll: true })
   }
 
@@ -459,7 +468,7 @@ export function initPendaftaran (): void {
     return String(result?.data?.[0]?.nomor_pengajuan ?? '')
   }
 
-  prev?.addEventListener('click', () => go(Math.max(0, state.step - 1)))
+  prev?.addEventListener('click', () => void go(Math.max(0, state.step - 1)))
 
   form.addEventListener('submit', async event => {
     event.preventDefault()
@@ -471,7 +480,7 @@ export function initPendaftaran (): void {
       return
     }
     if (state.step < STEP_TITLES.length - 1) {
-      go(state.step + 1)
+      void go(state.step + 1)
       return
     }
 
@@ -486,8 +495,9 @@ export function initPendaftaran (): void {
           number.hidden = !nomor
           number.replaceChildren(el('span', 'text-sm text-redup', 'Nomor pengajuan'), ticketDisplay(nomor))
         }
-        done.hidden = false
-        done.focus()
+        enter(done)
+        done.focus({ preventScroll: true })
+        bringIntoView(done)
       }
     } catch (caught) {
       // tanda tangan diunggah ulang pada percobaan berikutnya bila berkas sementara hilang

@@ -10,6 +10,7 @@
 import { dateLong } from '../lib/format'
 import { api, ApiError, recaptchaToken, warmRecaptcha } from './api'
 import { el, setBusy, showError } from './dom'
+import { bringIntoView, enter, swapPanels } from './motion'
 
 const STEP_TITLES = ['Nomor pelanggan', 'Verifikasi nama', 'Data pelapor', 'Kendala']
 
@@ -60,7 +61,7 @@ export function initPengaduan (): void {
   const jenisSelect = field('jenis') as HTMLSelectElement
   const masalahInput = field('masalah') as HTMLTextAreaElement
 
-  const state = { step: 0, masked: '', id: '', verifiedNama: '', maskedFor: '' }
+  const state = { step: 0, masked: '', id: '', verifiedNama: '', maskedFor: '', moving: false }
 
   nomorInput.addEventListener('focus', warmRecaptcha, { once: true })
 
@@ -91,11 +92,14 @@ export function initPengaduan (): void {
     jenisSelect.append(new Option('Lainnya', 'Lainnya'))
   })
 
-  function go (step: number): void {
+  async function go (step: number): Promise<void> {
+    if (state.moving || step === state.step) {
+      return
+    }
+    const from = fieldsets[state.step]
+    const direction = step > state.step ? 1 : -1
     state.step = step
-    fieldsets.forEach((fieldset, index) => {
-      fieldset.hidden = index !== step
-    })
+    state.moving = true
     stepper.forEach((item, index) => {
       item.dataset.state = index < step ? 'done' : index === step ? 'current' : 'todo'
       if (index === step) {
@@ -118,7 +122,13 @@ export function initPengaduan (): void {
       }
     }
     showError(error, '')
-    fieldsets[step]?.querySelector<HTMLElement>('input, select, textarea')?.focus()
+    bringIntoView(form!)
+    try {
+      await swapPanels(form!, from, fieldsets[step]!, direction)
+    } finally {
+      state.moving = false
+    }
+    fieldsets[step]?.querySelector<HTMLElement>('input, select, textarea')?.focus({ preventScroll: true })
   }
 
   async function lookUpCustomer (): Promise<void> {
@@ -195,7 +205,7 @@ export function initPengaduan (): void {
     return typeof tiket === 'string' ? tiket : String(tiket?.tiket ?? tiket?.id ?? '')
   }
 
-  prev?.addEventListener('click', () => go(Math.max(0, state.step - 1)))
+  prev?.addEventListener('click', () => void go(Math.max(0, state.step - 1)))
 
   form.addEventListener('submit', async event => {
     event.preventDefault()
@@ -214,12 +224,13 @@ export function initPengaduan (): void {
         if (done) {
           done.querySelector('[data-done-ticket]')?.replaceChildren(ticketDisplay(tiket))
           done.querySelector<HTMLAnchorElement>('[data-done-link]')!.href = `/pelanggan/pengaduan?tiket=${encodeURIComponent(tiket)}`
-          done.hidden = false
-          done.focus()
+          enter(done)
+          done.focus({ preventScroll: true })
+          bringIntoView(done)
         }
         return
       }
-      go(state.step + 1)
+      await go(state.step + 1)
     } catch (caught) {
       showError(error, errorMessage(caught, 'Permintaan belum berhasil. Coba lagi dalam beberapa saat.'))
     } finally {

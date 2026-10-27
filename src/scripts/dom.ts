@@ -1,3 +1,5 @@
+import { reducedMotion, reveal } from './motion'
+
 /** Pembuat elemen kecil untuk hasil API: teks selalu lewat textContent, tidak pernah innerHTML. */
 export function el<K extends keyof HTMLElementTagNameMap> (
   tag: K,
@@ -22,13 +24,15 @@ export function showError (box: HTMLElement | null, message: string): void {
   if (!box) {
     return
   }
-  box.hidden = !message
   const text = box.querySelector('[data-error-text]')
-  if (text) {
+  if (text && message) {
     text.textContent = message
   }
+  reveal(box, Boolean(message))
   if (message) {
-    box.focus()
+    // fokus untuk pembaca layar tanpa lompatan gulir; geser seperlunya bila kotak di luar layar
+    box.focus({ preventScroll: true })
+    box.scrollIntoView({ block: 'nearest', behavior: reducedMotion() ? 'auto' : 'smooth' })
   }
 }
 
