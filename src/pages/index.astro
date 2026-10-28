@@ -40,6 +40,9 @@ const services = [
 ---
 
 <Base preconnect={[INFO_PELANGGAN_API]} description="Cek tagihan air, lapor gangguan, dan pantau informasi layanan air bersih Perumda Tirta Patriot Kota Bekasi.">
+  <!-- karosel info dari aplikasi Tirta Patriot Mobile, paling atas -->
+  <Karosel />
+
   <!-- hero: cek tagihan adalah hal pertama yang dicari pelanggan -->
   <section class="relative isolate overflow-hidden bg-pipa text-white">
     <div class="absolute inset-0 -z-10 bg-[radial-gradient(60rem_40rem_at_85%_-10%,rgb(11_111_184/55%),transparent_70%)]" aria-hidden="true"></div>
@@ -87,7 +90,6 @@ const services = [
             quality={75}
             class="relative h-full w-full object-cover [clip-path:url(#tetesan)]"
             loading="eager"
-            fetchpriority="high"
           />
         </div>
 
@@ -142,8 +144,6 @@ const services = [
       ))}
     </ul>
   </nav>
-
-  <Karosel />
 
   {utama && (
     <section class="wrap mt-20" aria-labelledby="berita-judul">

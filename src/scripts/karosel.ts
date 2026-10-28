@@ -1,5 +1,5 @@
 /**
- * Karosel beranda (src/components/Karosel.astro): geser dengan sentuh/gulir (scroll-snap), tombol, titik penanda,
+ * Karosel teratas beranda (src/components/Karosel.astro): geser dengan sentuh/gulir (scroll-snap), tombol, titik penanda,
  * dan putar otomatis yang berhenti saat disentuh, difokus, atau bila pengguna memilih mengurangi animasi.
  * Isinya dimuat ulang dari API Informasi Pelanggan agar sama dengan aplikasi Tirta Patriot Mobile.
  */
@@ -12,40 +12,43 @@ const INTERVAL = 6000
 
 function slideFor (item: Pengumuman, index: number, total: number): HTMLLIElement {
   const image = item.cover_image || item.image || ''
-  const gangguan = isGangguan(item)
+  const loading = index === 0 ? 'eager' : 'lazy'
 
-  const cover = el('span', 'block aspect-video overflow-hidden rounded-xl bg-air')
+  const open = el('button', 'mx-auto block w-full max-w-[min(100%,calc((100svh-15rem)*16/9))] cursor-pointer overflow-hidden rounded-lg shadow-lift sm:rounded-xl')
   if (image) {
-    const img = el('img', 'h-full w-full object-cover transition duration-500 ease-out group-hover:scale-[1.03]')
+    const img = el('img', 'block aspect-video w-full object-cover')
     img.src = image
     img.alt = ''
     img.width = 1280
     img.height = 720
-    img.loading = index < 2 ? 'eager' : 'lazy'
-    cover.append(img)
+    img.loading = loading
+    open.append(img)
+  } else {
+    open.append(el('span', 'grid aspect-video w-full place-items-center p-8 text-center text-title font-extrabold text-white', item.title))
   }
-
-  const dot = el('span', 'inline-block size-2 rounded-full bg-current')
-  dot.setAttribute('aria-hidden', 'true')
-  const open = el('button', 'group block w-full cursor-pointer text-left',
-    cover,
-    gangguan && el('span', 'mt-4 inline-flex items-center gap-2 text-sm font-bold text-meter', dot, 'Gangguan layanan'),
-    el('span', `block text-lg font-bold group-hover:text-patriot ${gangguan ? 'mt-1' : 'mt-4'}`, item.title),
-    el('span', 'mt-1 block text-sm text-redup', item.date),
-  )
   open.type = 'button'
+  open.setAttribute('aria-label', `${item.title}, ${item.date}`)
   open.dataset.karoselOpen = ''
   open.dataset.title = item.title
   open.dataset.tanggal = item.date
   open.dataset.image = image
-  open.toggleAttribute('data-gangguan', gangguan)
+  open.toggleAttribute('data-gangguan', isGangguan(item))
 
   // isi API ditampilkan sebagai teks polos, tidak pernah sebagai HTML
   const detail = el('template')
   detail.dataset.karoselDetail = ''
   detail.content.append(el('div', 'grid gap-3', ...paragraphs(item.description).map(text => el('p', '', text))))
 
-  const slide = el('li', 'w-full shrink-0 snap-start md:w-[calc((100%-1.25rem)/2)]', open, detail)
+  const slide = el('li', 'relative isolate w-full shrink-0 snap-start overflow-hidden px-3 pt-4 pb-[calc(clamp(36px,6vw,84px)+3rem)] sm:pt-6')
+  if (image) {
+    const backdrop = el('img', 'absolute inset-0 -z-10 h-full w-full scale-110 object-cover opacity-50 blur-2xl')
+    backdrop.src = image
+    backdrop.alt = ''
+    backdrop.loading = loading
+    backdrop.setAttribute('aria-hidden', 'true')
+    slide.append(backdrop)
+  }
+  slide.append(open, detail)
   slide.setAttribute('aria-roledescription', 'slide')
   slide.setAttribute('aria-label', `${index + 1} dari ${total}`)
   slide.dataset.karoselSlide = item.id
@@ -142,7 +145,7 @@ export function initKarosel (): void {
     }
     const active = current()
     dots.replaceChildren(...(count < 2 ? [] : Array.from({ length: count }, (_, index) => {
-      const dot = el('button', `h-2.5 cursor-pointer rounded-full transition-all duration-300 ${index === active ? 'w-7 bg-patriot' : 'w-2.5 bg-garis hover:bg-patriot/50'}`)
+      const dot = el('button', `h-2.5 cursor-pointer rounded-full transition-all duration-300 ${index === active ? 'w-7 bg-white' : 'w-2.5 bg-white/45 hover:bg-white/75'}`)
       dot.type = 'button'
       dot.setAttribute('aria-label', `Tampilkan slide ${index + 1}`)
       dot.toggleAttribute('aria-current', index === active)
