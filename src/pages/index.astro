@@ -5,6 +5,7 @@ import ArticleCard from '../components/ArticleCard.astro'
 import { Image } from 'astro:assets'
 import hero from '../assets/hero.webp'
 import Himbauan from '../components/Himbauan.astro'
+import Karosel from '../components/Karosel.astro'
 import Icon from '../components/Icon.astro'
 import MeterField from '../components/MeterField.astro'
 import Odometer from '../components/Odometer.astro'
@@ -142,6 +143,8 @@ const services = [
     </ul>
   </nav>
 
+  <Karosel />
+
   {utama && (
     <section class="wrap mt-20" aria-labelledby="berita-judul">
       <div class="mb-8 flex items-end justify-between gap-4">
@@ -204,9 +207,11 @@ const services = [
 
 <script>
   import { refreshStatusPanel } from '../scripts/gangguan'
+  import { initKarosel } from '../scripts/karosel'
   import { bindMeterFields } from '../scripts/meter-input'
   import '../scripts/odometer'
 
   bindMeterFields()
+  initKarosel()
   void refreshStatusPanel()
 </script>

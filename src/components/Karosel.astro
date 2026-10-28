@@ -1,0 +1,74 @@
+---
+/**
+ * Karosel beranda: pengumuman & berita yang sama dengan yang tayang di aplikasi Tirta Patriot Mobile.
+ * Isi saat build dari koleksi `pengumuman`; src/scripts/karosel.ts menggerakkan dan memperbaruinya dari API.
+ */
+import { getCollection, render } from 'astro:content'
+import Icon from './Icon.astro'
+
+const slides = await Promise.all((await getCollection('pengumuman'))
+  .toSorted((a, b) => a.data.urutan - b.data.urutan)
+  .map(async entry => ({ id: entry.id, ...entry.data, Content: (await render(entry)).Content })))
+---
+
+<section class="wrap mt-20" aria-labelledby="karosel-judul" data-karosel data-karosel-ids={slides.map(slide => slide.id).join(',')} hidden={slides.length === 0}>
+  <div class="mb-8 flex items-end justify-between gap-4">
+    <div>
+      <h2 id="karosel-judul" class="text-title font-extrabold">Info terkini</h2>
+      <p class="mt-2 text-redup">Pengumuman yang juga tayang di aplikasi Tirta Patriot Mobile.</p>
+    </div>
+    <div class="flex shrink-0 gap-2" data-karosel-controls hidden>
+      <button type="button" class="group btn btn-quiet size-11 p-0" data-karosel-play aria-label="Hentikan putar otomatis">
+        <Icon name="mdi:pause" size={20} class="group-data-paused:hidden" />
+        <Icon name="mdi:play" size={20} class="hidden group-data-paused:block" />
+      </button>
+      <button type="button" class="btn btn-quiet size-11 p-0" data-karosel-prev aria-label="Sebelumnya">
+        <Icon name="mdi:chevron-left" size={24} />
+      </button>
+      <button type="button" class="btn btn-quiet size-11 p-0" data-karosel-next aria-label="Berikutnya">
+        <Icon name="mdi:chevron-right" size={24} />
+      </button>
+    </div>
+  </div>
+
+  <ul
+    class="relative flex snap-x snap-mandatory gap-5 overflow-x-auto overscroll-x-contain pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+    aria-roledescription="karosel"
+    aria-label="Info terkini"
+    data-karosel-track
+  >
+    {slides.map((slide, index) => (
+      <li class="w-full shrink-0 snap-start md:w-[calc((100%-1.25rem)/2)]" aria-roledescription="slide" aria-label={`${index + 1} dari ${slides.length}`} data-karosel-slide={slide.id}>
+        <button type="button" class="group block w-full cursor-pointer text-left" data-karosel-open data-title={slide.title} data-tanggal={slide.tanggal} data-image={slide.image ?? ''} data-gangguan={slide.gangguan ? '' : undefined}>
+          <span class="block aspect-video overflow-hidden rounded-xl bg-air">
+            {slide.image && <img src={slide.image} alt="" width="1280" height="720" loading={index < 2 ? 'eager' : 'lazy'} decoding="async" class="h-full w-full object-cover transition duration-500 ease-out group-hover:scale-[1.03]" />}
+          </span>
+          {slide.gangguan && <span class="mt-4 inline-flex items-center gap-2 text-sm font-bold text-meter"><span class="inline-block size-2 rounded-full bg-current" aria-hidden="true" />Gangguan layanan</span>}
+          <span class:list={['block text-lg font-bold group-hover:text-patriot', slide.gangguan ? 'mt-1' : 'mt-4']}>{slide.title}</span>
+          <span class="mt-1 block text-sm text-redup">{slide.tanggal}</span>
+        </button>
+        <template data-karosel-detail><div class="content"><slide.Content /></div></template>
+      </li>
+    ))}
+  </ul>
+
+  <div class="mt-6 flex justify-center gap-2" data-karosel-dots></div>
+
+  <dialog class="m-auto max-h-[92vh] w-[min(94vw,46rem)] overflow-y-auto rounded-2xl bg-white p-0 text-pipa backdrop:bg-pipa/85" aria-labelledby="karosel-dialog-judul" data-karosel-dialog>
+    <form method="dialog" class="sticky top-0 z-10 flex justify-end p-3 pb-0">
+      <button class="grid size-10 place-items-center rounded-full bg-white text-pipa shadow" aria-label="Tutup">
+        <Icon name="mdi:close" size={22} />
+      </button>
+    </form>
+    <div class="-mt-13">
+      <img class="aspect-video w-full object-cover" alt="" data-karosel-dialog-image>
+      <div class="p-5 sm:p-7">
+        <p class="flex items-center gap-2 text-sm font-bold text-meter" data-karosel-dialog-gangguan><span class="inline-block size-2 rounded-full bg-current" aria-hidden="true" />Gangguan layanan</p>
+        <h3 id="karosel-dialog-judul" class="mt-1 text-xl font-bold" data-karosel-dialog-title></h3>
+        <p class="mt-1 text-sm text-redup" data-karosel-dialog-tanggal></p>
+        <div class="mt-4" data-karosel-dialog-body></div>
+        <a href="/informasi/gangguan-layanan" class="group link mt-6 inline-flex items-center gap-1" data-karosel-dialog-link>Semua informasi gangguan <Icon name="mdi:arrow-right" size={18} class="nudge" /></a>
+      </div>
+    </div>
+  </dialog>
+</section>

@@ -14,7 +14,7 @@ async function load (): Promise<Pengumuman[] | null> {
 }
 
 /** Paragraf teks polos dari HTML pengumuman, tanpa menjalankan atau menyisipkan markup. */
-function paragraphs (html: string): string[] {
+export function paragraphs (html: string): string[] {
   const doc = new DOMParser().parseFromString(html, 'text/html')
   const blocks = [...doc.body.querySelectorAll('p, li')].map(node => (node.textContent ?? '').replace(/\s+/g, ' ').trim())
   const text = blocks.length ? blocks : [(doc.body.textContent ?? '').replace(/\s+/g, ' ').trim()]

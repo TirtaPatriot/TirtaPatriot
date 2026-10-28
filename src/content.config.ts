@@ -6,7 +6,7 @@
 import { defineCollection } from 'astro:content'
 import { file, glob } from 'astro/loaders'
 import { z } from 'astro/zod'
-import { fetchGangguan, isSelesai } from './lib/info-pelanggan'
+import { fetchGangguan, fetchPengumuman, isGangguan, isSelesai } from './lib/info-pelanggan'
 import { renderContent } from './lib/render-content'
 
 /** Berita & edukasi: Markdown di src/content/artikel/{berita,edukasi}/<slug>.md, id = "berita/<slug>". */
@@ -107,6 +107,38 @@ const gangguan = defineCollection({
   }),
 })
 
+/**
+ * Pengumuman & berita yang tayang di aplikasi Tirta Patriot Mobile (sistem Informasi Pelanggan), untuk karosel beranda.
+ * Snapshot saat build; beranda memperbaruinya langsung dari API di browser.
+ */
+const pengumuman = defineCollection({
+  loader: {
+    name: 'info-pelanggan-pengumuman',
+    async load ({ store, parseData, logger }) {
+      store.clear()
+      let items: Awaited<ReturnType<typeof fetchPengumuman>> = []
+      try {
+        items = await fetchPengumuman()
+      } catch (error) {
+        logger.warn(`pengumuman tidak dimuat: ${String(error)}`)
+      }
+      for (const [urutan, item] of items.entries()) {
+        const data = await parseData({ id: item.id, data: { title: item.title, tanggal: item.date, image: item.cover_image || item.image || null, gangguan: isGangguan(item), urutan } })
+        store.set({ id: item.id, data, rendered: { html: await renderContent(item.description, 'html') } })
+      }
+      logger.info(`${items.length} pengumuman tayang`)
+    },
+  },
+  schema: z.object({
+    title: z.string(),
+    tanggal: z.string(),
+    image: z.string().nullable(),
+    gangguan: z.boolean(),
+    // urutan dari API (terbaru lebih dulu), sama dengan aplikasi
+    urutan: z.number(),
+  }),
+})
+
 const legal = defineCollection({
   loader: glob({ pattern: '*.md', base: './src/content/legal' }),
   schema: z.object({
@@ -127,4 +159,4 @@ const legal = defineCollection({
   }),
 })
 
-export const collections = { artikel, halaman, navigasi, kantor, mitra, direksi, gangguan, legal }
+export const collections = { artikel, halaman, navigasi, kantor, mitra, direksi, gangguan, pengumuman, legal }
