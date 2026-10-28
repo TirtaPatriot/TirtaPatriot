@@ -14,7 +14,7 @@ function slideFor (item: Pengumuman, index: number, total: number): HTMLLIElemen
   const image = item.cover_image || item.image || ''
   const loading = index === 0 ? 'eager' : 'lazy'
 
-  const open = el('button', 'block w-full cursor-pointer')
+  const open = el('button', 'mx-auto block w-full max-w-[calc((100svh-4.25rem-clamp(36px,6vw,84px)-2.75rem)*16/9)] cursor-pointer')
   if (image) {
     const img = el('img', 'block aspect-video w-full object-cover')
     img.src = image
@@ -39,7 +39,7 @@ function slideFor (item: Pengumuman, index: number, total: number): HTMLLIElemen
   detail.dataset.karoselDetail = ''
   detail.content.append(el('div', 'grid gap-3', ...paragraphs(item.description).map(text => el('p', '', text))))
 
-  const slide = el('li', 'w-full shrink-0 snap-start pb-[clamp(36px,6vw,84px)]')
+  const slide = el('li', 'w-full shrink-0 snap-start pb-[calc(clamp(36px,6vw,84px)+2.75rem)]')
   slide.append(open, detail)
   slide.setAttribute('aria-roledescription', 'slide')
   slide.setAttribute('aria-label', `${index + 1} dari ${total}`)
