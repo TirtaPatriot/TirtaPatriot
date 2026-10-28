@@ -1,0 +1,25 @@
+---
+import Icon from '../components/Icon.astro'
+import PageHead from '../components/PageHead.astro'
+import Base from '../layouts/Base.astro'
+---
+
+<Base title="Cari" description="Cari layanan, halaman, dan berita Perumda Tirta Patriot Kota Bekasi." noindex>
+  <PageHead title="Cari" lead="Temukan layanan, halaman, berita, dan materi edukasi." crumbs={[{ title: 'Beranda', href: '/' }]} narrow />
+
+  <div class="wrap wrap-narrow mt-10" data-cari-page>
+    <form action="/cari" method="get" role="search">
+      <label for="cari-halaman" class="sr-only">Kata kunci</label>
+      <div class="relative">
+        <Icon name="mdi:magnify" size={22} class="pointer-events-none absolute top-1/2 left-3.5 -translate-y-1/2 text-redup" />
+        <input id="cari-halaman" class="input pl-11 text-lg" type="search" name="q" autocomplete="off" enterkeyhint="search" placeholder="Misalnya: tagihan, pasang baru, pelatihan" autofocus>
+      </div>
+    </form>
+    <p class="mt-4 text-redup" role="status" data-cari-status>Memuat…</p>
+    <ul class="mt-2" data-cari-hasil></ul>
+  </div>
+</Base>
+
+<script>
+  import '../scripts/cari'
+</script>

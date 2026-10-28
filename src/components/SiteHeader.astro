@@ -13,6 +13,9 @@ const navigation = (await getCollection('navigasi')).toSorted((a, b) => order.in
   external: /^https?:/.test(data.tautan ?? ''),
   children: data.anak.map(child => ({ title: child.judul, href: child.tautan, external: /^https?:/.test(child.tautan) })),
 }))
+// tautan ke situs lain (Lelang) di pojok kanan, setelah tombol Layanan Pelanggan
+const main = navigation.filter(item => item.children.length || !item.external)
+const corner = navigation.filter(item => !item.children.length && item.external)
 const path = Astro.url.pathname.replace(/\/+$/, '') || '/'
 
 function isCurrent (href: string): boolean {
@@ -22,6 +25,7 @@ function isCurrent (href: string): boolean {
   return href === '/' ? path === '/' : path === href || path.startsWith(`${href}/`)
 }
 
+const searchInput = 'h-10 w-full rounded-full border border-garis bg-white pr-3 pl-9 text-sm text-pipa placeholder:text-redup hover:border-pipa-soft focus:border-patriot focus:outline-2 focus:outline-patriot [&::-webkit-search-cancel-button]:cursor-pointer'
 const linkClass = 'inline-flex min-h-11 items-center gap-1.5 rounded-md px-3 font-semibold text-pipa hover:bg-air aria-[current=page]:text-patriot'
 ---
 
@@ -33,7 +37,7 @@ const linkClass = 'inline-flex min-h-11 items-center gap-1.5 rounded-md px-3 fon
 
     <nav aria-label="Menu utama" class="hidden lg:block">
       <ul class="flex items-center gap-1">
-        {navigation.map(item => (
+        {main.map(item => (
           <li class="relative">
             {item.children.length ? (
               <details class="nav-menu group">
@@ -59,9 +63,25 @@ const linkClass = 'inline-flex min-h-11 items-center gap-1.5 rounded-md px-3 fon
             )}
           </li>
         ))}
-        <li class="ml-2">
-          <a href="/pelanggan" class="btn btn-primary" aria-current={isCurrent('/pelanggan') ? 'page' : undefined}>Layanan Pelanggan</a>
+        <li class="ml-1">
+          <form action="/cari" method="get" role="search" class="relative" data-cari-form>
+            <label for="cari-header" class="sr-only">Cari di situs</label>
+            <Icon name="mdi:magnify" size={20} class="pointer-events-none absolute top-1/2 left-2.5 -translate-y-1/2 text-redup" />
+            <input id="cari-header" class:list={[searchInput, 'w-36 transition-[width] duration-300 focus:w-44 xl:w-48 xl:focus:w-64']} type="search" name="q" autocomplete="off" enterkeyhint="search" placeholder="Cari berita, menu…">
+            <ul class="absolute top-full right-0 mt-2 grid w-[24rem] gap-0.5 rounded-xl border border-garis bg-white p-1.5 shadow-lift" hidden data-cari-saran></ul>
+          </form>
         </li>
+        <li class="ml-1">
+          <a href="/pelanggan" class="btn btn-primary whitespace-nowrap" aria-current={isCurrent('/pelanggan') ? 'page' : undefined}>Layanan Pelanggan</a>
+        </li>
+        {corner.map(item => (
+          <li>
+            <a href={item.href} class={linkClass} rel="noopener" target="_blank">
+              {item.title}
+              <Icon name="mdi:open-in-new" size={15} label="(situs lain)" />
+            </a>
+          </li>
+        ))}
       </ul>
     </nav>
 
@@ -73,10 +93,18 @@ const linkClass = 'inline-flex min-h-11 items-center gap-1.5 rounded-md px-3 fon
 
   <nav id="menu-ponsel" aria-label="Menu utama" class="mobile-menu border-t border-garis bg-white lg:hidden" hidden>
     <ul class="wrap flex flex-col py-3">
+      <li class="pb-3">
+        <form action="/cari" method="get" role="search" class="relative" data-cari-form>
+          <label for="cari-ponsel" class="sr-only">Cari di situs</label>
+          <Icon name="mdi:magnify" size={20} class="pointer-events-none absolute top-5 left-2.5 -translate-y-1/2 text-redup" />
+          <input id="cari-ponsel" class:list={[searchInput, 'h-10 text-base']} type="search" name="q" autocomplete="off" enterkeyhint="search" placeholder="Cari berita, menu…">
+          <ul class="mt-2 grid gap-0.5 rounded-xl border border-garis p-1.5" hidden data-cari-saran></ul>
+        </form>
+      </li>
       <li class="pb-2">
         <a href="/pelanggan" class="btn btn-primary w-full">Layanan Pelanggan</a>
       </li>
-      {navigation.map(item => (
+      {[...main, ...corner].map(item => (
         <li>
           {item.children.length ? (
             <>
@@ -100,6 +128,8 @@ const linkClass = 'inline-flex min-h-11 items-center gap-1.5 rounded-md px-3 fon
 </header>
 
 <script>
+  import '../scripts/cari'
+
   // bayangan tipis setelah halaman digulir
   const header = document.querySelector<HTMLElement>('[data-site-header]')
   const onScroll = () => header?.toggleAttribute('data-scrolled', window.scrollY > 8)
