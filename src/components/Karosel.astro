@@ -2,7 +2,8 @@
 /**
  * Karosel teratas beranda: pengumuman & berita yang sama dengan yang tayang di aplikasi Tirta Patriot Mobile.
  * Isi saat build dari koleksi `pengumuman`; src/scripts/karosel.ts menggerakkan dan memperbaruinya dari API.
- * Poster dari aplikasi berukuran 16:9 dan sudah memuat teksnya sendiri, jadi ditampilkan utuh (tidak dipotong).
+ * Poster dari aplikasi berukuran 16:9 dan sudah memuat teksnya sendiri, jadi ditampilkan selebar layar tanpa dipotong;
+ * gelombang menuju hero berada di bawah poster agar tidak menutupi teksnya.
  */
 import { getCollection, render } from 'astro:content'
 import Icon from './Icon.astro'
@@ -12,8 +13,8 @@ const slides = await Promise.all((await getCollection('pengumuman'))
   .toSorted((a, b) => a.data.urutan - b.data.urutan)
   .map(async entry => ({ id: entry.id, ...entry.data, Content: (await render(entry)).Content })))
 
-// tombol panah di tengah poster (bukan tengah section, yang termasuk ruang titik & gelombang di bawah)
-const arrow = 'absolute top-[calc(50%-2.5rem)] z-10 grid size-9 -translate-y-1/2 cursor-pointer place-items-center rounded-full bg-pipa-deep/75 text-white backdrop-blur transition hover:bg-pipa-deep sm:size-14'
+// tombol panah di tengah poster (bukan tengah section, yang termasuk ruang gelombang di bawah)
+const arrow = 'absolute top-[calc(50%-clamp(36px,6vw,84px)/2)] z-10 grid size-9 -translate-y-1/2 cursor-pointer place-items-center rounded-full bg-pipa-deep/75 text-white backdrop-blur transition hover:bg-pipa-deep sm:size-14'
 ---
 
 <section class="relative isolate overflow-hidden bg-pipa-deep" aria-labelledby="karosel-judul" data-karosel data-karosel-ids={slides.map(slide => slide.id).join(',')} hidden={slides.length === 0}>
@@ -26,10 +27,8 @@ const arrow = 'absolute top-[calc(50%-2.5rem)] z-10 grid size-9 -translate-y-1/2
     data-karosel-track
   >
     {slides.map((slide, index) => (
-      <li class="relative isolate w-full shrink-0 snap-start overflow-hidden px-3 pt-4 pb-[calc(clamp(36px,6vw,84px)+3rem)] sm:pt-6" aria-roledescription="slide" aria-label={`${index + 1} dari ${slides.length}`} data-karosel-slide={slide.id}>
-        {/* latar: poster yang sama, buram, mengisi sisi kiri-kanan layar lebar */}
-        {slide.image && <img src={slide.image} alt="" aria-hidden="true" loading={index === 0 ? 'eager' : 'lazy'} decoding="async" class="absolute inset-0 -z-10 h-full w-full scale-110 object-cover opacity-50 blur-2xl" />}
-        <button type="button" class="mx-auto block w-full max-w-[min(100%,calc((100svh-15rem)*16/9))] cursor-pointer overflow-hidden rounded-lg shadow-lift sm:rounded-xl" aria-label={`${slide.title}, ${slide.tanggal}`} data-karosel-open data-title={slide.title} data-tanggal={slide.tanggal} data-image={slide.image ?? ''} data-gangguan={slide.gangguan ? '' : undefined}>
+      <li class="w-full shrink-0 snap-start pb-[clamp(36px,6vw,84px)]" aria-roledescription="slide" aria-label={`${index + 1} dari ${slides.length}`} data-karosel-slide={slide.id}>
+        <button type="button" class="block w-full cursor-pointer" aria-label={`${slide.title}, ${slide.tanggal}`} data-karosel-open data-title={slide.title} data-tanggal={slide.tanggal} data-image={slide.image ?? ''} data-gangguan={slide.gangguan ? '' : undefined}>
           {slide.image
             ? <img src={slide.image} alt="" width="1280" height="720" loading={index === 0 ? 'eager' : 'lazy'} fetchpriority={index === 0 ? 'high' : undefined} decoding="async" class="block aspect-video w-full object-cover" />
             : <span class="grid aspect-video w-full place-items-center p-8 text-center text-title font-extrabold text-white">{slide.title}</span>}
@@ -46,7 +45,7 @@ const arrow = 'absolute top-[calc(50%-2.5rem)] z-10 grid size-9 -translate-y-1/2
     <button type="button" class:list={[arrow, 'right-1 sm:right-8']} data-karosel-next aria-label="Berikutnya">
       <Icon name="mdi:chevron-right" size={28} />
     </button>
-    <div class="absolute inset-x-0 bottom-[calc(clamp(36px,6vw,84px)+0.5rem)] z-10 flex items-center justify-center gap-3">
+    <div class="absolute inset-x-0 bottom-[calc(clamp(36px,6vw,84px)+0.75rem)] sm:bottom-[calc(clamp(36px,6vw,84px)+1.5rem)] z-10 flex items-center justify-center gap-3">
       <div class="flex items-center gap-2 rounded-full bg-pipa-deep/55 px-3 py-2 backdrop-blur" data-karosel-dots></div>
       <button type="button" class="group grid size-8 cursor-pointer place-items-center rounded-full bg-pipa-deep/55 text-white backdrop-blur hover:bg-pipa-deep" data-karosel-play aria-label="Hentikan putar otomatis">
         <Icon name="mdi:pause" size={18} class="group-data-paused:hidden" />

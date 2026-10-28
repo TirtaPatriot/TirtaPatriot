@@ -14,7 +14,7 @@ function slideFor (item: Pengumuman, index: number, total: number): HTMLLIElemen
   const image = item.cover_image || item.image || ''
   const loading = index === 0 ? 'eager' : 'lazy'
 
-  const open = el('button', 'mx-auto block w-full max-w-[min(100%,calc((100svh-15rem)*16/9))] cursor-pointer overflow-hidden rounded-lg shadow-lift sm:rounded-xl')
+  const open = el('button', 'block w-full cursor-pointer')
   if (image) {
     const img = el('img', 'block aspect-video w-full object-cover')
     img.src = image
@@ -39,15 +39,7 @@ function slideFor (item: Pengumuman, index: number, total: number): HTMLLIElemen
   detail.dataset.karoselDetail = ''
   detail.content.append(el('div', 'grid gap-3', ...paragraphs(item.description).map(text => el('p', '', text))))
 
-  const slide = el('li', 'relative isolate w-full shrink-0 snap-start overflow-hidden px-3 pt-4 pb-[calc(clamp(36px,6vw,84px)+3rem)] sm:pt-6')
-  if (image) {
-    const backdrop = el('img', 'absolute inset-0 -z-10 h-full w-full scale-110 object-cover opacity-50 blur-2xl')
-    backdrop.src = image
-    backdrop.alt = ''
-    backdrop.loading = loading
-    backdrop.setAttribute('aria-hidden', 'true')
-    slide.append(backdrop)
-  }
+  const slide = el('li', 'w-full shrink-0 snap-start pb-[clamp(36px,6vw,84px)]')
   slide.append(open, detail)
   slide.setAttribute('aria-roledescription', 'slide')
   slide.setAttribute('aria-label', `${index + 1} dari ${total}`)
