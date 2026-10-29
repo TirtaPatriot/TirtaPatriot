@@ -52,7 +52,9 @@ function tersimpan (nomor: string): string | null {
   }
 }
 
-const biaya = (kanal: Kanal) => kanal.persen ? `${kanal.persen * 100}%` : rupiah(kanal.biaya_admin)
+// persen dari API berupa pecahan (0,01 = 1%)
+const PERSEN = new Intl.NumberFormat('id-ID', { style: 'percent', maximumFractionDigits: 2 })
+const biaya = (kanal: Kanal) => kanal.persen ? PERSEN.format(kanal.persen) : rupiah(kanal.biaya_admin)
 
 // logo bank dari src/assets/mitra/bank-<kode>.png; kanal VA tertutup berkode va<bank>-close
 const LOGO = import.meta.glob<string>('../assets/mitra/bank-*.png', { eager: true, query: '?url', import: 'default' })
@@ -212,7 +214,9 @@ export async function mountBayar (container: HTMLElement, nomor: string): Promis
   }
 
   let timer: number | undefined
-  const mulai = Date.now()
+  // batas pemantauan dihitung per transaksi, bukan sejak halaman dimuat
+  let dipantau = ''
+  let mulai = 0
 
   const tampilTransaksi = (trx: Transaksi) => {
     ganti(transaksiCard(trx, () => {
@@ -222,8 +226,14 @@ export async function mountBayar (container: HTMLElement, nomor: string): Promis
     window.clearTimeout(timer)
     if (trx.status === 'menunggu' || trx.status === 'diproses') {
       simpan(nomor, trx.kode)
+      if (trx.kode !== dipantau) {
+        dipantau = trx.kode
+        mulai = Date.now()
+      }
       if (Date.now() - mulai < PANTAU_MAKS) {
         timer = window.setTimeout(() => void pantau(trx.kode), PANTAU_MS)
+      } else {
+        body.append(el('p', 'notice notice-warn', 'Status tidak lagi diperbarui otomatis. Muat ulang halaman untuk melihat status terbaru.'))
       }
     } else {
       simpan(nomor, trx.status === 'lunas' || trx.status === 'kedaluwarsa' ? null : trx.kode)

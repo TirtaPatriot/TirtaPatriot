@@ -116,11 +116,14 @@ export function initLaporKebocoran (): void {
       if (!value('pelapor')) {
         throw new Error('Tulis nama Anda sebagai pelapor.')
       }
-      if (!/^(\+?62|0)\d{8,13}$/.test(value('telepon').replace(/[\s-]/g, ''))) {
+      if (!/^(62|0)\d{8,13}$/.test(telepon())) {
         throw new Error('Nomor telepon tidak valid. Contoh: 0812 3456 7890.')
       }
     }
   }
+
+  // nomor telepon dikirim sebagai angka saja, sama dengan yang diperiksa
+  const telepon = () => value('telepon').replace(/\D+/g, '')
 
   async function send (): Promise<string> {
     const foto = await Promise.all(photos.map(photo => blobToDataUrl(photo.blob)))
@@ -129,7 +132,7 @@ export function initLaporKebocoran (): void {
       body: {
         'jenis': value('jenis'),
         'pelapor': value('pelapor'),
-        'telepon': value('telepon'),
+        'telepon': telepon(),
         'alamat': value('alamat'),
         'keterangan': value('keterangan'),
         'latitude': Number(value('latitude')),

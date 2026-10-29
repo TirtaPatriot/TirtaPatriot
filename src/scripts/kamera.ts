@@ -78,8 +78,10 @@ export function takePhoto (title: string, hint: string, caption: string[]): Prom
 
     let stream: MediaStream | null = null
     let result: Capture | null = null
+    let finished = false
 
     const finish = (value: Capture | null) => {
+      finished = true
       stream?.getTracks().forEach(track => track.stop())
       dialog.close()
       dialog.remove()
@@ -127,8 +129,12 @@ export function takePhoto (title: string, hint: string, caption: string[]): Prom
       const when = new Intl.DateTimeFormat('id-ID', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'Asia/Jakarta' }).format(takenAt)
       stamp(context, canvas.width, canvas.height, [...caption, `${when} WIB`])
       canvas.toBlob(blob => {
-        if (!blob) {
+        if (!blob || finished) {
           return
+        }
+        // ketukan ganda: lepaskan URL hasil sebelumnya
+        if (result) {
+          URL.revokeObjectURL(result.url)
         }
         result = { blob, url: URL.createObjectURL(blob), takenAt }
         preview.src = result.url
@@ -147,11 +153,19 @@ export function takePhoto (title: string, hint: string, caption: string[]): Prom
 
     navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' }, width: { ideal: 1920 }, height: { ideal: 1080 } }, audio: false })
       .then(media => {
+        // dialog sudah ditutup selagi izin kamera diminta: matikan kamera, jangan dibiarkan menyala
+        if (finished) {
+          media.getTracks().forEach(track => track.stop())
+          return
+        }
         stream = media
         video.srcObject = media
         return video.play()
       })
       .then(() => {
+        if (finished) {
+          return
+        }
         status.remove()
         shutter.disabled = false
         shutter.focus()

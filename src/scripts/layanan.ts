@@ -96,6 +96,8 @@ export function mountVerifikasi (root: HTMLElement): { lanjut: () => Promise<Ses
     reveal(done, false)
     reveal(fields, true)
     input('nomor').focus()
+    // halaman membersihkan data pelanggan sebelumnya (riwayat, pengajuan)
+    root.dispatchEvent(new CustomEvent('verifikasi:ganti', { bubbles: true }))
   })
   for (const name of ['nomor', 'bayar']) {
     input(name).addEventListener('input', event => {
@@ -114,6 +116,11 @@ export function mountVerifikasi (root: HTMLElement): { lanjut: () => Promise<Ses
       const sesi = getSesi()
       if (sesi) {
         return sesi
+      }
+      // sesi berakhir selagi isian tersembunyi: tampilkan lagi isiannya, jangan membaca isian kosong
+      if (fields.hidden) {
+        tampil()
+        throw new SesiBerakhir('Sesi layanan berakhir. Silakan verifikasi ulang nomor pelanggan Anda.')
       }
       const nomor = input('nomor').value.trim()
       const nama = input('nama').value.trim()

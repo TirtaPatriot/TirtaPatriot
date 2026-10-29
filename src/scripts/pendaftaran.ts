@@ -52,8 +52,9 @@ function bindSignature (canvas: HTMLCanvasElement): { isEmpty: () => boolean, to
     if (!width) {
       return
     }
-    canvas.width = width * ratio
-    canvas.height = height * ratio
+    // dibulatkan sama dengan pemeriksaan di pointerdown; bila tidak, setiap goresan mengosongkan kanvas
+    canvas.width = Math.round(width * ratio)
+    canvas.height = Math.round(height * ratio)
     context.scale(ratio, ratio)
     context.lineWidth = 2.5
     context.lineCap = 'round'

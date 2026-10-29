@@ -61,7 +61,7 @@ export function initPengaduan (): void {
   const jenisSelect = field('jenis') as HTMLSelectElement
   const masalahInput = field('masalah') as HTMLTextAreaElement
 
-  const state = { step: 0, masked: '', id: '', verifiedNama: '', maskedFor: '', moving: false }
+  const state = { step: 0, masked: '', id: '', verifiedNama: '', verifiedFor: '', maskedFor: '', moving: false }
 
   nomorInput.addEventListener('focus', warmRecaptcha, { once: true })
 
@@ -162,17 +162,23 @@ export function initPengaduan (): void {
     if (!nama) {
       throw new Error('Tulis nama lengkap sesuai data sambungan Anda.')
     }
-    if (state.id && state.verifiedNama === nama) {
+    const nomor = nomorInput.value.trim()
+    if (state.id && state.verifiedNama === nama && state.verifiedFor === nomor) {
       return
     }
 
     try {
       const result = await api<{ id?: string }>('/pelanggan', {
         method: 'POST',
-        body: { 'nomor': nomorInput.value.trim(), nama, 'g-recaptcha-response': await recaptchaToken('aduan') },
+        body: { nomor, nama, 'g-recaptcha-response': await recaptchaToken('aduan') },
       })
+      // nomor diganti selagi verifikasi berjalan: jawaban untuk nomor lama tidak dipakai
+      if (nomorInput.value.trim() !== nomor) {
+        throw new Error('Nomor pelanggan berubah. Silakan verifikasi ulang.')
+      }
       state.id = result?.id ?? ''
       state.verifiedNama = nama
+      state.verifiedFor = nomor
     } catch (caught) {
       state.id = ''
       state.verifiedNama = ''
@@ -180,6 +186,14 @@ export function initPengaduan (): void {
         throw new Error('Nama tidak sesuai dengan data sambungan. Tulis nama lengkap sesuai rekening air, tanpa tanda bintang.', { cause: caught })
       }
       throw caught
+    }
+  }
+
+  /** Sama dengan pemeriksaan API Open: nomor Indonesia 08… atau 62…, 9–14 digit. */
+  function checkTelepon (): void {
+    const digits = field('telepon').value.replace(/\D+/g, '').replace(/^62/, '0')
+    if (!/^0\d{8,13}$/.test(digits)) {
+      throw new Error('Nomor telepon tidak valid. Gunakan nomor yang dapat dihubungi petugas, mis. 0812xxxxxxx.')
     }
   }
 
@@ -211,12 +225,18 @@ export function initPengaduan (): void {
     event.preventDefault()
     showError(error, '')
     setBusy(next, true)
+    // Kembali dikunci selama permintaan berjalan agar jawaban tidak mendarat di langkah lain
+    if (prev) {
+      prev.disabled = true
+    }
 
     try {
       if (state.step === 0) {
         await lookUpCustomer()
       } else if (state.step === 1) {
         await verifyName()
+      } else if (state.step === 2) {
+        checkTelepon()
       } else if (state.step === 3) {
         const tiket = await submitComplaint()
         form.hidden = true
@@ -235,6 +255,9 @@ export function initPengaduan (): void {
       showError(error, errorMessage(caught, 'Permintaan belum berhasil. Coba lagi dalam beberapa saat.'))
     } finally {
       setBusy(next, false)
+      if (prev) {
+        prev.disabled = false
+      }
     }
   })
 }

@@ -29,7 +29,7 @@ const periode = (value: unknown) => {
 /** label isian dari API dirapikan: huruf kapital di awal saja, keterangan dalam kurung tetap */
 const tidy = (label: string) => label.charAt(0) + label.slice(1).toLowerCase().replace(/\bpemertintah\b/, 'pemerintah')
 
-export async function initUbahData (): Promise<void> {
+export function initUbahData (): void {
   const form = document.querySelector<HTMLFormElement>('[data-ubah-form]')
   if (!form) {
     return
@@ -52,20 +52,23 @@ export async function initUbahData (): Promise<void> {
   const wizard = createWizard(form, TITLES, { lastLabel: 'Kirim pengajuan' })
   const verifikasi = mountVerifikasi(form.querySelector<HTMLElement>('[data-verifikasi]')!)
 
-  // jenis pengajuan
+  // jenis pengajuan: tidak ditunggu, agar penangan submit terpasang sebelum pengguna dapat mengirim formulir
+  // (bila belum terpasang, browser mengirim GET dengan nama dan pembayaran terakhir di URL)
   let jenisList: Jenis[] = []
-  try {
-    jenisList = await api<Jenis[]>('/pengajuan/jenis')
-    typesBox.replaceChildren(...jenisList.map(jenis => {
-      const radio = el('input', 'mt-1 size-4 shrink-0 accent-patriot')
-      radio.type = 'radio'
-      radio.name = 'jenis'
-      radio.value = jenis.id
-      return el('label', 'flex cursor-pointer items-start gap-3 rounded-lg border border-garis bg-white p-4 font-semibold transition-colors has-[:checked]:border-patriot has-[:checked]:bg-air', radio, jenis.label)
-    }))
-  } catch {
-    typesBox.replaceChildren(el('p', 'notice notice-error', 'Jenis pengajuan belum dapat dimuat. Silakan muat ulang halaman.'))
-  }
+  api<Jenis[]>('/pengajuan/jenis')
+    .then(list => {
+      jenisList = list
+      typesBox.replaceChildren(...jenisList.map(jenis => {
+        const radio = el('input', 'mt-1 size-4 shrink-0 accent-patriot')
+        radio.type = 'radio'
+        radio.name = 'jenis'
+        radio.value = jenis.id
+        return el('label', 'flex cursor-pointer items-start gap-3 rounded-lg border border-garis bg-white p-4 font-semibold transition-colors has-[:checked]:border-patriot has-[:checked]:bg-air', radio, jenis.label)
+      }))
+    })
+    .catch(() => {
+      typesBox.replaceChildren(el('p', 'notice notice-error', 'Jenis pengajuan belum dapat dimuat. Silakan muat ulang halaman.'))
+    })
 
   typesBox.addEventListener('change', () => void loadFields())
 
@@ -79,17 +82,26 @@ export async function initUbahData (): Promise<void> {
     }
     fieldsBox.replaceChildren(el('p', 'text-redup', 'Menyiapkan isian…'))
     const key = `${jenis.id}:${state.customer}`
+    // jawaban untuk jenis/nomor yang sudah tidak dipilih diabaikan, agar tidak menimpa isian jenis yang baru
+    const masihDipilih = () => state.jenis === jenis && `${jenis.id}:${state.customer}` === key
     try {
       if (state.prefillFor !== key) {
-        state.prefill = await layanan<Prefill>(`/pengajuan/siapkan?jenis=${encodeURIComponent(jenis.id)}`)
+        const prefill = await layanan<Prefill>(`/pengajuan/siapkan?jenis=${encodeURIComponent(jenis.id)}`)
+        if (!masihDipilih()) {
+          return
+        }
+        state.prefill = prefill
         state.prefillFor = key
       }
     } catch (caught) {
+      if (!masihDipilih()) {
+        return
+      }
       state.prefill = null
       fieldsBox.replaceChildren(el('p', 'notice notice-error', pesanGalat(caught, 'Data pengajuan belum dapat disiapkan. Silakan coba lagi.')))
       return
     }
-    if (state.jenis !== jenis) {
+    if (!masihDipilih()) {
       return
     }
     renderFields(jenis, state.prefill ?? {})
@@ -218,17 +230,33 @@ export async function initUbahData (): Promise<void> {
     }
   })
 
+  // ganti nomor: riwayat dan isian pelanggan sebelumnya dibersihkan
+  form.addEventListener('verifikasi:ganti', () => {
+    riwayatNomor = ''
+    state.prefill = null
+    state.prefillFor = ''
+    historyRequest++
+    document.querySelector<HTMLElement>('[data-history]')?.replaceChildren()
+  })
+
   document.querySelector('[data-again]')?.addEventListener('click', () => location.reload())
 }
+
+let historyRequest = 0
 
 async function loadHistory (): Promise<void> {
   const box = document.querySelector<HTMLElement>('[data-history]')
   if (!box) {
     return
   }
+  // hanya jawaban permintaan terakhir yang ditampilkan
+  const request = ++historyRequest
   box.replaceChildren(el('p', 'text-redup', 'Memuat…'))
   try {
     const items = await layanan<Riwayat[]>('/pengajuan')
+    if (request !== historyRequest) {
+      return
+    }
     if (!items?.length) {
       box.replaceChildren(el('p', 'text-redup', 'Belum ada pengajuan untuk nomor ini.'))
       return
@@ -247,6 +275,9 @@ async function loadHistory (): Promise<void> {
       )
     }))
   } catch {
+    if (request !== historyRequest) {
+      return
+    }
     box.replaceChildren(el('p', 'text-redup', 'Riwayat pengajuan belum dapat dimuat.'))
   }
 }

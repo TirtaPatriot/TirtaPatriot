@@ -229,6 +229,9 @@ export function initRiwayat (): void {
       result.querySelector('[data-pakai-chart]')!.replaceChildren(chart)
       bindChart(chart)
     } else {
+      // kosongkan ringkasan pelanggan sebelumnya
+      result.querySelector('[data-ringkas]')!.replaceChildren()
+      result.querySelector('[data-pakai-notice]')!.replaceChildren()
       result.querySelector('[data-pakai-chart]')!.replaceChildren(el('p', 'text-redup', 'Belum ada data pemakaian untuk nomor ini.'))
     }
     result.querySelector('[data-bayar-rows]')!.replaceChildren(...bayarRows(data))
@@ -257,6 +260,10 @@ export function initRiwayat (): void {
   form.addEventListener('submit', event => {
     event.preventDefault()
     void muat()
+  })
+  // ganti nomor: riwayat pelanggan sebelumnya tidak dibiarkan tampil
+  form.addEventListener('verifikasi:ganti', () => {
+    result.hidden = true
   })
   // sesi verifikasi masih berlaku (mis. dari halaman catat meter): langsung tampilkan
   if (getSesi()) {

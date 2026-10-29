@@ -30,7 +30,7 @@ const steps = ['Verifikasi', 'Foto meter', 'Rumah dan lokasi']
         </ol>
         <p class="sr-only" aria-live="polite" data-step-announce>Langkah 1 dari 3: Verifikasi</p>
 
-        <form class="mt-8 grid gap-6" novalidate data-catat-form>
+        <form class="mt-8 grid gap-6" method="post" novalidate data-catat-form>
           <VerifikasiPelanggan id="catat" />
 
           <fieldset data-step="1" class="grid gap-5" hidden>

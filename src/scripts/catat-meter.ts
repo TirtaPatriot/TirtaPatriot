@@ -37,8 +37,9 @@ function jadwalNotices (cek: Kelayakan): HTMLElement[] {
     notices.push(el('p', 'notice', `Petugas telah mencatat meter Anda bulan ini${tanggal}. Anda tetap dapat melapor; rekening bulan ini memakai angka petugas.`))
   }
   if (cek.hari_catat) {
-    const now = new Date()
-    const akhirBulan = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate()
+    // bulan berjalan menurut WIB, bukan zona waktu perangkat
+    const wib = new Date(Date.now() + 7 * 3600_000)
+    const akhirBulan = new Date(Date.UTC(wib.getUTCFullYear(), wib.getUTCMonth() + 1, 0)).getUTCDate()
     const dari = Math.max(1, cek.hari_catat - cek.toleransi_hari)
     const sampai = Math.min(akhirBulan, cek.hari_catat + cek.toleransi_hari)
     notices.push(cek.ideal

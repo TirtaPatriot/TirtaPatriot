@@ -17,7 +17,8 @@ import rehypeContentGuard from './rehype-content-guard'
 
 const BLOCK_HTML = /^\s*<(?:p|div|h[1-6]|ul|ol|table|figure|blockquote|section|article|details)\b/i
 
-const SITE_HOST = 'tirtapatriot.co.id'
+// sama dengan `site` di astro.config.ts; tautan ke domain ini bukan tautan eksternal
+const SITE_HOST = new URL(process.env.SITE_URL || 'https://web.tirtapatriot.id').host
 
 export type ContentFormat = 'auto' | 'markdown' | 'html'
 
