@@ -1,6 +1,6 @@
 ---
 import { Font, getImage } from 'astro:assets'
-import kantorPusat from '../assets/kantor-pusat.webp'
+import ogDefault from '../assets/og-default.jpg'
 import SiteFooter from '../components/SiteFooter.astro'
 import SiteHeader from '../components/SiteHeader.astro'
 import { ORGANIZATION_LD, SITE_DESCRIPTION, SITE_NAME, SOCIALS } from '../lib/site'
@@ -28,9 +28,9 @@ const { title, description = SITE_DESCRIPTION, image, imageAlt, type = 'website'
 
 const fullTitle = title ? `${title} | ${SITE_NAME}` : `${SITE_NAME} Kota Bekasi`
 const canonical = new URL(Astro.url.pathname, Astro.site)
-// bawaan: foto kantor pusat dari CMS, dipotong ke ukuran pratinjau tautan
-const ogImage = image ?? new URL((await getImage({ src: kantorPusat, width: 1200, height: 630, fit: 'cover', format: 'jpg' })).src, Astro.site).toString()
-const ogImageAlt = imageAlt ?? (image ? title ?? SITE_NAME : `Kantor pusat ${SITE_NAME}`)
+// bawaan: kartu pratinjau bermerek (judul + ajakan cek tagihan) di atas foto kantor pusat
+const ogImage = image ?? new URL((await getImage({ src: ogDefault, width: 1200, height: 630, fit: 'cover', format: 'jpg' })).src, Astro.site).toString()
+const ogImageAlt = imageAlt ?? (image ? title ?? SITE_NAME : `${SITE_NAME}: Berapa tagihan air Anda bulan ini? Cek tagihan di web.tirtapatriot.id`)
 const facebook = SOCIALS.find(item => item.title === 'Facebook')?.href
 const isHome = Astro.url.pathname === '/'
 
