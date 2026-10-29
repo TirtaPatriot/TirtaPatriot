@@ -3,6 +3,7 @@ import { Image } from 'astro:assets'
 import { getCollection } from 'astro:content'
 import wordmark from '../assets/logo-wordmark.png'
 import navigasiJson from '../data/navigasi.json'
+import CariDialog from './CariDialog.astro'
 import Icon from './Icon.astro'
 
 // urutan mengikuti urutan di src/data/navigasi.json (loader file() tidak menjamin urutan)
@@ -25,7 +26,6 @@ function isCurrent (href: string): boolean {
   return href === '/' ? path === '/' : path === href || path.startsWith(`${href}/`)
 }
 
-const searchInput = 'h-10 w-full rounded-full border border-garis bg-white pr-3 pl-9 text-sm text-pipa placeholder:text-redup hover:border-pipa-soft focus:border-patriot focus:outline-2 focus:outline-patriot [&::-webkit-search-cancel-button]:cursor-pointer'
 const linkClass = 'inline-flex min-h-11 items-center gap-1.5 rounded-md px-3 font-semibold text-pipa hover:bg-air aria-[current=page]:text-patriot'
 ---
 
@@ -36,12 +36,11 @@ const linkClass = 'inline-flex min-h-11 items-center gap-1.5 rounded-md px-3 fon
       <Image src={wordmark} alt="" width={125} height={40} densities={[1, 2]} class="h-10 w-auto" loading="eager" />
     </a>
 
-    <form action="/cari" method="get" role="search" class="relative mr-auto hidden lg:block" data-cari-form>
-      <label for="cari-header" class="sr-only">Cari di situs</label>
-      <Icon name="mdi:magnify" size={20} class="pointer-events-none absolute top-1/2 left-2.5 -translate-y-1/2 text-redup" />
-      <input id="cari-header" class:list={[searchInput, 'w-44 transition-[width] duration-300 xl:w-64 xl:focus:w-80']} type="search" name="q" autocomplete="off" enterkeyhint="search" placeholder="Cari…">
-      <ul class="absolute top-full left-0 mt-2 grid w-[24rem] gap-0.5 rounded-xl border border-garis bg-white p-1.5 shadow-lift" hidden data-cari-saran></ul>
-    </form>
+    <button type="button" class="mr-auto hidden h-10 cursor-pointer items-center gap-2 rounded-full border border-garis bg-white pr-2 pl-3 text-sm text-redup transition-colors hover:border-patriot hover:text-patriot lg:inline-flex" aria-haspopup="dialog" data-cari-buka>
+      <Icon name="mdi:magnify" size={20} />
+      <span>Cari</span>
+      <kbd class="rounded-md border border-garis bg-kabut px-1.5 py-0.5 font-sans text-xs font-semibold">Ctrl K</kbd>
+    </button>
 
     <nav aria-label="Menu utama" class="hidden lg:block">
       <ul class="flex items-center gap-1">
@@ -85,22 +84,19 @@ const linkClass = 'inline-flex min-h-11 items-center gap-1.5 rounded-md px-3 fon
       </ul>
     </nav>
 
-    <button type="button" class="btn btn-quiet lg:hidden" aria-expanded="false" aria-controls="menu-ponsel" data-menu-toggle>
-      <Icon name="mdi:menu" size={22} />
-      Menu
-    </button>
+    <div class="flex items-center gap-2 lg:hidden">
+      <button type="button" class="btn btn-quiet size-11 p-0" aria-label="Cari" aria-haspopup="dialog" data-cari-buka>
+        <Icon name="mdi:magnify" size={22} />
+      </button>
+      <button type="button" class="btn btn-quiet" aria-expanded="false" aria-controls="menu-ponsel" data-menu-toggle>
+        <Icon name="mdi:menu" size={22} />
+        Menu
+      </button>
+    </div>
   </div>
 
   <nav id="menu-ponsel" aria-label="Menu utama" class="mobile-menu border-t border-garis bg-white lg:hidden" hidden>
     <ul class="wrap flex flex-col py-3">
-      <li class="pb-3">
-        <form action="/cari" method="get" role="search" class="relative" data-cari-form>
-          <label for="cari-ponsel" class="sr-only">Cari di situs</label>
-          <Icon name="mdi:magnify" size={20} class="pointer-events-none absolute top-5 left-2.5 -translate-y-1/2 text-redup" />
-          <input id="cari-ponsel" class:list={[searchInput, 'h-10 text-base']} type="search" name="q" autocomplete="off" enterkeyhint="search" placeholder="Cari berita, menu…">
-          <ul class="mt-2 grid gap-0.5 rounded-xl border border-garis p-1.5" hidden data-cari-saran></ul>
-        </form>
-      </li>
       <li class="pb-2">
         <a href="/pelanggan" class="btn btn-primary w-full">Layanan Pelanggan</a>
       </li>
@@ -126,6 +122,8 @@ const linkClass = 'inline-flex min-h-11 items-center gap-1.5 rounded-md px-3 fon
     </ul>
   </nav>
 </header>
+
+<CariDialog />
 
 <script>
   import '../scripts/cari'
