@@ -7,7 +7,9 @@ import { rehypeContentEnhance } from './src/lib/render-content'
 
 // https://docs.astro.build/en/reference/configuration-reference/
 export default defineConfig({
-  site: 'https://tirtapatriot.co.id',
+  // domain publik untuk URL absolut (canonical, Open Graph, sitemap); build-arg SITE_URL selama situs
+  // masih berjalan di domain lain sebelum tirtapatriot.co.id dipindahkan
+  site: process.env.SITE_URL || 'https://tirtapatriot.co.id',
   output: 'static',
   trailingSlash: 'ignore',
 

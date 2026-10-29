@@ -23,7 +23,7 @@ type Props = { article: CollectionEntry<'artikel'> }
 
 const { article } = Astro.props
 const { Content } = await render(article)
-const { judul, ringkasan, sampul, terbit } = article.data
+const { judul, ringkasan, sampul, terbit, diperbarui } = article.data
 const jenis = jenisOf(article)
 const meta = JENIS[jenis]
 const description = ringkasan ? plainText(ringkasan) : plainText(article.rendered?.html) || meta.lead
@@ -45,8 +45,11 @@ const shareTargets = [
   title={judul}
   description={description}
   image={new URL(ogImage.src, Astro.site).toString()}
+  imageAlt={judul}
   type="article"
   publishedTime={terbit}
+  modifiedTime={diperbarui}
+  section={meta.title}
 >
   <article>
     <header class="wrap wrap-narrow pt-8 md:pt-12">
@@ -79,9 +82,10 @@ const shareTargets = [
             <Icon name={target.icon} size={20} label={`Bagikan ke ${target.label}`} />
           </a>
         ))}
-        <button type="button" class="btn btn-quiet" data-copy={shareUrl}>
-          <Icon name="mdi:link-variant" size={20} />
-          <span data-copy-label>Salin tautan</span>
+        <!-- Web Share API bawaan perangkat; bila tidak didukung, tautan disalin ke papan klip -->
+        <button type="button" class="btn btn-quiet" data-share-native data-title={judul} data-text={description} data-path={`/${article.id}/`}>
+          <Icon name="mdi:share-variant" size={20} />
+          <span data-share-label>Bagikan artikel</span>
         </button>
       </div>
     </div>
@@ -98,21 +102,44 @@ const shareTargets = [
 </Base>
 
 <script>
-  for (const button of document.querySelectorAll<HTMLButtonElement>('[data-copy]')) {
-    const label = button.querySelector('[data-copy-label]')
+  // tombol bagikan: lembar bagikan bawaan perangkat (Web Share API), tanpa pustaka pihak ketiga
+  for (const button of document.querySelectorAll<HTMLButtonElement>('[data-share-native]')) {
+    const label = button.querySelector('[data-share-label]')
+    const idle = label?.textContent ?? ''
+    const { title = document.title, text = '', path = location.pathname } = button.dataset
+    // URL dari domain yang sedang dibuka, sehingga tautan yang dibagikan selalu bisa diakses
+    const url = new URL(path, location.origin).toString()
+    const data: ShareData = { title, text, url }
+    const native = typeof navigator.share === 'function' && (navigator.canShare?.(data) ?? true)
+    let timer = 0
+    const flash = (message: string): void => {
+      if (!label) {
+        return
+      }
+      label.textContent = message
+      clearTimeout(timer)
+      timer = window.setTimeout(() => {
+        label.textContent = idle
+      }, 2500)
+    }
+
     button.addEventListener('click', async () => {
+      if (native) {
+        try {
+          await navigator.share(data)
+          return
+        } catch (error) {
+          // AbortError = pengguna menutup lembar bagikan; galat lain jatuh ke salin tautan
+          if ((error as DOMException).name === 'AbortError') {
+            return
+          }
+        }
+      }
       try {
-        await navigator.clipboard.writeText(button.dataset.copy ?? location.href)
-        if (label) {
-          label.textContent = 'Tautan disalin'
-          setTimeout(() => {
-            label.textContent = 'Salin tautan'
-          }, 2000)
-        }
+        await navigator.clipboard.writeText(url)
+        flash('Tautan disalin')
       } catch {
-        if (label) {
-          label.textContent = 'Salin manual dari bilah alamat'
-        }
+        flash('Salin manual dari bilah alamat')
       }
     })
   }

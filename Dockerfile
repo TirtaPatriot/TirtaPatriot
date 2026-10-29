@@ -9,6 +9,8 @@ RUN bun install --frozen-lockfile
 
 COPY . .
 
+# domain publik untuk canonical, Open Graph, dan sitemap (lihat astro.config.ts)
+ARG SITE_URL=https://tirtapatriot.co.id
 # Nilai PUBLIC_* ditanam ke HTML/JS saat build (bukan saat container berjalan).
 ARG PUBLIC_API_URL=https://papi.tirtapatriot.id/web
 ARG PUBLIC_INFO_PELANGGAN_API=https://pelanggan.api.tirtapatriot.co
@@ -19,7 +21,8 @@ ARG PUBLIC_PIPA_TILES=https://tile.api.tirtapatriot.com
 # widget obrolan Chatwoot (token website bersifat publik); kirim build-arg kosong untuk menonaktifkan
 ARG PUBLIC_CHATWOOT_WEBSITE_TOKEN=LPKadeqQCpwESm9LQgr4kHVQ
 ARG PUBLIC_CHATWOOT_BASE_URL=https://omni.app.tirtapatriot.com
-ENV PUBLIC_API_URL=$PUBLIC_API_URL \
+ENV SITE_URL=$SITE_URL \
+    PUBLIC_API_URL=$PUBLIC_API_URL \
     PUBLIC_INFO_PELANGGAN_API=$PUBLIC_INFO_PELANGGAN_API \
     PUBLIC_RECAPTCHA_SITE_KEY=$PUBLIC_RECAPTCHA_SITE_KEY \
     PUBLIC_BASEMAP_STYLE=$PUBLIC_BASEMAP_STYLE \
