@@ -10,7 +10,7 @@ RUN bun install --frozen-lockfile
 COPY . .
 
 # domain publik untuk canonical, Open Graph, dan sitemap (lihat astro.config.ts)
-ARG SITE_URL=https://tirtapatriot.co.id
+ARG SITE_URL=https://web.tirtapatriot.id
 # Nilai PUBLIC_* ditanam ke HTML/JS saat build (bukan saat container berjalan).
 ARG PUBLIC_API_URL=https://papi.tirtapatriot.id/web
 ARG PUBLIC_INFO_PELANGGAN_API=https://pelanggan.api.tirtapatriot.co

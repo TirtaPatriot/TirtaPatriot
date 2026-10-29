@@ -1,6 +1,6 @@
 # tirtapatriot-web
 
-Situs publik Perumda Tirta Patriot Kota Bekasi — https://tirtapatriot.co.id
+Situs publik Perumda Tirta Patriot Kota Bekasi — https://web.tirtapatriot.id
 
 ## Stack
 

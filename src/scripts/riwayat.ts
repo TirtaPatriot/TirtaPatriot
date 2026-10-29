@@ -169,7 +169,7 @@ function cetakBukti (data: Riwayat, item: Rekening): void {
         baris('Tempat bayar', item.tempat ?? '-'),
       ),
     ),
-    el('p', 'mt-8 text-xs text-redup', `Dicetak dari tirtapatriot.co.id pada ${dateTimeShort(new Date())} WIB. Bukti ini disusun dari data pembayaran di sistem Perumda Tirta Patriot dan tidak menggantikan struk dari tempat pembayaran.`),
+    el('p', 'mt-8 text-xs text-redup', `Dicetak dari ${location.host} pada ${dateTimeShort(new Date())} WIB. Bukti ini disusun dari data pembayaran di sistem Perumda Tirta Patriot dan tidak menggantikan struk dari tempat pembayaran.`),
   )
   document.body.append(bukti)
   document.body.classList.add('mencetak-bukti')

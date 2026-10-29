@@ -6,7 +6,7 @@
 - Keep code in TypeScript unless migration is required.
 
 ## Stack
-- Framework: Astro 7 (static output, deployed to https://tirtapatriot.co.id)
+- Framework: Astro 7 (static output, deployed to https://web.tirtapatriot.id; domain set by `SITE_URL`, see `astro.config.ts`)
 - Styling: Tailwind CSS v4 (CSS-first config in `src/styles/global.css`, no UI library)
 - Language: TypeScript 7 (native compiler) for type-checking; interactive pages use plain TypeScript in `src/scripts/`, no client framework
 - Content: Astro content collections (`src/content.config.ts`) from Markdown/JSON in the repo (no Directus); operational snapshots from ERP MSSQL via `bun run data`; outages and new-connection registration through the Info Pelanggan API

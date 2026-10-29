@@ -82,7 +82,7 @@ const chatwootUrl = import.meta.env.PUBLIC_CHATWOOT_BASE_URL
 
     <Font cssVariable="--font-jakarta" preload />
 
-    {isHome && <script type="application/ld+json" set:html={JSON.stringify(ORGANIZATION_LD)} />}
+    {isHome && <script type="application/ld+json" set:html={JSON.stringify({ ...ORGANIZATION_LD, url: Astro.site?.toString(), logo: new URL('/logo.png', Astro.site).toString() })} />}
     <slot name="head" />
   </head>
 

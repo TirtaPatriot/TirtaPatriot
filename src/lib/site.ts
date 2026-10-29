@@ -38,8 +38,6 @@ export const ORGANIZATION_LD = {
   'alternateName': 'Tirta Patriot',
   'legalName': 'Perusahaan Umum Daerah Air Minum Tirta Patriot Kota Bekasi',
   'description': SITE_DESCRIPTION,
-  'url': 'https://tirtapatriot.co.id',
-  'logo': 'https://tirtapatriot.co.id/logo.png',
   'address': {
     '@type': 'PostalAddress',
     'streetAddress': 'Jl. Perjuangan No.99, RT.003/RW.011, Marga Mulya, Kec. Bekasi Utara',
