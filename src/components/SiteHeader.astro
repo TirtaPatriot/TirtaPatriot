@@ -88,9 +88,9 @@ const linkClass = 'inline-flex min-h-11 items-center gap-1.5 rounded-md px-3 fon
       <button type="button" class="btn btn-quiet size-11 p-0" aria-label="Cari" aria-haspopup="dialog" data-cari-buka>
         <Icon name="mdi:magnify" size={22} />
       </button>
-      <button type="button" class="btn btn-quiet" aria-expanded="false" aria-controls="menu-ponsel" data-menu-toggle>
-        <Icon name="mdi:menu" size={22} />
-        Menu
+      <button type="button" class="group btn btn-quiet size-11 p-0" aria-label="Menu" aria-expanded="false" aria-controls="menu-ponsel" data-menu-toggle>
+        <Icon name="mdi:menu" size={22} class="group-aria-expanded:hidden" />
+        <Icon name="mdi:close" size={22} class="hidden group-aria-expanded:block" />
       </button>
     </div>
   </div>
