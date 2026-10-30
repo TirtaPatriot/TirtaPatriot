@@ -148,7 +148,14 @@ function qrisGambar (qr: string): HTMLElement {
   )
 }
 
-function transaksiCard (trx: Transaksi, onBaru: () => void): HTMLElement {
+/** Kelompokkan digit nomor VA per 4 agar mudah dibaca; hanya untuk tampilan (yang disalin tetap mentah). */
+function kelompokVa (nomor: string): string {
+  return /^\d{8,}$/.test(nomor)
+    ? nomor.replace(/(\d{4})(?=\d)/g, '$1 ')
+    : nomor
+}
+
+function transaksiCard (trx: Transaksi, onBaru: () => void, onCek: () => Promise<void>): HTMLElement {
   const nomor = trx.nomor_bayar ?? ''
   const isQr = Boolean(trx.qr) && !nomor
   const salin = el('button', 'btn btn-quiet', 'Salin')
@@ -176,21 +183,39 @@ function transaksiCard (trx: Transaksi, onBaru: () => void): HTMLElement {
       )
     : el('div', '',
         el('p', 'text-sm text-redup', `Nomor ${trx.kanal}`),
-        el('div', 'mt-1 flex flex-wrap items-center gap-3', el('p', 'num text-title font-extrabold tracking-wider', nomor || '–'), ...(nomor && trx.status === 'menunggu' ? [salin] : [])),
+        el('div', 'mt-1 flex flex-wrap items-center gap-3', el('p', 'num text-title font-extrabold tracking-wider', kelompokVa(nomor) || '–'), ...(nomor && trx.status === 'menunggu' ? [salin] : [])),
       )
   const card = el('div', 'grid gap-4 rounded-2xl border border-garis p-5 sm:p-6',
     statusNotice(trx),
     identitas,
     el('dl', 'grid gap-x-8 gap-y-2 sm:grid-cols-2', ...rows.map(([label, value]) => el('div', '', el('dt', 'text-sm text-redup', label), el('dd', 'num font-semibold', value)))),
   )
-  if (trx.status === 'menunggu') {
-    card.append(el('p', 'text-sm text-redup', isQr
-      ? 'Pindai kode QR di atas dengan aplikasi apa pun yang mendukung QRIS (m-banking atau dompet digital). Pastikan jumlahnya sesuai total di atas.'
-      : `Bayar melalui aplikasi atau ATM ${trx.kanal.replace(/\s*VA$/, '')} dengan menu Virtual Account, lalu masukkan nomor di atas. Pastikan jumlahnya sesuai total di atas.`))
-    const ganti = el('button', 'btn btn-quiet justify-self-start', 'Ganti metode pembayaran')
-    ganti.type = 'button'
-    ganti.addEventListener('click', onBaru)
-    card.append(ganti)
+  if (trx.status === 'menunggu' || trx.status === 'diproses') {
+    if (trx.status === 'menunggu') {
+      card.append(el('p', 'text-sm text-redup', isQr
+        ? 'Pindai kode QR di atas dengan aplikasi apa pun yang mendukung QRIS (m-banking atau dompet digital). Pastikan jumlahnya sesuai total di atas.'
+        : `Bayar melalui aplikasi atau ATM ${trx.kanal.replace(/\s*VA$/, '')} dengan menu Virtual Account, lalu masukkan nomor di atas. Pastikan jumlahnya sesuai total di atas.`))
+    }
+    // cek status manual: status diperbarui tanpa menunggu callback gateway (yang bisa terlambat/hilang)
+    const cek = el('button', 'btn btn-primary justify-self-start', 'Sudah bayar? Cek status')
+    cek.type = 'button'
+    cek.dataset.idle = 'Sudah bayar? Cek status'
+    cek.addEventListener('click', async () => {
+      setBusy(cek, true, 'Mengecek…')
+      try {
+        await onCek()
+      } finally {
+        setBusy(cek, false)
+      }
+    })
+    const aksi = el('div', 'flex flex-wrap gap-3', cek)
+    if (trx.status === 'menunggu') {
+      const ganti = el('button', 'btn btn-quiet', 'Ganti metode pembayaran')
+      ganti.type = 'button'
+      ganti.addEventListener('click', onBaru)
+      aksi.append(ganti)
+    }
+    card.append(aksi)
   }
   if (trx.status === 'lunas') {
     const link = el('a', 'btn btn-quiet justify-self-start', 'Lihat riwayat pembayaran')
@@ -254,11 +279,20 @@ export async function mountBayar (container: HTMLElement, nomor: string): Promis
     pilihan(dipilihSebelumnya)
   }
 
+  // cek status manual (tombol): ambil status terkini sekali, biarkan render memperbarui kartu
+  const cekSekarang = async (kode: string) => {
+    try {
+      tampilTransaksi(await api<Transaksi>(`/bayar/${encodeURIComponent(kode)}`))
+    } catch {
+      // biarkan status lama; pengguna bisa coba lagi
+    }
+  }
+
   const tampilTransaksi = (trx: Transaksi) => {
     const tanda = `${trx.kode}|${trx.status}|${trx.nomor_bayar ?? ''}|${trx.qr ?? ''}|${trx.total}|${trx.batas ?? ''}`
     if (tanda !== tampil) {
       tampil = tanda
-      ganti(transaksiCard(trx, () => gantiMetode(kanal.find(k => k.nama === trx.kanal)?.kode)))
+      ganti(transaksiCard(trx, () => gantiMetode(kanal.find(k => k.nama === trx.kanal)?.kode), () => cekSekarang(trx.kode)))
     }
     window.clearTimeout(timer)
     if (trx.status === 'menunggu' || trx.status === 'diproses') {
