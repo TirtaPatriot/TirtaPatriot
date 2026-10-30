@@ -133,8 +133,24 @@ function statusNotice (trx: Transaksi): HTMLElement {
   }
 }
 
+/** Gambar QRIS dari gateway (umumnya URL/gambar); bila berupa payload EMV mentah, tampilkan teksnya sebagai cadangan. */
+function qrisGambar (qr: string): HTMLElement {
+  if (/^(https?:\/\/|data:image\/)/.test(qr)) {
+    const image = el('img', 'mt-2 size-60 rounded-lg bg-white p-2 ring-1 ring-garis')
+    image.src = qr
+    image.alt = 'Kode QR pembayaran QRIS'
+    image.loading = 'lazy'
+    return image
+  }
+  return el('div', 'mt-2',
+    el('p', 'num break-all rounded-lg bg-kabut p-3 text-sm', qr),
+    el('p', 'mt-1 text-sm text-redup', 'Salin kode ini ke aplikasi pembayaran QRIS Anda.'),
+  )
+}
+
 function transaksiCard (trx: Transaksi, onBaru: () => void): HTMLElement {
   const nomor = trx.nomor_bayar ?? ''
+  const isQr = Boolean(trx.qr) && !nomor
   const salin = el('button', 'btn btn-quiet', 'Salin')
   salin.type = 'button'
   salin.addEventListener('click', async () => {
@@ -152,22 +168,25 @@ function transaksiCard (trx: Transaksi, onBaru: () => void): HTMLElement {
     ['Bayar sebelum', trx.batas ? `${dateTimeShort(trx.batas)} WIB` : '–'],
     ['Kode transaksi', trx.kode],
   ]
+  // identitas pembayaran: QRIS = gambar untuk dipindai; VA = nomor virtual account
+  const identitas = isQr
+    ? el('div', '',
+        el('p', 'text-sm text-redup', 'Pindai dengan QRIS'),
+        qrisGambar(trx.qr!),
+      )
+    : el('div', '',
+        el('p', 'text-sm text-redup', `Nomor ${trx.kanal}`),
+        el('div', 'mt-1 flex flex-wrap items-center gap-3', el('p', 'num text-title font-extrabold tracking-wider', nomor || '–'), ...(nomor && trx.status === 'menunggu' ? [salin] : [])),
+      )
   const card = el('div', 'grid gap-4 rounded-2xl border border-garis p-5 sm:p-6',
     statusNotice(trx),
-    el('div', '',
-      el('p', 'text-sm text-redup', `Nomor ${trx.kanal}`),
-      el('div', 'mt-1 flex flex-wrap items-center gap-3', el('p', 'num text-title font-extrabold tracking-wider', nomor || '–'), ...(nomor && trx.status === 'menunggu' ? [salin] : [])),
-    ),
+    identitas,
     el('dl', 'grid gap-x-8 gap-y-2 sm:grid-cols-2', ...rows.map(([label, value]) => el('div', '', el('dt', 'text-sm text-redup', label), el('dd', 'num font-semibold', value)))),
   )
-  if (trx.qr && /^(https:|data:image\/png;base64,)/.test(trx.qr)) {
-    const image = el('img', 'size-56 rounded-lg ring-1 ring-garis')
-    image.src = trx.qr
-    image.alt = 'Kode QR pembayaran'
-    card.append(image)
-  }
   if (trx.status === 'menunggu') {
-    card.append(el('p', 'text-sm text-redup', `Bayar melalui aplikasi atau ATM ${trx.kanal.replace(/\s*VA$/, '')} dengan menu Virtual Account, lalu masukkan nomor di atas. Pastikan jumlahnya sesuai total di atas.`))
+    card.append(el('p', 'text-sm text-redup', isQr
+      ? 'Pindai kode QR di atas dengan aplikasi apa pun yang mendukung QRIS (m-banking atau dompet digital). Pastikan jumlahnya sesuai total di atas.'
+      : `Bayar melalui aplikasi atau ATM ${trx.kanal.replace(/\s*VA$/, '')} dengan menu Virtual Account, lalu masukkan nomor di atas. Pastikan jumlahnya sesuai total di atas.`))
     const ganti = el('button', 'btn btn-quiet justify-self-start', 'Ganti metode pembayaran')
     ganti.type = 'button'
     ganti.addEventListener('click', onBaru)
