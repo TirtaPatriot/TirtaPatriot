@@ -84,6 +84,13 @@
     border-radius: 2px;
   }
 
+  /* Wadah hasil/aria-live difokuskan lewat skrip hanya untuk memindah fokus pembaca layar.
+     Ini bukan kontrol interaktif, jadi cincin fokus besarnya dihilangkan agar tidak mengganggu. */
+  :is([data-tagihan-result], [data-status], [data-riwayat], [data-done]):focus,
+  :is([data-tagihan-result], [data-status], [data-riwayat], [data-done]):focus-visible {
+    outline: none;
+  }
+
   [hidden] {
     display: none !important;
   }
