@@ -359,27 +359,26 @@ export async function mountBayar (container: HTMLElement, nomor: string): Promis
       input.value = item.kode
       input.checked = dipilihSebelumnya ? item.kode === dipilihSebelumnya : index === 0
       input.addEventListener('change', () => perbaruiBiaya(item))
-      // logo bawaan situs (terkurasi) lebih diutamakan; selain itu logo gateway yang diproksi API Open
+      // logo bawaan situs (terkurasi, dipangkas rapat) mengisi seluruh kotak; logo gateway proporsinya tidak
+      // seragam (sering banyak ruang kosong), jadi ditampilkan sebagai ikon kecil di samping nama, bukan wordmark penuh
       const bawaan = logoKanal(item.kode)
-      const src = bawaan ?? (item.logo || undefined)
       const teks = el('span', 'text-sm font-bold', namaPendek(item.nama))
       let tanda: HTMLElement = teks
-      if (src) {
+      if (bawaan) {
         const image = el('img', 'h-7 w-full object-contain')
         image.alt = namaPendek(item.nama)
         image.loading = 'lazy'
-        // bila logo bawaan gagal, coba logo gateway; bila itu pun gagal, tampilkan teks nama
-        let gatewayBisa = Boolean(bawaan && item.logo)
-        image.addEventListener('error', () => {
-          if (gatewayBisa && item.logo) {
-            gatewayBisa = false
-            image.src = item.logo
-          } else {
-            image.replaceWith(teks)
-          }
-        })
-        image.src = src
+        image.addEventListener('error', () => image.replaceWith(teks))
+        image.src = bawaan
         tanda = image
+      } else if (item.logo) {
+        const ikon = el('img', 'size-6 shrink-0 rounded object-contain')
+        ikon.alt = ''
+        ikon.loading = 'lazy'
+        ikon.src = item.logo
+        const label = el('span', 'truncate text-xs font-semibold', namaPendek(item.nama))
+        ikon.addEventListener('error', () => ikon.remove())
+        tanda = el('span', 'flex min-w-0 items-center gap-2', ikon, label)
       }
       return el('label', 'grid h-14 cursor-pointer place-items-center rounded-lg border border-garis bg-white px-3 transition-colors hover:border-patriot/50 has-[:checked]:border-patriot has-[:checked]:bg-air has-[:checked]:ring-1 has-[:checked]:ring-patriot has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-patriot', input, tanda)
     })
