@@ -197,11 +197,11 @@ function transaksiCard (trx: Transaksi, onBaru: () => void, onCek: () => Promise
         : `Bayar melalui aplikasi atau ATM ${trx.kanal.replace(/\s*VA$/, '')} dengan menu Virtual Account, lalu masukkan nomor di atas. Pastikan jumlahnya sesuai total di atas.`))
     }
     // cek status manual: status diperbarui tanpa menunggu callback gateway (yang bisa terlambat/hilang)
-    const cek = el('button', 'btn btn-primary justify-self-start', 'Sudah bayar? Cek status')
+    const cek = el('button', 'btn btn-primary justify-self-start', 'Periksa status pembayaran')
     cek.type = 'button'
-    cek.dataset.idle = 'Sudah bayar? Cek status'
+    cek.dataset.idle = 'Periksa status pembayaran'
     cek.addEventListener('click', async () => {
-      setBusy(cek, true, 'Mengecek…')
+      setBusy(cek, true, 'Memeriksa…')
       try {
         await onCek()
       } finally {
