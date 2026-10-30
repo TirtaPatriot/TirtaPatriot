@@ -168,6 +168,10 @@ function transaksiCard (trx: Transaksi, onBaru: () => void): HTMLElement {
   }
   if (trx.status === 'menunggu') {
     card.append(el('p', 'text-sm text-redup', `Bayar melalui aplikasi atau ATM ${trx.kanal.replace(/\s*VA$/, '')} dengan menu Virtual Account, lalu masukkan nomor di atas. Pastikan jumlahnya sesuai total di atas.`))
+    const ganti = el('button', 'btn btn-quiet justify-self-start', 'Ganti metode pembayaran')
+    ganti.type = 'button'
+    ganti.addEventListener('click', onBaru)
+    card.append(ganti)
   }
   if (trx.status === 'lunas') {
     const link = el('a', 'btn btn-quiet justify-self-start', 'Lihat riwayat pembayaran')
@@ -219,15 +223,23 @@ export async function mountBayar (container: HTMLElement, nomor: string): Promis
   let mulai = 0
   // tampilan terakhir: kartu hanya digambar ulang bila ada yang berubah, agar tidak berkedip saat polling
   let tampil = ''
+  // kode yang sedang dipantau; polling yang tertinggal (mis. setelah "ganti metode") diabaikan
+  let pantauKode = ''
+
+  // kembali ke pilihan metode: hentikan pemantauan transaksi lama (VA-nya dibiarkan kedaluwarsa sendiri)
+  const gantiMetode = (dipilihSebelumnya?: string) => {
+    window.clearTimeout(timer)
+    pantauKode = ''
+    tampil = ''
+    simpan(nomor, null)
+    pilihan(dipilihSebelumnya)
+  }
 
   const tampilTransaksi = (trx: Transaksi) => {
     const tanda = `${trx.kode}|${trx.status}|${trx.nomor_bayar ?? ''}|${trx.qr ?? ''}|${trx.total}|${trx.batas ?? ''}`
     if (tanda !== tampil) {
       tampil = tanda
-      ganti(transaksiCard(trx, () => {
-        simpan(nomor, null)
-        pilihan()
-      }))
+      ganti(transaksiCard(trx, () => gantiMetode(kanal.find(k => k.nama === trx.kanal)?.kode)))
     }
     window.clearTimeout(timer)
     if (trx.status === 'menunggu' || trx.status === 'diproses') {
@@ -237,6 +249,7 @@ export async function mountBayar (container: HTMLElement, nomor: string): Promis
         mulai = Date.now()
       }
       if (Date.now() - mulai < PANTAU_MAKS) {
+        pantauKode = trx.kode
         timer = window.setTimeout(() => void pantau(trx.kode), PANTAU_MS)
       } else {
         body.append(el('p', 'notice notice-warn', 'Status tidak lagi diperbarui otomatis. Muat ulang halaman untuk melihat status terbaru.'))
@@ -247,7 +260,8 @@ export async function mountBayar (container: HTMLElement, nomor: string): Promis
   }
 
   const pantau = async (kode: string) => {
-    if (!section.isConnected) {
+    // transaksi sudah ditinggalkan (ganti metode / transaksi lain): abaikan polling tertinggal
+    if (kode !== pantauKode || !section.isConnected) {
       return
     }
     if (document.hidden) {
