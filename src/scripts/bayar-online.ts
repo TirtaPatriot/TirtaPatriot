@@ -217,12 +217,18 @@ export async function mountBayar (container: HTMLElement, nomor: string): Promis
   // batas pemantauan dihitung per transaksi, bukan sejak halaman dimuat
   let dipantau = ''
   let mulai = 0
+  // tampilan terakhir: kartu hanya digambar ulang bila ada yang berubah, agar tidak berkedip saat polling
+  let tampil = ''
 
   const tampilTransaksi = (trx: Transaksi) => {
-    ganti(transaksiCard(trx, () => {
-      simpan(nomor, null)
-      pilihan()
-    }))
+    const tanda = `${trx.kode}|${trx.status}|${trx.nomor_bayar ?? ''}|${trx.qr ?? ''}|${trx.total}|${trx.batas ?? ''}`
+    if (tanda !== tampil) {
+      tampil = tanda
+      ganti(transaksiCard(trx, () => {
+        simpan(nomor, null)
+        pilihan()
+      }))
+    }
     window.clearTimeout(timer)
     if (trx.status === 'menunggu' || trx.status === 'diproses') {
       simpan(nomor, trx.kode)
