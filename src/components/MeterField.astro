@@ -32,5 +32,8 @@ const cells = Array.from({ length: 12 }, (_, index) => index)
       aria-describedby={hint ? `${id}-hint` : undefined}
     >
   </div>
-  {hint && <p id={`${id}-hint`} class:list={['hint', dark && 'text-white/70!']}>{hint}</p>}
+  <div class:list={['meter-foot', dark && 'on-dark']}>
+    {hint && <p id={`${id}-hint`} class:list={['hint', dark && 'text-white/70!']}>{hint}</p>}
+    <button type="button" class="meter-reset" data-reset hidden>Reset</button>
+  </div>
 </div>

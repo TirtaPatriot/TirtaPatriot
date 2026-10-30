@@ -45,13 +45,24 @@ export function bindMeterFields (root: ParentNode = document): void {
     }
 
     field.dataset.bound = 'true'
+    // tombol Reset berada di baris hint (.meter-foot), sejajar dengan input di dalam .field
+    const reset = field.parentElement?.querySelector<HTMLButtonElement>('[data-reset]')
     const sync = () => {
       const clean = digitsOnly(input.value)
       if (clean !== input.value) {
         input.value = clean
       }
       renderRegister(field, clean)
+      if (reset) {
+        reset.hidden = !clean
+      }
     }
+
+    reset?.addEventListener('click', () => {
+      input.value = ''
+      sync()
+      input.focus()
+    })
 
     input.addEventListener('input', sync)
 
