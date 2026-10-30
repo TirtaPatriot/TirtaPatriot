@@ -12,13 +12,11 @@ import { el, setBusy, showError } from './dom'
 import { pesanGalat } from './layanan'
 import { enter } from './motion'
 
-type JenisKanal = 'va' | 'retail' | 'qr'
-type Kanal = { kode: string, nama: string, jenis?: JenisKanal, biaya_admin: number, persen: number, logo?: string | null }
+type Kanal = { kode: string, nama: string, biaya_admin: number, persen: number, logo?: string | null }
 type Transaksi = {
   kode: string
   status: 'menunggu' | 'diproses' | 'lunas' | 'diperiksa' | 'kedaluwarsa'
   kanal: string
-  jenis?: JenisKanal
   nomor_bayar: string | null
   qr: string | null
   jumlah: number
@@ -58,21 +56,9 @@ function tersimpan (nomor: string): string | null {
 const PERSEN = new Intl.NumberFormat('id-ID', { style: 'percent', maximumFractionDigits: 2 })
 const biaya = (kanal: Kanal) => kanal.persen ? PERSEN.format(kanal.persen) : rupiah(kanal.biaya_admin)
 
-// logo mitra terkurasi dari src/assets/mitra/; VA tertutup berkode va<bank>-close, retail mengandung indomaret/alfamart
-const LOGO = import.meta.glob<string>('../assets/mitra/*.png', { eager: true, query: '?url', import: 'default' })
-function logoKanal (kode: string): string | undefined {
-  const k = kode.toLowerCase()
-  const berkas = /^va([a-z]+)-/.exec(k)?.[1]
-    ? `bank-${/^va([a-z]+)-/.exec(k)![1]}`
-    : k.includes('indomaret')
-        ? 'indomaret'
-        : k.includes('alfamart')
-          ? 'alfamart'
-          : ''
-  return berkas
-    ? LOGO[`../assets/mitra/${berkas}.png`]
-    : undefined
-}
+// logo bank dari src/assets/mitra/bank-<kode>.png; kanal VA tertutup berkode va<bank>-close
+const LOGO = import.meta.glob<string>('../assets/mitra/bank-*.png', { eager: true, query: '?url', import: 'default' })
+const logoKanal = (kode: string) => LOGO[`../assets/mitra/bank-${/^va([a-z]+)-/.exec(kode)?.[1] ?? ''}.png`]
 const namaPendek = (nama: string) => nama.replace(/\s*(VA|Virtual Account)$/i, '')
 
 const blok = (kelas: string) => el('div', `skeleton ${kelas}`)
@@ -89,7 +75,7 @@ function kerangka (jenis: 'pilihan' | 'transaksi'): HTMLElement {
 
 const LANGKAH = [
   { teks: 'Memeriksa tagihan Anda', mulai: 0 },
-  { teks: 'Menyiapkan kode pembayaran', mulai: 1800 },
+  { teks: 'Menyiapkan virtual account', mulai: 1800 },
   { teks: 'Menyimpan kode pembayaran', mulai: 5000 },
 ]
 
@@ -171,8 +157,7 @@ function kelompokVa (nomor: string): string {
 
 function transaksiCard (trx: Transaksi, onBaru: () => void, onCek: () => Promise<void>): HTMLElement {
   const nomor = trx.nomor_bayar ?? ''
-  const isQr = trx.jenis === 'qr' || (Boolean(trx.qr) && !nomor)
-  const isRetail = trx.jenis === 'retail'
+  const isQr = Boolean(trx.qr) && !nomor
   const salin = el('button', 'btn btn-quiet', 'Salin')
   salin.type = 'button'
   salin.addEventListener('click', async () => {
@@ -190,16 +175,14 @@ function transaksiCard (trx: Transaksi, onBaru: () => void, onCek: () => Promise
     ['Bayar sebelum', trx.batas ? `${dateTimeShort(trx.batas)} WIB` : '–'],
     ['Kode transaksi', trx.kode],
   ]
-  // identitas pembayaran: QRIS = gambar untuk dipindai; retail = kode bayar di kasir; VA = nomor virtual account
+  // identitas pembayaran: QRIS = gambar untuk dipindai; VA = nomor virtual account
   const identitas = isQr
     ? el('div', '',
         el('p', 'text-sm text-redup', 'Pindai dengan QRIS'),
         qrisGambar(trx.qr!),
       )
     : el('div', '',
-        el('p', 'text-sm text-redup', isRetail
-          ? `Kode pembayaran ${trx.kanal}`
-          : `Nomor ${trx.kanal}`),
+        el('p', 'text-sm text-redup', `Nomor ${trx.kanal}`),
         el('div', 'mt-1 flex flex-wrap items-center gap-3', el('p', 'num text-title font-extrabold tracking-wider', kelompokVa(nomor) || '–'), ...(nomor && trx.status === 'menunggu' ? [salin] : [])),
       )
   const card = el('div', 'grid gap-4 rounded-2xl border border-garis p-5 sm:p-6',
@@ -211,9 +194,7 @@ function transaksiCard (trx: Transaksi, onBaru: () => void, onCek: () => Promise
     if (trx.status === 'menunggu') {
       card.append(el('p', 'text-sm text-redup', isQr
         ? 'Pindai kode QR di atas dengan aplikasi apa pun yang mendukung QRIS (m-banking atau dompet digital). Pastikan jumlahnya sesuai total di atas.'
-        : isRetail
-          ? `Bayar di kasir ${trx.kanal} terdekat dengan menyebutkan kode di atas. Pastikan jumlahnya sesuai total di atas.`
-          : `Bayar melalui aplikasi atau ATM ${trx.kanal.replace(/\s*VA$/, '')} dengan menu Virtual Account, lalu masukkan nomor di atas. Pastikan jumlahnya sesuai total di atas.`))
+        : `Bayar melalui aplikasi atau ATM ${trx.kanal.replace(/\s*VA$/, '')} dengan menu Virtual Account, lalu masukkan nomor di atas. Pastikan jumlahnya sesuai total di atas.`))
     }
     // cek status manual: status diperbarui tanpa menunggu callback gateway (yang bisa terlambat/hilang)
     const cek = el('button', 'btn btn-primary justify-self-start', 'Periksa status pembayaran')
@@ -359,21 +340,21 @@ export async function mountBayar (container: HTMLElement, nomor: string): Promis
       input.value = item.kode
       input.checked = dipilihSebelumnya ? item.kode === dipilihSebelumnya : index === 0
       input.addEventListener('change', () => perbaruiBiaya(item))
-      // logo bawaan situs (terkurasi) lebih diutamakan; selain itu logo gateway yang diproksi API Open
-      const bawaan = logoKanal(item.kode)
-      const src = bawaan ?? (item.logo || undefined)
+      // logo dari API Open (diproksi dari gateway) lebih diutamakan; selain itu logo bawaan situs
+      const src = item.logo || logoKanal(item.kode)
       const teks = el('span', 'text-sm font-bold', namaPendek(item.nama))
       let tanda: HTMLElement = teks
       if (src) {
         const image = el('img', 'h-7 w-full object-contain')
         image.alt = namaPendek(item.nama)
         image.loading = 'lazy'
-        // bila logo bawaan gagal, coba logo gateway; bila itu pun gagal, tampilkan teks nama
-        let gatewayBisa = Boolean(bawaan && item.logo)
+        // bila logo proksi gagal dimuat, jatuh ke logo bawaan lalu ke teks nama
+        let bawaanDicoba = false
         image.addEventListener('error', () => {
-          if (gatewayBisa && item.logo) {
-            gatewayBisa = false
-            image.src = item.logo
+          const bawaan = logoKanal(item.kode)
+          if (!bawaanDicoba && bawaan) {
+            bawaanDicoba = true
+            image.src = bawaan
           } else {
             image.replaceWith(teks)
           }
@@ -410,7 +391,7 @@ export async function mountBayar (container: HTMLElement, nomor: string): Promis
       }
     })
     const fieldset = el('fieldset', 'grid gap-3',
-      el('legend', 'mb-3 text-redup', 'Pilih metode pembayaran.'),
+      el('legend', 'mb-3 text-redup', 'Pilih bank, lalu bayar dengan virtual account.'),
       el('div', 'grid grid-cols-2 gap-2 sm:grid-cols-4', ...pilihanBank),
       keterangan,
     )
