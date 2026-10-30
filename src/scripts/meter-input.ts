@@ -54,6 +54,24 @@ export function bindMeterFields (root: ParentNode = document): void {
     }
 
     input.addEventListener('input', sync)
+
+    // tempel (paste) mengganti seluruh isi dengan angka yang ditempel, bukan menyisipkan di tengah
+    input.addEventListener('paste', event => {
+      event.preventDefault()
+      input.value = digitsOnly(event.clipboardData?.getData('text') ?? '')
+      sync()
+      input.setSelectionRange(input.value.length, input.value.length)
+    })
+
+    // Esc mengosongkan isian tanpa menghilangkan fokus
+    input.addEventListener('keydown', event => {
+      if (event.key === 'Escape' && input.value) {
+        event.preventDefault()
+        input.value = ''
+        sync()
+      }
+    })
+
     sync()
   }
 }
