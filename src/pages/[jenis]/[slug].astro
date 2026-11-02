@@ -46,6 +46,7 @@ const related = (await getArtikel(jenis)).filter(entry => entry.id !== article.i
 const shareUrl = new URL(`/${article.id}`, Astro.site).toString()
 const shareText = encodeURIComponent(`${judul} ${shareUrl}`)
 const shareTargets = [
+  { label: 'WhatsApp', icon: 'mdi:whatsapp', href: `https://wa.me/?text=${shareText}` },
   { label: 'Facebook', icon: 'mdi:facebook', href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}` },
   { label: 'X', icon: 'mdi:twitter', href: `https://twitter.com/intent/tweet?text=${shareText}` },
 ]

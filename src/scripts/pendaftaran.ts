@@ -8,7 +8,7 @@
  */
 import { dateLong } from '../lib/format'
 import { INFO_PELANGGAN_API } from '../lib/info-pelanggan'
-import { PHONE_CC } from '../lib/site'
+import { WHATSAPP_CC } from '../lib/site'
 import { rupiah } from '../lib/tarif'
 import { api, ApiError } from './api'
 import { el, setBusy, showError } from './dom'
@@ -454,14 +454,16 @@ export async function showRegistrationStatus (nomor: string): Promise<void> {
     const notFound = caught instanceof ApiError && caught.status === 404
     // nomor pengajuan (SB…) diberikan saat mendaftar; pelacakan API baru mengenal nomor registrasi hasil verifikasi
     if (notFound && /^SB\d+$/i.test(nomor)) {
-      const telepon = el('a', 'link', `Contact Center ${PHONE_CC.text}`)
-      telepon.href = PHONE_CC.href
+      const wa = el('a', 'link', 'WhatsApp Contact Center')
+      wa.href = WHATSAPP_CC
+      wa.rel = 'noopener'
+      wa.target = '_blank'
       container.replaceChildren(
         el('div', 'flex flex-wrap items-center gap-4', el('h2', 'text-2xl font-extrabold', 'Status permohonan'), ticketDisplay(nomor.toUpperCase())),
         el('div', 'notice mt-6', el('p', '',
           `${nomor.toUpperCase()} adalah nomor pengajuan. Status permohonan dapat dicek di halaman ini setelah berkas diverifikasi, `,
           'menggunakan nomor registrasi 10 digit yang Anda terima saat itu. ',
-          'Untuk menanyakan permohonan sebelum itu, hubungi ', telepon, ' dengan menyebutkan nomor pengajuan Anda.',
+          'Untuk menanyakan permohonan sebelum itu, hubungi ', wa, ' dengan menyebutkan nomor pengajuan Anda.',
         )),
         statusActions(),
       )
