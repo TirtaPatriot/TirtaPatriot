@@ -121,7 +121,7 @@ const linkClass = 'inline-flex min-h-11 items-center gap-1.5 rounded-md px-3 fon
 </header>
 
 <!-- di luar <header>: backdrop-filter pada header menjadikannya acuan posisi fixed -->
-<button type="button" class="fixed right-4 bottom-[max(1rem,env(safe-area-inset-bottom))] z-30 inline-flex h-12 cursor-pointer items-center gap-2 rounded-full bg-pipa pr-5 pl-2 font-semibold text-white shadow-lift transition-colors hover:bg-pipa-soft lg:hidden print:hidden" aria-haspopup="dialog" data-cari-buka>
+<button type="button" class="fixed right-4 bottom-[max(1rem,env(safe-area-inset-bottom))] z-30 inline-flex h-12 cursor-pointer items-center gap-2 rounded-full bg-pipa pr-5 pl-2 font-semibold text-white shadow-lift transition-[background-color,opacity] duration-300 hover:bg-pipa-soft data-[menggulir]:opacity-40 hover:data-[menggulir]:opacity-100 focus-visible:data-[menggulir]:opacity-100 lg:hidden print:hidden" aria-haspopup="dialog" data-cari-buka data-cari-melayang>
   <span class="grid size-8 place-items-center rounded-full bg-white/15 text-emas"><Icon name="mdi:magnify" size={20} /></span>
   Cari
 </button>
@@ -136,6 +136,15 @@ const linkClass = 'inline-flex min-h-11 items-center gap-1.5 rounded-md px-3 fon
   const onScroll = () => header?.toggleAttribute('data-scrolled', window.scrollY > 8)
   window.addEventListener('scroll', onScroll, { passive: true })
   onScroll()
+
+  // tombol Cari melayang (ponsel) memudar saat halaman digulir dan pulih setelah berhenti
+  const floating = document.querySelector<HTMLElement>('[data-cari-melayang]')
+  let scrollTimer = 0
+  window.addEventListener('scroll', () => {
+    floating?.toggleAttribute('data-menggulir', true)
+    clearTimeout(scrollTimer)
+    scrollTimer = window.setTimeout(() => floating?.removeAttribute('data-menggulir'), 600)
+  }, { passive: true })
 
   const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]')
   const panel = document.querySelector<HTMLElement>('#menu-ponsel')
