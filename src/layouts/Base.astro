@@ -7,6 +7,9 @@ import { ldJson, websiteLd } from '../lib/seo'
 import { ORGANIZATION_LD, SITE_DESCRIPTION, SITE_NAME, SOCIALS } from '../lib/site'
 import '../styles/global.css'
 
+// kartu pratinjau per halaman (dibuat `bun run og`), dipilih dari jalur URL: /pelanggan/tarif → pelanggan-tarif
+const pageCards = import.meta.glob<ImageMetadata>('../assets/og/*.jpg', { eager: true, import: 'default' })
+
 type Props = {
   /** judul halaman tanpa nama situs; kosongkan untuk beranda */
   title?: string
@@ -30,8 +33,11 @@ const { title, description = SITE_DESCRIPTION, image, imageAlt, type = 'website'
 const fullTitle = title ? `${title} | ${SITE_NAME}` : `${SITE_NAME} Kota Bekasi`
 const canonical = new URL(Astro.url.pathname, Astro.site)
 // bawaan: kartu pratinjau bermerek (judul + ajakan cek tagihan) di atas foto kantor pusat
-const ogImage = image ?? new URL((await getImage({ src: ogDefault, width: 1200, height: 630, fit: 'cover', format: 'jpg' })).src, Astro.site).toString()
-const ogImageAlt = imageAlt ?? (image ? title ?? SITE_NAME : `${SITE_NAME}: Berapa tagihan air Anda bulan ini? Cek tagihan di web.tirtapatriot.id`)
+// halaman tanpa kartu sendiri (berita/2, dokumen privasi) memakai kartu induknya
+const segments = Astro.url.pathname.split('/').filter(Boolean)
+const pageCard = segments.map((_, index) => pageCards[`../assets/og/${segments.slice(0, segments.length - index).join('-')}.jpg`]).find(Boolean)
+const ogImage = image ?? new URL((await getImage({ src: pageCard ?? ogDefault, width: 1200, height: 630, fit: 'cover', format: 'jpg' })).src, Astro.site).toString()
+const ogImageAlt = imageAlt ?? (image || pageCard ? title ?? SITE_NAME : `${SITE_NAME}: Berapa tagihan air Anda bulan ini? Cek tagihan di web.tirtapatriot.id`)
 const facebook = SOCIALS.find(item => item.title === 'Facebook')?.href
 const isHome = Astro.url.pathname === '/'
 
