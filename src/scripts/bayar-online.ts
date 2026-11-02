@@ -12,7 +12,7 @@ import { el, setBusy, showError } from './dom'
 import { pesanGalat } from './layanan'
 import { enter } from './motion'
 
-type Kanal = { kode: string, nama: string, biaya_admin: number, persen: number }
+type Kanal = { kode: string, nama: string, biaya_admin: number, persen: number, logo?: string | null }
 type Transaksi = {
   kode: string
   status: 'menunggu' | 'diproses' | 'lunas' | 'diperiksa' | 'kedaluwarsa'
@@ -340,13 +340,26 @@ export async function mountBayar (container: HTMLElement, nomor: string): Promis
       input.value = item.kode
       input.checked = dipilihSebelumnya ? item.kode === dipilihSebelumnya : index === 0
       input.addEventListener('change', () => perbaruiBiaya(item))
-      const src = logoKanal(item.kode)
-      let tanda: HTMLElement = el('span', 'text-sm font-bold', namaPendek(item.nama))
+      // logo dari API Open (diproksi dari gateway) lebih diutamakan; selain itu logo bawaan situs
+      const src = item.logo || logoKanal(item.kode)
+      const teks = el('span', 'text-sm font-bold', namaPendek(item.nama))
+      let tanda: HTMLElement = teks
       if (src) {
         const image = el('img', 'h-7 w-full object-contain')
-        image.src = src
         image.alt = namaPendek(item.nama)
         image.loading = 'lazy'
+        // bila logo proksi gagal dimuat, jatuh ke logo bawaan lalu ke teks nama
+        let bawaanDicoba = false
+        image.addEventListener('error', () => {
+          const bawaan = logoKanal(item.kode)
+          if (!bawaanDicoba && bawaan) {
+            bawaanDicoba = true
+            image.src = bawaan
+          } else {
+            image.replaceWith(teks)
+          }
+        })
+        image.src = src
         tanda = image
       }
       return el('label', 'grid h-14 cursor-pointer place-items-center rounded-lg border border-garis bg-white px-3 transition-colors hover:border-patriot/50 has-[:checked]:border-patriot has-[:checked]:bg-air has-[:checked]:ring-1 has-[:checked]:ring-patriot has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-patriot', input, tanda)
