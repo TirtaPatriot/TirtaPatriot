@@ -87,6 +87,31 @@
     border-radius: 2px;
   }
 
+  /* di atas latar gelap (hero, footer, pita cari) cincin biru tidak terbaca: pakai kuning merek */
+  :is(.bg-pipa, .bg-pipa-deep) :focus-visible {
+    outline-color: var(--color-emas);
+  }
+
+  /* preferensi pengguna: kontras lebih tinggi */
+  @media (prefers-contrast: more) {
+    :root {
+      --color-redup: #2f3f55;
+      --color-garis: #8497ad;
+    }
+  }
+
+  /* mode kontras sistem (Windows High Contrast): pakai warna sistem agar batas dan fokus tetap terlihat */
+  @media (forced-colors: active) {
+    :focus-visible {
+      outline-color: Highlight;
+    }
+
+    .btn,
+    .input {
+      border: 1px solid ButtonText;
+    }
+  }
+
   /* Wadah hasil/aria-live difokuskan lewat skrip hanya untuk memindah fokus pembaca layar.
      Ini bukan kontrol interaktif, jadi cincin fokus besarnya dihilangkan agar tidak mengganggu. */
   :is([data-tagihan-result], [data-status], [data-riwayat], [data-done]):focus,

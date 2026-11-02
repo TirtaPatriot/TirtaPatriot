@@ -30,7 +30,8 @@ const grouped = [null, 1, 2, 3, 4].map(zona => ({ zona, items: kantor.filter(ite
       <section aria-labelledby="kecamatan-judul">
         <h2 id="kecamatan-judul" class="text-xl font-bold">Pelanggan aktif per kecamatan</h2>
         <table class="mt-4 w-full border-collapse text-left text-sm">
-          <thead><tr class="border-b-2 border-pipa"><th class="py-2 font-semibold">Kecamatan</th><th class="py-2 text-right font-semibold">Pelanggan aktif</th></tr></thead>
+          <caption class="sr-only">Pelanggan aktif per kecamatan</caption>
+          <thead><tr class="border-b-2 border-pipa"><th scope="col" class="py-2 font-semibold">Kecamatan</th><th scope="col" class="py-2 text-right font-semibold">Pelanggan aktif</th></tr></thead>
           <tbody>
             {kinerja.pelanggan.kecamatan.map(item => (
               <tr class="border-b border-garis/70"><td class="py-2">{item.nama}</td><td class="num py-2 text-right font-semibold">{angka(item.jumlah)}</td></tr>

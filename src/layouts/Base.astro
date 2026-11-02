@@ -3,6 +3,7 @@ import { Font, getImage } from 'astro:assets'
 import ogDefault from '../assets/og-default.jpg'
 import SiteFooter from '../components/SiteFooter.astro'
 import SiteHeader from '../components/SiteHeader.astro'
+import { ldJson, websiteLd } from '../lib/seo'
 import { ORGANIZATION_LD, SITE_DESCRIPTION, SITE_NAME, SOCIALS } from '../lib/site'
 import '../styles/global.css'
 
@@ -46,7 +47,8 @@ const chatwootUrl = import.meta.env.PUBLIC_CHATWOOT_BASE_URL
     <title>{fullTitle}</title>
     <meta name="description" content={description}>
     <link rel="canonical" href={canonical}>
-    {noindex && <meta name="robots" content="noindex">}
+    <meta name="robots" content={noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'}>
+    <link rel="alternate" type="application/rss+xml" title={`Berita dan edukasi ${SITE_NAME}`} href="/rss.xml">
 
     <meta name="theme-color" content="#0098da">
     <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
@@ -82,7 +84,8 @@ const chatwootUrl = import.meta.env.PUBLIC_CHATWOOT_BASE_URL
 
     <Font cssVariable="--font-jakarta" preload />
 
-    {isHome && <script type="application/ld+json" set:html={JSON.stringify({ ...ORGANIZATION_LD, url: Astro.site?.toString(), logo: new URL('/logo.png', Astro.site).toString() })} />}
+    {isHome && <script type="application/ld+json" set:html={ldJson({ ...ORGANIZATION_LD, url: Astro.site?.toString(), logo: new URL('/logo.png', Astro.site).toString() })} />}
+    {isHome && <script type="application/ld+json" set:html={ldJson(websiteLd(Astro.site!))} />}
     <slot name="head" />
   </head>
 
@@ -93,7 +96,7 @@ const chatwootUrl = import.meta.env.PUBLIC_CHATWOOT_BASE_URL
 
     <SiteHeader />
 
-    <main id="isi" class="flex-1">
+    <main id="isi" class="flex-1 focus:outline-none" tabindex="-1">
       <slot />
     </main>
 

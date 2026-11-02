@@ -105,7 +105,8 @@ const chartId = `chart-${Math.abs([...title].reduce((h, c) => (h * 31 + c.charCo
     <summary class="cursor-pointer font-semibold text-patriot">Lihat tabel data</summary>
     <div class="mt-2 overflow-x-auto">
       <table class="w-full border-collapse text-left">
-        <thead><tr class="border-b border-garis"><th class="py-1.5 pr-4 font-semibold">Periode</th>{series.map(s => <th class="py-1.5 pl-4 text-right font-semibold">{s.name}</th>)}</tr></thead>
+        <caption class="sr-only">{title}</caption>
+        <thead><tr class="border-b border-garis"><th scope="col" class="py-1.5 pr-4 font-semibold">Periode</th>{series.map(s => <th scope="col" class="py-1.5 pl-4 text-right font-semibold">{s.name}</th>)}</tr></thead>
         <tbody>
           {categories.map((_, i) => (
             <tr class="border-b border-garis/60"><td class="py-1.5 pr-4">{categoryLabels[i]}</td>{series.map(s => <td class="num py-1.5 pl-4 text-right">{fmt(s.values[i] ?? 0)}</td>)}</tr>

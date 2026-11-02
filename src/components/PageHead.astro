@@ -3,6 +3,7 @@
  * Kepala halaman: jejak lokasi (bagian situs), judul, dan kalimat pengantar di atas latar pipa,
  * ditutup gelombang air yang menyambung ke isi halaman. Rata kiri, sejajar dengan isi.
  */
+import { breadcrumbLd, ldJson } from '../lib/seo'
 import Waves from './Waves.astro'
 
 type Crumb = { title: string, href?: string }
@@ -15,7 +16,14 @@ type Props = {
 }
 
 const { title, lead, crumbs = [], narrow = false } = Astro.props
+
+// jejak untuk mesin pencari: hanya bagian yang punya halaman, ditutup halaman ini sendiri
+const trail = crumbs.length
+  ? [...crumbs.filter(crumb => crumb.href).map(crumb => ({ name: crumb.title, url: new URL(crumb.href!, Astro.site).toString() })), { name: title, url: new URL(Astro.url.pathname, Astro.site).toString() }]
+  : []
 ---
+
+{trail.length > 1 && <script type="application/ld+json" set:html={ldJson(breadcrumbLd(trail))} />}
 
 <div class="relative isolate overflow-hidden bg-pipa text-white">
   <div class="absolute inset-0 -z-10 bg-[radial-gradient(48rem_28rem_at_90%_-20%,rgb(0_152_218/50%),transparent_70%)]" aria-hidden="true"></div>

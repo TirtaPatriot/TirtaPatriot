@@ -27,7 +27,8 @@ export default defineConfig({
 
   integrations: [
     sitemap({
-      filter: page => !page.includes('/404'),
+      // halaman hasil pencarian dan 404 bertanda noindex, jadi tidak masuk sitemap
+      filter: page => !/\/(404|cari)\/?$/.test(page),
     }),
   ],
 

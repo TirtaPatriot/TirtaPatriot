@@ -10,6 +10,7 @@ import Base from '../../layouts/Base.astro'
 import { coverTransition, getArtikel, JENIS, jenisOf } from '../../lib/artikel'
 import { dateLong } from '../../lib/format'
 import { plainText } from '../../lib/render-content'
+import { articleLd, breadcrumbLd, ldJson } from '../../lib/seo'
 
 export const getStaticPaths = (async () => {
   const articles = await getCollection('artikel', entry => !entry.data.draf)
@@ -29,6 +30,16 @@ const meta = JENIS[jenis]
 const description = ringkasan ? plainText(ringkasan) : plainText(article.rendered?.html) || meta.lead
 const cover = sampul ?? kantorPusat
 const ogImage = await getImage({ src: cover, width: 1200, height: 630, fit: 'cover', format: 'jpg' })
+
+const pageUrl = new URL(Astro.url.pathname, Astro.site).toString()
+const structured = [
+  articleLd({ type: jenis === 'berita' ? 'NewsArticle' : 'Article', title: judul, description, url: pageUrl, image: new URL(ogImage.src, Astro.site).toString(), published: terbit, modified: diperbarui, site: Astro.site! }),
+  breadcrumbLd([
+    { name: 'Beranda', url: new URL('/', Astro.site).toString() },
+    { name: meta.title, url: new URL(`/${jenis}`, Astro.site).toString() },
+    { name: judul, url: pageUrl },
+  ]),
+]
 
 const related = (await getArtikel(jenis)).filter(entry => entry.id !== article.id).slice(0, 3)
 
@@ -51,6 +62,7 @@ const shareTargets = [
   modifiedTime={diperbarui}
   section={meta.title}
 >
+  {structured.map(data => <script slot="head" type="application/ld+json" set:html={ldJson(data)} />)}
   <article>
     <header class="wrap wrap-narrow pt-8 md:pt-12">
       <nav aria-label="Lokasi halaman" class="text-sm text-redup">
@@ -79,7 +91,7 @@ const shareTargets = [
         <p class="mr-2 font-semibold">Bagikan</p>
         {shareTargets.map(target => (
           <a class="grid size-11 place-items-center rounded-md border border-garis hover:border-patriot hover:text-patriot" href={target.href} rel="noopener" target="_blank">
-            <Icon name={target.icon} size={20} label={`Bagikan ke ${target.label}`} />
+            <Icon name={target.icon} size={20} label={`Bagikan ke ${target.label} (tab baru)`} />
           </a>
         ))}
         <!-- Web Share API bawaan perangkat; bila tidak didukung, tautan disalin ke papan klip -->

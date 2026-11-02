@@ -53,7 +53,8 @@ function bindDialog (dialog: HTMLDialogElement): void {
   const list = dialog.querySelector<HTMLElement>('[data-cari-hasil-dialog]')
   const examples = dialog.querySelector<HTMLElement>('[data-cari-contoh]')
   const status = dialog.querySelector<HTMLElement>('[data-cari-dialog-status]')
-  if (!form || !input || !list || !examples || !status) {
+  const live = dialog.querySelector<HTMLElement>('[data-cari-dialog-live]')
+  if (!form || !input || !list || !examples || !status || !live) {
     return
   }
 
@@ -81,6 +82,7 @@ function bindDialog (dialog: HTMLDialogElement): void {
       list.hidden = true
       list.replaceChildren()
       status.textContent = ''
+      live.textContent = ''
       input.setAttribute('aria-expanded', 'false')
       select(-1)
       return
@@ -113,6 +115,7 @@ function bindDialog (dialog: HTMLDialogElement): void {
     list.hidden = false
     input.setAttribute('aria-expanded', 'true')
     status.textContent = found.length ? '' : `Tidak ada yang cocok dengan “${query}”. Coba kata lain yang lebih umum.`
+    live.textContent = found.length ? `${found.length} hasil. Gunakan panah atas dan bawah untuk memilih, Enter untuk membuka.` : ''
     select(found.length ? 0 : -1)
   }
 

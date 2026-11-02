@@ -41,7 +41,7 @@ const year = new Date().getFullYear()
         {SOCIALS.map(social => (
           <li>
             <a href={social.href} rel="noopener" target="_blank" class="grid size-11 place-items-center rounded-md text-white/85 hover:bg-white/10 hover:text-white">
-              <Icon name={social.icon} size={22} label={social.title} />
+              <Icon name={social.icon} size={22} label={`${social.title} (tab baru)`} />
             </a>
           </li>
         ))}
