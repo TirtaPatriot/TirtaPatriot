@@ -198,15 +198,6 @@
     }
   }
 
-  .btn-wa {
-    background: var(--color-lunas);
-    color: #fff;
-
-    &:hover {
-      background: #0f5039;
-    }
-  }
-
   .link {
     color: var(--color-patriot);
     font-weight: 600;

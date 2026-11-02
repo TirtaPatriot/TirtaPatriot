@@ -39,7 +39,7 @@ export const MENU: Entri[] = [
   { judul: 'Manajemen', ringkasan: 'Jajaran direksi serta susunan organisasi dan tata kerja.', url: '/perusahaan/manajemen', kata: 'direksi direktur organisasi struktur sotk' },
   { judul: 'Visi & Misi', ringkasan: 'Arah dan komitmen layanan air minum.', url: '/perusahaan/visi-misi' },
   { judul: 'Sejarah', ringkasan: 'Perjalanan melayani air bersih masyarakat Kota Bekasi.', url: '/perusahaan/sejarah', kata: 'profil perusahaan' },
-  { judul: 'Kontak', ringkasan: 'Telepon, WhatsApp, email, media sosial, dan unit pelayanan.', url: '/perusahaan/kontak', kata: 'hubungi telepon whatsapp email alamat kantor' },
+  { judul: 'Kontak', ringkasan: 'Telepon, email, media sosial, dan unit pelayanan.', url: '/perusahaan/kontak', kata: 'hubungi telepon email alamat kantor' },
   { judul: 'Lelang', ringkasan: 'Pengumuman pengadaan barang dan jasa di e-Procurement.', url: navigasi.find(item => item.id === 'lelang')?.tautan ?? '/', kata: 'pelelangan pengadaan tender eproc vendor' },
 ].map(entry => ({ jenis: 'menu' as const, ...entry }))
 
