@@ -15,7 +15,7 @@ export const PIPA_TILES = (import.meta.env.PUBLIC_PIPA_TILES || 'https://tile.ap
 export const BEKASI: [[number, number], [number, number]] = [[106.9, -6.385], [107.05, -6.165]]
 
 // selaras dengan token --color-pipa dan --color-patriot
-const PIPA_UTAMA = '#3e4095'
+const PIPA_UTAMA = '#0a3d5f'
 const PIPA_DISTRIBUSI = '#0098da'
 /** Pipa berdiameter ini ke atas digambar sebagai pipa utama (transmisi dan distribusi induk). */
 export const DIAMETER_UTAMA = 250

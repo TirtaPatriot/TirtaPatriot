@@ -19,8 +19,8 @@ const H = 630
 
 // warna dari @theme di src/styles/global.css
 const C = {
-  pipa: '#3e4095',
-  pipaDeep: '#272968',
+  pipa: '#0a3d5f',
+  pipaDeep: '#062a43',
   patriot: '#0098da',
   emas: '#fff212',
   emasSoft: '#fff88f',

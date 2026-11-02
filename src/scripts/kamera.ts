@@ -19,7 +19,7 @@ function stamp (context: CanvasRenderingContext2D, width: number, height: number
   const lineHeight = Math.round(size * 1.35)
   const boxWidth = Math.max(...lines.map(line => context.measureText(line).width)) + padding * 2
   const boxHeight = lines.length * lineHeight + padding
-  context.fillStyle = 'rgb(39 41 104 / 0.72)'
+  context.fillStyle = 'rgb(6 42 67 / 0.72)'
   context.fillRect(0, height - boxHeight, Math.min(boxWidth, width), boxHeight)
   context.fillStyle = '#ffffff'
   lines.forEach((line, index) => {

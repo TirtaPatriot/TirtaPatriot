@@ -59,7 +59,7 @@ function bindSignature (canvas: HTMLCanvasElement): { isEmpty: () => boolean, to
     context.lineWidth = 2.5
     context.lineCap = 'round'
     context.lineJoin = 'round'
-    context.strokeStyle = '#3e4095'
+    context.strokeStyle = '#0a3d5f'
     empty = true
   }
 
