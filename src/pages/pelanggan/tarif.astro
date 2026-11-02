@@ -62,7 +62,7 @@ const angka = (value: number) => new Intl.NumberFormat('id-ID').format(value)
 
       <!-- hasil simulasi -->
       <div class="relative isolate overflow-hidden rounded-2xl bg-pipa p-6 text-white md:p-8" aria-live="polite" data-hasil>
-        <div class="absolute inset-0 -z-10 bg-[radial-gradient(30rem_20rem_at_100%_0%,rgb(11_111_184/55%),transparent_70%)]" aria-hidden="true"></div>
+        <div class="absolute inset-0 -z-10 bg-[radial-gradient(30rem_20rem_at_100%_0%,rgb(0_152_218/55%),transparent_70%)]" aria-hidden="true"></div>
         <p class="text-white/75">Perkiraan tagihan sebulan</p>
         <p class="num mt-1 text-[clamp(2.4rem,1.8rem+2.4vw,3.5rem)] leading-none font-extrabold tracking-tight" data-total>{rupiah(awal.total)}</p>
         <p class="mt-2 text-sm text-white/70" data-ditagih>Dihitung untuk {awal.ditagih} m³</p>
@@ -70,7 +70,7 @@ const angka = (value: number) => new Intl.NumberFormat('id-ID').format(value)
         <!-- batang blok: lebar sebanding biaya tiap blok -->
         <div class="mt-7 flex h-3 overflow-hidden rounded-full bg-white/10" aria-hidden="true" data-batang>
           {awal.blok.map((baris, index) => (
-            <span class="h-full transition-[width] duration-500 ease-out" style={`width: ${awal.total ? (baris.biaya / awal.total) * 100 : 0}%; background: ${['#a9e6fa', '#3cc4f0', '#0b8fd8'][index]}`} />
+            <span class="h-full transition-[width] duration-500 ease-out" style={`width: ${awal.total ? (baris.biaya / awal.total) * 100 : 0}%; background: ${['#a6dcf3', '#4cb8e8', '#0098da'][index]}`} />
           ))}
           <span class="h-full bg-white/50 transition-[width] duration-500 ease-out" style={`width: ${(awal.admin / awal.total) * 100}%`} />
         </div>
@@ -79,7 +79,7 @@ const angka = (value: number) => new Intl.NumberFormat('id-ID').format(value)
           {awal.blok.map((baris, index) => (
             <div class="flex items-center justify-between gap-4">
               <dt class="flex items-center gap-2 text-white/80">
-                <span class="size-2.5 rounded-full" style={`background: ${['#a9e6fa', '#3cc4f0', '#0b8fd8'][index]}`} />
+                <span class="size-2.5 rounded-full" style={`background: ${['#a6dcf3', '#4cb8e8', '#0098da'][index]}`} />
                 <span data-label>{baris.sampai ? `${baris.dari}–${baris.sampai} m³` : `Di atas ${baris.dari - 1} m³`}</span>
                 <span class="text-white/55" data-detail>{baris.m3} × {rupiah(baris.harga)}</span>
               </dt>
@@ -97,7 +97,7 @@ const angka = (value: number) => new Intl.NumberFormat('id-ID').format(value)
         </dl>
 
         <p class="mt-6 border-t border-white/15 pt-4 text-sm text-white/70">
-          Hasil ini merupakan perkiraan. Untuk tagihan sebenarnya, silakan <a class="font-semibold text-aqua-soft underline underline-offset-2 hover:text-white" href="/pelanggan/tagihan">cek tagihan</a>.
+          Hasil ini merupakan perkiraan. Untuk tagihan sebenarnya, silakan <a class="font-semibold text-emas-soft underline underline-offset-2 hover:text-white" href="/pelanggan/tagihan">cek tagihan</a>.
         </p>
       </div>
     </section>

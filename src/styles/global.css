@@ -2,20 +2,23 @@
 
 /*
  * Token desain Tirta Patriot.
- * pipa   – biru tua jaringan pipa: teks utama, footer
- * patriot – biru merek (kontras 5,3:1 terhadap putih): aksi utama, tautan
- * air    – biru air yang sangat pucat: permukaan bertint
- * meter  – merah roda angka desimal pada meter air: hanya untuk gangguan & penanda register
- * lunas  – hijau untuk status tagihan lunas / layanan normal
- * aqua   – cyan pada logo tetesan: aksen hanya di atas latar pipa (gelap)
+ * Warna merek (blok logo): biru #0098da (R0 G152 B218), indigo #3e4095 (R62 G64 B149), kuning #fff212 (R255 G242 B18).
+ * pipa    – indigo merek (kontras 8,9:1 terhadap putih): teks utama, footer, latar gelap
+ * patriot – biru merek yang digelapkan agar lolos kontras 5,1:1 terhadap putih: aksi utama, tautan
+ * biru    – biru merek asli (hanya 3,2:1 terhadap putih): aksen dekoratif dan cincin fokus, bukan teks kecil
+ * air     – biru air yang sangat pucat: permukaan bertint
+ * meter   – merah roda angka desimal pada meter air: hanya untuk gangguan & penanda register
+ * lunas   – hijau untuk status tagihan lunas / layanan normal
+ * emas    – kuning merek: aksen hanya di atas latar pipa (gelap)
  */
 @theme {
-  --color-pipa: #0a2a5e;
-  --color-pipa-soft: #1c3b70;
-  --color-patriot: #0b6fb8;
-  --color-patriot-strong: #095b97;
-  --color-air: #e8f2fa;
-  --color-air-strong: #d3e6f5;
+  --color-pipa: #3e4095;
+  --color-pipa-soft: #5558a8;
+  --color-patriot: #0074ae;
+  --color-patriot-strong: #005f90;
+  --color-biru: #0098da;
+  --color-air: #e6f4fb;
+  --color-air-strong: #cdeaf8;
   --color-kabut: #f4f7fa;
   --color-garis: #d9e2ec;
   --color-redup: #4b5d75;
@@ -25,9 +28,9 @@
   --color-lunas-soft: #e6f4ee;
   --color-awas: #8a5a00;
   --color-awas-soft: #fff4dc;
-  --color-aqua: #3cc4f0;
-  --color-aqua-soft: #a9e6fa;
-  --color-pipa-deep: #061d45;
+  --color-emas: #fff212;
+  --color-emas-soft: #fff88f;
+  --color-pipa-deep: #272968;
 
   --font-sans: var(--font-jakarta), system-ui, sans-serif;
 
@@ -40,7 +43,7 @@
   --ease-out-soft: cubic-bezier(0.2, 0.7, 0.2, 1);
   --ease-water: cubic-bezier(0.45, 0, 0.25, 1);
 
-  --shadow-lift: 0 1px 2px rgb(10 42 94 / 6%), 0 12px 32px -12px rgb(10 42 94 / 22%);
+  --shadow-lift: 0 1px 2px rgb(62 64 149 / 6%), 0 12px 32px -12px rgb(62 64 149 / 22%);
 
   /* skala tipografi modular (rasio ~1,25) */
   --text-hero: clamp(2.6rem, 1.6rem + 4.2vw, 4.75rem);
@@ -234,7 +237,7 @@
   }
 
   .meter-foot.on-dark .meter-reset {
-    color: var(--color-aqua);
+    color: var(--color-emas);
   }
 
   .input {
@@ -637,14 +640,14 @@
       animation: digit-roll 320ms var(--ease-out-soft) both;
     }
 
-    /* di atas latar gelap: bingkai lebih pekat, cincin fokus aqua */
+    /* di atas latar gelap: bingkai lebih pekat, cincin fokus emas */
     &.on-dark {
       background: var(--color-pipa-deep);
       box-shadow: 0 0 0 1px rgb(255 255 255 / 12%), 0 18px 40px -18px rgb(0 0 0 / 60%);
     }
 
     &.on-dark:focus-within {
-      outline-color: var(--color-aqua);
+      outline-color: var(--color-emas);
     }
 
     /* sel muncul bergiliran pada urutan pembuka */
@@ -1012,7 +1015,7 @@
   .maplibregl-popup-content {
     padding: 0.5rem 0.75rem;
     border-radius: var(--radius-lg);
-    box-shadow: 0 6px 20px rgb(10 42 94 / 0.16);
+    box-shadow: 0 6px 20px rgb(62 64 149 / 0.16);
     color: var(--color-pipa);
     font-size: 0.875rem;
     font-weight: 600;

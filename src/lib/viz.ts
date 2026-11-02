@@ -3,9 +3,9 @@
  *  - DUA_TINGKAT: satu warna dua tingkat untuk dua ukuran hal yang sama (mis. pengaduan masuk vs selesai)
  *  - RAMP: urutan 5 tingkat untuk besaran (peta pelanggan per kecamatan), terang → gelap
  */
-export const AKSEN = '#0B6FB8'
-export const DUA_TINGKAT = ['#7DB5E3', '#0B6FB8'] as const
-export const RAMP = ['#7DB5E3', '#4E96D2', '#2479BE', '#0B5E9E', '#08406E'] as const
+export const AKSEN = '#0074AE'
+export const DUA_TINGKAT = ['#80CBED', '#0074AE'] as const
+export const RAMP = ['#80CBED', '#40B0E3', '#0090CF', '#006A9E', '#00436A'] as const
 
 export const GRID = '#E3E9F0'
 

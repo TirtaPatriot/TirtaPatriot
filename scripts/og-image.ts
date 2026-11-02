@@ -19,11 +19,11 @@ const H = 630
 
 // warna dari @theme di src/styles/global.css
 const C = {
-  pipa: '#0a2a5e',
-  pipaDeep: '#061d45',
-  patriot: '#0b6fb8',
-  aqua: '#3cc4f0',
-  aquaSoft: '#a9e6fa',
+  pipa: '#3e4095',
+  pipaDeep: '#272968',
+  patriot: '#0098da',
+  emas: '#fff212',
+  emasSoft: '#fff88f',
 }
 
 const TEXT = {
@@ -75,7 +75,7 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" 
   <rect width="${W}" height="${H}" fill="url(#cahaya)"/>
 
   <g transform="translate(650 14)">
-    <path d="${DROP}" transform="translate(18 12)" fill="${C.aqua}" fill-opacity="0.28"/>
+    <path d="${DROP}" transform="translate(18 12)" fill="${C.patriot}" fill-opacity="0.28"/>
     <image href="${png(photo)}" width="520" height="600" clip-path="url(#tetesan)" preserveAspectRatio="xMidYMid slice"/>
   </g>
 
@@ -92,10 +92,10 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" 
     <tspan x="64" y="424">${TEXT.lead[1]}</tspan>
   </text>
 
-  <rect x="64" y="476" width="304" height="76" rx="14" fill="${C.aqua}"/>
+  <rect x="64" y="476" width="304" height="76" rx="14" fill="${C.emas}"/>
   <text x="96" y="525" font-family="Plus Jakarta Sans" font-weight="800" font-size="30" fill="${C.pipaDeep}">${TEXT.tombol}</text>
   <path d="M292 514 h40 m-15 -15 l15 15 l-15 15" stroke="${C.pipaDeep}" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-  <text x="392" y="524" font-family="Plus Jakarta Sans" font-weight="700" font-size="26" fill="${C.aquaSoft}">${TEXT.alamat}</text>
+  <text x="392" y="524" font-family="Plus Jakarta Sans" font-weight="700" font-size="26" fill="${C.emasSoft}">${TEXT.alamat}</text>
 </svg>`
 
 // resvg-js hanya membaca huruf dari berkas, bukan buffer

@@ -93,9 +93,9 @@ const offices = kantor.map(item => ({ ...item, nama: titleCase(item.nama), xy: p
     </g>
 
     <g data-zona class="pointer-events-none">
-      {zones.map(zone => <path d={zone.d} fill="none" stroke="#0a2a5e" stroke-width="2.5" stroke-linejoin="round" />)}
+      {zones.map(zone => <path d={zone.d} fill="none" stroke="#3e4095" stroke-width="2.5" stroke-linejoin="round" />)}
       {zones.map(zone => (
-        <text x={zone.label[0]} y={zone.label[1]} text-anchor="middle" class="text-[13px] font-extrabold" fill="#0a2a5e" stroke="#fff" stroke-width="4" paint-order="stroke">{zone.nama}</text>
+        <text x={zone.label[0]} y={zone.label[1]} text-anchor="middle" class="text-[13px] font-extrabold" fill="#3e4095" stroke="#fff" stroke-width="4" paint-order="stroke">{zone.nama}</text>
       ))}
     </g>
 
@@ -103,7 +103,7 @@ const offices = kantor.map(item => ({ ...item, nama: titleCase(item.nama), xy: p
       {offices.map(office => (
         <g class="map-office" tabindex="0" role="img" data-tip={`${office.nama}|${office.hari}, ${office.jam}`} aria-label={`${office.nama}, ${office.alamat}`}>
           <circle cx={office.xy[0]} cy={office.xy[1]} r="14" fill="transparent" />
-          <circle cx={office.xy[0]} cy={office.xy[1]} r="6" fill="#0a2a5e" stroke="#fff" stroke-width="2.5" />
+          <circle cx={office.xy[0]} cy={office.xy[1]} r="6" fill="#3e4095" stroke="#fff" stroke-width="2.5" />
         </g>
       ))}
     </g>

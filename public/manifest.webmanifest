@@ -8,7 +8,7 @@
   "scope": "/",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#0b6fb8",
+  "theme_color": "#0098da",
   "categories": ["utilities", "government"],
   "icons": [
     { "src": "/pwa-64x64.png", "sizes": "64x64", "type": "image/png" },

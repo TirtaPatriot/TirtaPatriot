@@ -45,7 +45,7 @@ function resultLink (entry: Entri, compact: boolean): HTMLAnchorElement {
 
 /**
  * Modal cari: kombobox dengan daftar hasil (maks. 8 + "lihat semua"), panah atas/bawah memilih, Enter membuka.
- * Dibuka tombol [data-cari-buka], Ctrl/⌘+K, atau "/" di luar kolom isian.
+ * Dibuka tombol [data-cari-buka] atau "/" di luar kolom isian; kolom kosong menampilkan kartu pintasan.
  */
 function bindDialog (dialog: HTMLDialogElement): void {
   const form = dialog.querySelector('form')
@@ -55,15 +55,6 @@ function bindDialog (dialog: HTMLDialogElement): void {
   const status = dialog.querySelector<HTMLElement>('[data-cari-dialog-status]')
   if (!form || !input || !list || !examples || !status) {
     return
-  }
-
-  if (/Mac|iPhone|iPad/.test(navigator.platform)) {
-    for (const node of document.querySelectorAll('[data-cari-pintasan]')) {
-      node.textContent = '⌘'
-    }
-    for (const node of document.querySelectorAll('[data-cari-buka] kbd')) {
-      node.textContent = '⌘K'
-    }
   }
 
   let active = -1
@@ -158,13 +149,12 @@ function bindDialog (dialog: HTMLDialogElement): void {
       dialog.close()
     }
   })
-  for (const chip of dialog.querySelectorAll<HTMLButtonElement>('[data-cari-isi]')) {
-    chip.addEventListener('click', () => {
-      input.value = chip.dataset.cariIsi ?? ''
-      input.focus()
-      void update()
-    })
-  }
+  examples.addEventListener('click', event => {
+    if ((event.target as Element).closest('a')) {
+      dialog.close()
+    }
+  })
+  dialog.querySelector('[data-cari-tutup]')?.addEventListener('click', () => dialog.close())
   // klik di luar kotak menutup modal
   dialog.addEventListener('click', event => {
     if (event.target === dialog) {
@@ -178,10 +168,7 @@ function bindDialog (dialog: HTMLDialogElement): void {
   document.addEventListener('keydown', event => {
     const target = event.target as HTMLElement | null
     const typing = target?.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(target?.tagName ?? '')
-    if ((event.key === 'k' || event.key === 'K') && (event.ctrlKey || event.metaKey)) {
-      event.preventDefault()
-      open()
-    } else if (event.key === '/' && !typing && !event.ctrlKey && !event.metaKey && !event.altKey) {
+    if (event.key === '/' && !typing && !event.ctrlKey && !event.metaKey && !event.altKey) {
       event.preventDefault()
       open()
     }
