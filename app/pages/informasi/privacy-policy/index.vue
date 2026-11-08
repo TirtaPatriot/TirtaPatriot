@@ -36,6 +36,20 @@
       ],
     },
     {
+      category: 'Aplikasi Kepegawaian Mobile',
+      description: 'Dokumen pelindungan data untuk aplikasi Kepegawaian Mobile pegawai Perumda Tirta Patriot di Google Play.',
+      color: 'indigo',
+      icon: 'i-mdi:badge-account',
+      items: [
+        {
+          title: 'Instruksi Penghapusan Data (Data Deletion Instructions)',
+          subtitle: 'Tata cara permohonan penghapusan data pengguna aplikasi Kepegawaian Mobile',
+          to: '/informasi/privacy-policy/kepegawaian-mobile-deletion',
+          badge: 'Google Play',
+        },
+      ],
+    },
+    {
       category: 'Layanan Integrasi Google (CRM / OCA)',
       description: 'Ketentuan dan privasi penggunaan integrasi Google OAuth pada sistem CRM dukungan pelanggan OCA.',
       color: 'primary',
