@@ -17,6 +17,12 @@ const GROUPS = [
     text: 'Ketentuan dan privasi integrasi Google OAuth pada sistem CRM dukungan pelanggan OCA.',
     icon: 'mdi:google',
   },
+  {
+    key: 'kepegawaian',
+    title: 'Aplikasi Kepegawaian Mobile',
+    text: 'Dokumen pelindungan data untuk aplikasi Kepegawaian Mobile pegawai Perumda Tirta Patriot di Google Play.',
+    icon: 'mdi:badge-account',
+  },
 ] as const
 
 const docs = (await getCollection('legal')).toSorted((a, b) => a.data.order - b.data.order)

@@ -19,6 +19,8 @@ aliases:
 
 Sesuai dengan kebijakan privasi Meta dan Undang-Undang Pelindungan Data Pribadi (UU PDP No. 27/2022), Anda memiliki hak penuh untuk meminta penghapusan informasi pribadi dan riwayat interaksi Anda dari sistem WhatsApp Business Kami.
 
+> **Pengguna Aplikasi Kepegawaian Mobile (Google Play):** Instruksi penghapusan data untuk aplikasi Kepegawaian Mobile Perumda Tirta Patriot tersedia di halaman [Penghapusan Data Pengguna Kepegawaian Mobile](/informasi/privacy-policy/kepegawaian-mobile-deletion).
+
 ## 1. Data Apa Saja yang Dapat Dihapus?
 
 Permohonan penghapusan data yang diproses meliputi:

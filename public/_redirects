@@ -41,6 +41,7 @@ https://tirtapatriot.netlify.app/* https://tirtapatriot.co.id/:splat 301!
 /data-deletion	/informasi/privacy-policy/whatsapp-business-deletion	301
 /user-data-deletion	/informasi/privacy-policy/whatsapp-business-deletion	301
 /hapus-data	/informasi/privacy-policy/whatsapp-business-deletion	301
+/kepegawaian/hapus-data	/informasi/privacy-policy/kepegawaian-mobile-deletion	301
 /privacy-policy/oca-google	/informasi/privacy-policy/oca-google	301
 /terms-of-service/oca-google	/informasi/privacy-policy/oca-google-tos	301
 
