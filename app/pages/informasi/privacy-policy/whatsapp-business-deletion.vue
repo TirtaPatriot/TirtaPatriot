@@ -48,6 +48,14 @@
         </p>
       </v-card>
 
+      <v-alert class="mb-6" color="indigo" icon="i-mdi:badge-account" variant="tonal">
+        <strong>Pengguna Aplikasi Kepegawaian Mobile (Google Play):</strong>
+        Instruksi penghapusan data untuk aplikasi Kepegawaian Mobile Perumda Tirta Patriot tersedia di halaman
+        <NuxtLink class="text-primary font-weight-medium" to="/informasi/privacy-policy/kepegawaian-mobile-deletion">
+          Penghapusan Data Pengguna Kepegawaian Mobile
+        </NuxtLink>.
+      </v-alert>
+
       <section class="mb-6">
         <h2 class="text-title-large font-weight-bold mb-3">
           1. Data Apa Saja yang Dapat Dihapus?
