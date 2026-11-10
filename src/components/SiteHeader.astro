@@ -30,7 +30,7 @@ const linkClass = 'inline-flex min-h-11 items-center gap-1.5 rounded-md px-3 fon
 ---
 
 <header class="site-header sticky top-0 z-40 border-b border-transparent bg-white/85 backdrop-blur-md backdrop-saturate-150 transition-[border-color,box-shadow] duration-300 data-[scrolled]:border-garis data-[scrolled]:shadow-[0_8px_24px_-16px_rgb(10_61_95/35%)]" style="view-transition-name: site-header" data-site-header>
-  <!-- selebar layar: logo dan kolom cari di kiri (di ponsel: tombol Cari melayang di bawah layar), menu di kanan, tautan situs lain (Lelang) di pojok kanan -->
+  <!-- selebar layar: logo dan kolom cari di kiri (di ponsel: tombol Cari melayang di kiri bawah layar), menu di kanan, tautan situs lain (Lelang) di pojok kanan -->
   <div class="flex h-16 w-full items-center justify-between gap-4 px-4 sm:px-6 xl:px-8">
     <a href="/" class="shrink-0" aria-label="Beranda Perumda Tirta Patriot">
       <Image src={wordmark} alt="" width={125} height={40} densities={[1, 2]} class="h-10 w-auto" loading="eager" />
@@ -121,7 +121,7 @@ const linkClass = 'inline-flex min-h-11 items-center gap-1.5 rounded-md px-3 fon
 </header>
 
 <!-- di luar <header>: backdrop-filter pada header menjadikannya acuan posisi fixed -->
-<button type="button" class="fixed right-4 bottom-[max(1rem,env(safe-area-inset-bottom))] z-30 inline-flex h-12 cursor-pointer items-center gap-2 rounded-full bg-pipa pr-5 pl-2 font-semibold text-white shadow-lift transition-[background-color,opacity] duration-300 hover:bg-pipa-soft data-[menggulir]:opacity-40 hover:data-[menggulir]:opacity-100 focus-visible:data-[menggulir]:opacity-100 lg:hidden print:hidden" aria-haspopup="dialog" data-cari-buka data-cari-melayang>
+<button type="button" class="fixed left-4 bottom-[max(1rem,env(safe-area-inset-bottom))] z-30 inline-flex h-12 cursor-pointer items-center gap-2 rounded-full bg-pipa pr-5 pl-2 font-semibold text-white shadow-lift transition-[background-color,opacity] duration-300 hover:bg-pipa-soft data-[menggulir]:opacity-40 hover:data-[menggulir]:opacity-100 focus-visible:data-[menggulir]:opacity-100 lg:hidden print:hidden" aria-haspopup="dialog" data-cari-buka data-cari-melayang>
   <span class="grid size-8 place-items-center rounded-full bg-white/15 text-emas"><Icon name="mdi:magnify" size={20} /></span>
   Cari
 </button>
