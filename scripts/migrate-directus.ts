@@ -111,7 +111,8 @@ async function localiseAssets (markdown: string, mdFile: string, assetFolder: st
   return result
 }
 
-async function migrateArtikel (): Promise<void> {
+/** `pilih` menyaring artikel yang ditulis ulang (bawaan: semua); dipakai scripts/sync-cms.ts. */
+export async function migrateArtikel (pilih: (row: Row, mdFile: string) => boolean = () => true): Promise<void> {
   const rows = await items<Row[]>('artikel', 'filter[status][_eq]=published&limit=-1&sort=-date_created&fields=id,jenis,judul,ringkasan,cover,content,permalink,dipublikasi,date_created,date_updated')
   for (const row of rows) {
     const permalink = String(row.permalink ?? '').trim().replace(/^\/+|\/+$/g, '')
@@ -122,6 +123,9 @@ async function migrateArtikel (): Promise<void> {
     }
 
     const mdFile = join(ROOT, 'src/content/artikel', jenis, `${slug}.md`)
+    if (!pilih(row, mdFile)) {
+      continue
+    }
     const assetFolder = join(ROOT, 'src/assets/artikel', slug)
     const cover = row.cover ? await download(String(row.cover), assetFolder, 'sampul') : undefined
     const body = await localiseAssets(String(row.content ?? '').trim(), mdFile, assetFolder)
@@ -205,7 +209,9 @@ async function migrateData (): Promise<void> {
   }
 }
 
-await migrateArtikel()
-await migrateHalaman()
-await migrateData()
-console.log('selesai')
+if (import.meta.main) {
+  await migrateArtikel()
+  await migrateHalaman()
+  await migrateData()
+  console.log('selesai')
+}
