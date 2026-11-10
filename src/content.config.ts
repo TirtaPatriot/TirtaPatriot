@@ -151,7 +151,7 @@ const legal = defineCollection({
     partyLabel: z.string(),
     party: z.string(),
     links: z.array(z.object({ title: z.string(), href: z.string() })).optional(),
-    group: z.enum(['whatsapp', 'google']),
+    group: z.enum(['whatsapp', 'google', 'kepegawaian']),
     order: z.number(),
     summary: z.string(),
     indexBadge: z.string(),
