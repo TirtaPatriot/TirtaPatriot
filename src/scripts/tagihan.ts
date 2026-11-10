@@ -1,7 +1,7 @@
 /** Cek tagihan: kirim nomor pelanggan ke API lalu tampilkan rincian tagihan. */
 import { api, ApiError, recaptchaToken, warmRecaptcha } from './api'
 import { mountBayar } from './bayar-online'
-import { ringkasTagihan, isAir, KATEGORI } from '../lib/tagihan'
+import { isAir, labelTagihan, ringkasTagihan } from '../lib/tagihan'
 import { el, masked, setBusy, showError } from './dom'
 
 type Pelanggan = {
@@ -15,6 +15,8 @@ type Pelanggan = {
 
 type ItemTagihan = {
   kategori?: string
+  /** penanda baris non-air tertentu dari API, mis. DENDA */
+  jenis?: string
   bulan?: string
   stan_awal?: number | string
   stan_akhir?: number | string
@@ -84,7 +86,7 @@ function detailTable (items: ItemTagihan[]): HTMLElement {
   ))
 
   const body = el('tbody', '', ...items.map(item => {
-    const kategori = item.kategori ? KATEGORI[item.kategori] : undefined
+    const kategori = labelTagihan(item)
     return el('tr', 'border-b border-garis',
       el('td', 'periode py-3 pr-4', el('span', 'font-semibold', show(item.bulan), kategori && el('span', 'ml-2 rounded-sm bg-air px-1.5 py-0.5 text-sm font-semibold text-patriot', kategori))),
       ...columns.map(column => {
