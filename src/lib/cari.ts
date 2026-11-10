@@ -32,7 +32,7 @@ export const MENU: Entri[] = [
   { judul: 'Gangguan layanan', ringkasan: 'Pekerjaan perbaikan dan gangguan aliran air yang sedang ditangani.', url: '/informasi/gangguan-layanan', kata: 'air mati tidak mengalir pemadaman perbaikan' },
   { judul: 'Tempat pembayaran', ringkasan: 'Bank, mitra, virtual account, dan loket kantor untuk membayar rekening air.', url: '/informasi/tempat-pembayaran', kata: 'bayar loket bank virtual account minimarket' },
   { judul: 'Peta layanan', ringkasan: 'Jaringan pipa, zona layanan, dan lokasi kantor pelayanan.', url: '/informasi/peta-layanan', kata: 'wilayah zona jaringan pipa kecamatan' },
-  { judul: 'Kinerja layanan', ringkasan: 'Jumlah pelanggan, penanganan pengaduan, air terjual, dan sambungan baru dalam angka.', url: '/informasi/kinerja-layanan', kata: 'statistik data angka' },
+  { judul: 'Kinerja layanan', ringkasan: 'Jumlah pelanggan, air terjual, dan sambungan baru dalam angka.', url: '/informasi/kinerja-layanan', kata: 'statistik data angka' },
   { judul: 'Berita', ringkasan: 'Kabar kegiatan, kerja sama, dan pengumuman resmi.', url: '/berita', kata: 'kabar pengumuman' },
   { judul: 'Edukasi', ringkasan: 'Panduan menghemat air, merawat instalasi, dan memahami rekening air.', url: '/edukasi', kata: 'tips panduan hemat air' },
   { judul: 'Kebijakan privasi dan ketentuan layanan', ringkasan: 'Kebijakan privasi dan ketentuan layanan digital.', url: '/informasi/privacy-policy', kata: 'privacy policy syarat ketentuan data pribadi' },

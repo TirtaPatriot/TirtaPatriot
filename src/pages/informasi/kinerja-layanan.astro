@@ -14,9 +14,11 @@ const terakhir = aduan.at(-2)! // bulan penuh terakhir; bulan berjalan belum len
 const masukTotal = aduan.reduce((sum, row) => sum + row.masuk, 0)
 const selesaiTotal = aduan.reduce((sum, row) => sum + row.selesai, 0)
 const bulanBerjalan = (value: string) => value === pengaduan.bulanBerjalan
+// bagian penanganan pengaduan disembunyikan sementara; ubah ke true untuk menampilkannya lagi (data tetap di kinerja.json)
+const tampilkanPengaduan = false
 ---
 
-<Base title="Kinerja layanan" description="Jumlah pelanggan, penanganan pengaduan, air terjual, dan sambungan baru Perumda Tirta Patriot Kota Bekasi dalam angka.">
+<Base title="Kinerja layanan" description="Jumlah pelanggan, air terjual, dan sambungan baru Perumda Tirta Patriot Kota Bekasi dalam angka.">
   <PageHead
     title="Kinerja layanan"
     lead="Gambaran pelayanan kami kepada pelanggan di Kota Bekasi."
@@ -53,7 +55,8 @@ const bulanBerjalan = (value: string) => value === pengaduan.bulanBerjalan
       />
     </section>
 
-    <!-- pengaduan -->
+    <!-- pengaduan (disembunyikan sementara, lihat tampilkanPengaduan) -->
+    {tampilkanPengaduan && (
     <section class="mt-24 border-t border-garis pt-14" aria-labelledby="aduan-judul">
       <h2 id="aduan-judul" class="text-title font-extrabold">Penanganan pengaduan</h2>
       
@@ -108,6 +111,7 @@ const bulanBerjalan = (value: string) => value === pengaduan.bulanBerjalan
         />
       </div>
     </section>
+    )}
 
     <!-- air terjual & sambungan baru -->
     <section class="mt-24 border-t border-garis pt-14" aria-labelledby="volume-judul">
