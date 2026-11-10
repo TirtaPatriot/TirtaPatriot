@@ -1,6 +1,7 @@
 /** Cek tagihan: kirim nomor pelanggan ke API lalu tampilkan rincian tagihan. */
 import { api, ApiError, recaptchaToken, warmRecaptcha } from './api'
 import { mountBayar } from './bayar-online'
+import { ringkasTagihan, isAir, KATEGORI } from '../lib/tagihan'
 import { el, masked, setBusy, showError } from './dom'
 
 type Pelanggan = {
@@ -31,9 +32,6 @@ type ResponseTagihan = {
   total?: string | number
 }
 
-const KATEGORI: Record<string, string> = { NONAIR: 'Non-air', CICILAN: 'Cicilan' }
-
-const isAir = (item: ItemTagihan) => !item.kategori || item.kategori === 'AIR'
 const show = (value: unknown) => (value === undefined || value === null || value === '' ? '–' : String(value))
 
 function customerBlock (pelanggan: Pelanggan = {}): HTMLElement {
@@ -52,8 +50,8 @@ function customerBlock (pelanggan: Pelanggan = {}): HTMLElement {
   )
 }
 
-function totalBlock (data: ResponseTagihan, count: number): HTMLElement {
-  if (!count) {
+function totalBlock (data: ResponseTagihan, items: ItemTagihan[]): HTMLElement {
+  if (!items.length) {
     return el('div', 'rounded-lg bg-lunas-soft p-6 text-lunas',
       el('p', 'text-2xl font-extrabold', 'Tidak ada tagihan'),
       el('p', 'mt-1', 'Seluruh rekening air Anda sudah terbayar.'),
@@ -63,7 +61,7 @@ function totalBlock (data: ResponseTagihan, count: number): HTMLElement {
   return el('div', 'rounded-lg bg-pipa p-6 text-white',
     el('p', 'text-white/85', 'Total tagihan'),
     el('p', 'num mt-1 text-display font-extrabold', `Rp ${show(data.total)}`),
-    el('p', 'mt-2 text-white/85', `${count} periode belum dibayar`),
+    el('p', 'mt-2 text-white/85', ringkasTagihan(items)),
   )
 }
 
@@ -114,7 +112,7 @@ function render (container: HTMLElement, data: ResponseTagihan): void {
     ...(nonaktif ? [nonaktif] : []),
     el('div', 'grid gap-8 md:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] md:items-start',
       customerBlock(data.pelanggan),
-      totalBlock(data, items.length),
+      totalBlock(data, items),
     ),
     ...(items.length ? [detailTable(items)] : []),
   )
