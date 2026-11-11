@@ -6,5 +6,5 @@
   publish = "dist"
 
 [build.environment]
-  # Astro mensyaratkan Node >=22.23.4
-  NODE_VERSION = "22"
+  # Astro mensyaratkan Node >=22.23.4; produksi memakai Node 24
+  NODE_VERSION = "24"
