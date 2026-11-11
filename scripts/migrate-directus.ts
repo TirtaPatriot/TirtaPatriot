@@ -17,8 +17,10 @@ import remarkGfm from 'remark-gfm'
 import remarkStringify from 'remark-stringify'
 import { unified } from 'unified'
 
-const CMS = 'https://cms.tirtapatriot.net'
+/** Alamat CMS; bisa diganti lewat variabel lingkungan CMS_URL (mis. di Netlify). */
+const CMS = (process.env.CMS_URL || 'https://cms.tirtapatriot.net').replace(/\/+$/, '')
 const ROOT = join(import.meta.dir, '..')
+const dataFile = (name: string) => join(ROOT, 'src/data', `${name}.json`)
 const slugify = (value: unknown) => String(value).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
 const ASSET_ID = /[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/
 
@@ -91,7 +93,8 @@ async function htmlToMarkdown (html: string): Promise<string> {
 
 /** Ganti setiap rujukan aset CMS di Markdown dengan berkas lokal. */
 async function localiseAssets (markdown: string, mdFile: string, assetFolder: string): Promise<string> {
-  const pattern = new RegExp(`(?:https?://cms\\.tirtapatriot\\.net)?/assets/(${ASSET_ID.source})[^\\s)"'<]*`, 'g')
+  const host = CMS.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  const pattern = new RegExp(`(?:${host})?/assets/(${ASSET_ID.source})[^\\s)"'<]*`, 'g')
   const found = [...new Set([...markdown.matchAll(pattern)].map(match => match[0]))]
   let result = markdown
   for (const url of found) {
@@ -142,7 +145,7 @@ export async function migrateArtikel (pilih: (row: Row, mdFile: string) => boole
   }
 }
 
-async function migrateHalaman (): Promise<void> {
+export async function migrateHalaman (): Promise<void> {
   const [sejarah, visi] = await Promise.all([items<Row>('Sejarah'), items<Row>('visi')])
   const pages = [
     { id: 'sejarah', judul: String(sejarah.judul || 'Sejarah'), isi: String(sejarah.isi ?? ''), cover: sejarah.cover as string | null },
@@ -166,8 +169,18 @@ async function writeJson (name: string, data: unknown): Promise<void> {
   console.log('data', name)
 }
 
+/** Jajaran direksi (manajemen_pegawai dengan manajemen = direksi): nama, jabatan, dan foto. */
+export async function migrateDireksi (): Promise<void> {
+  const direksi = await items<Row[]>('manajemen_pegawai', 'filter[manajemen][_eq]=direksi&sort=sort,id&fields=id,nama,jabatan,foto')
+  await writeJson('direksi', await Promise.all(direksi.map(async row => ({
+    id: slugify(row.nama),
+    nama: row.nama,
+    jabatan: row.jabatan,
+    foto: row.foto ? rel(dataFile('direksi'), await download(String(row.foto), join(ROOT, 'src/assets/direksi'), String(row.id))) : null,
+  }))))
+}
+
 async function migrateData (): Promise<void> {
-  const dataFile = (name: string) => join(ROOT, 'src/data', `${name}.json`)
 
   const kantor = await items<Row[]>('kantor', 'sort=id&limit=-1')
   await writeJson('kantor', kantor.map(row => ({ id: String(row.id), nama: row.name, alamat: row.address, lat: row.latitude, lng: row.longitude })))
@@ -180,14 +193,6 @@ async function migrateData (): Promise<void> {
     url: row.url,
     aktif: row.status === 'published',
     logo: rel(dataFile('mitra'), await download(String(row.logo), join(ROOT, 'src/assets/mitra'), String(row.name).toLowerCase().replace(/[^a-z0-9]+/g, '-'), { keepFormat: true })),
-  }))))
-
-  const direksi = await items<Row[]>('manajemen_pegawai', 'filter[manajemen][_eq]=direksi&sort=sort,id&fields=id,nama,jabatan,foto')
-  await writeJson('direksi', await Promise.all(direksi.map(async row => ({
-    id: slugify(row.nama),
-    nama: row.nama,
-    jabatan: row.jabatan,
-    foto: row.foto ? rel(dataFile('direksi'), await download(String(row.foto), join(ROOT, 'src/assets/direksi'), String(row.id))) : null,
   }))))
 
   const navigasi = await items<Row[]>('butir_navigasi', 'filter[active][_eq]=true&filter[navigasi][pid][_eq]=main&sort=sort,id&deep[children][_sort]=sort,id&fields=title,to,children.title,children.to,children.active')
@@ -203,9 +208,15 @@ async function migrateData (): Promise<void> {
   // gambar tetap halaman
   await download('8A917A55-EC1A-4166-890A-1FB3AC32E481', join(ROOT, 'src/assets/halaman'), 'sotk', { keepFormat: true })
   await download('C74BDC20-E6AE-423E-BE27-68F220D0F119', join(ROOT, 'src/assets'), 'kantor-pusat')
+  await migrateHero()
+}
+
+/** Gambar utama beranda: slide pertama korsel yang terbit. */
+export async function migrateHero (): Promise<void> {
   const [slide] = await items<Row[]>('korsel', 'filter[status][_eq]=published&sort=sort,id&limit=1&fields=image,title')
   if (slide) {
     await download(String(slide.image), join(ROOT, 'src/assets'), 'hero')
+    console.log('hero')
   }
 }
 

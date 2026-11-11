@@ -1,0 +1,10 @@
+# Build Netlify (branch produksi: v2). Konten publik diambil dari CMS Directus saat build,
+# jadi penerbitan di CMS cukup memicu build ulang lewat build hook (lihat README, "Konten dari CMS").
+[build]
+  # bun dipakai di seluruh proyek; `bun run cms` gagal-aman: bila CMS tidak terjangkau, build memakai konten di repo
+  command = "command -v bun >/dev/null || npm install -g bun; bun install --frozen-lockfile && (bun run cms || echo 'CMS tidak terjangkau, memakai konten di repo') && bun run build"
+  publish = "dist"
+
+[build.environment]
+  # Astro mensyaratkan Node >=22.23.4
+  NODE_VERSION = "22"

@@ -29,6 +29,7 @@ bun run dev
 | `bun run lint` | oxlint |
 | `bun test` | unit test (penyaring konten, rumus tagihan, format, grafik) |
 | `bun run data` | perbarui snapshot tarif, kantor, dan kinerja dari ERP (jaringan internal) |
+| `bun run cms` | ambil berita, direksi, gambar utama, dan halaman Sejarah/Visi-Misi yang baru dari CMS Directus (tanpa login) |
 
 ## Struktur
 
@@ -44,13 +45,15 @@ bun run dev
 
 ## Sumber konten dan data
 
-Situs tidak lagi bergantung pada CMS Directus (cms.tirtapatriot.net).
+Konten yang diterbitkan di CMS Directus (`cms.tirtapatriot.net`, bisa diganti lewat `CMS_URL`) disalin ke repo oleh `bun run cms`, dan build Netlify menjalankannya sendiri sebelum `astro build` (lihat [Konten dari CMS](#konten-dari-cms)). Situs tidak memanggil CMS dari browser.
 
 | Isi | Sumber | Cara memperbarui |
 | --- | --- | --- |
-| Berita & edukasi | `src/content/artikel/{berita,edukasi}/*.md`, gambar di `src/assets/artikel/` | tambah/ubah berkas Markdown lalu commit |
-| Sejarah, visi-misi, dokumen legal | `src/content/halaman/`, `src/content/legal/` | ubah Markdown lalu commit |
-| Navigasi, mitra pembayaran, direksi | `src/data/*.json` | ubah JSON lalu commit |
+| Berita & edukasi | `src/content/artikel/{berita,edukasi}/*.md`, gambar di `src/assets/artikel/` | terbitkan di CMS (otomatis saat build Netlify, atau `bun run cms`); atau ubah Markdown lalu commit |
+| Sejarah, visi-misi | `src/content/halaman/` | ubah di CMS (otomatis saat build, atau `bun run cms`) |
+| Dokumen legal | `src/content/legal/` | ubah Markdown lalu commit |
+| Direksi dan gambar utama beranda | `src/data/direksi.json` + `src/assets/direksi/`, `src/assets/hero.webp` | ubah di CMS (otomatis saat build, atau `bun run cms`) |
+| Navigasi, mitra pembayaran | `src/data/*.json` | ubah JSON lalu commit |
 | Tarif, kantor pelayanan, kinerja layanan | snapshot dari ERP (MSSQL) di `src/data/{tarif,kantor,kinerja}.json` | `bun run data` dari jaringan internal, lalu commit |
 | Tempat pembayaran: bank/mitra resmi dan virtual account | snapshot dari ERP (`billing.billing_loket` dengan transaksi 60 hari terakhir, `info_pelanggan.channel`) di `src/data/pembayaran.json`; logo di `src/assets/mitra/<id>.png` | `bun run data`; gerai & aplikasi lain di `src/data/mitra.json` diubah manual |
 | Batas kecamatan & zona layanan | snapshot dari PostGIS (`jaringan.bataskecamatan`, `jaringan.bataslayanan`), disederhanakan, di `src/data/geo/` | jarang berubah; ekspor ulang bila batas diperbarui |
@@ -60,7 +63,19 @@ Situs tidak lagi bergantung pada CMS Directus (cms.tirtapatriot.net).
 | Catat meter mandiri, perubahan data pelanggan | API Open `/web/akses`, `/web/catat-meter`, `/web/pengajuan` (repo TirtaPatriot/Open, branch `main`). Verifikasi: nomor + nama + jumlah pembayaran terakhir; token 30 menit di `sessionStorage`. Catat meter butuh SP `bacameter.sp_catat_meter_mandiri_*` (lihat `sql/` di repo Open) | – |
 | Jaringan pipa | vector tile PostGIS function layer `publik.pipa` (hanya garis dan diameter) dari `https://tile.api.tirtapatriot.com`, di atas peta dasar OpenFreeMap | langsung dari server tile |
 
-`scripts/migrate-directus.ts` adalah skrip migrasi satu kali dari Directus, disimpan sebagai dokumentasi.
+`scripts/migrate-directus.ts` adalah migrasi penuh satu kali dari Directus; `scripts/sync-cms.ts` (`bun run cms`) memakai bagiannya untuk sinkron rutin.
+
+### Konten dari CMS
+
+Netlify (branch produksi `v2`, lihat `netlify.toml`) menjalankan `bun run cms` lalu `bun run build`. Bila CMS tidak terjangkau, build memakai konten yang sudah ada di repo. Artikel hanya diambil bila baru atau `date_updated`-nya berubah; direksi, gambar utama, dan halaman Sejarah/Visi-Misi diambil ulang setiap build.
+
+Agar penerbitan di CMS memicu build otomatis:
+
+1. Netlify: **Site configuration → Build & deploy → Build hooks → Add build hook** (branch `v2`), salin URL-nya.
+2. Directus: **Settings → Flows → Create Flow**, trigger **Event Hook** (Action, Non-Blocking) untuk `items.create`, `items.update`, `items.delete` pada koleksi `artikel`, `manajemen_pegawai`, `korsel`, `Sejarah`, dan `visi`.
+3. Tambahkan operasi **Webhook / Request URL**: `POST` ke URL build hook (tanpa isi). Opsional: operasi **Condition** sebelumnya agar hanya item berstatus `published` yang memicu.
+
+Peran Public di Directus harus bisa membaca koleksi itu. Direktur baru harus berstatus `published` dengan `manajemen = direksi`. Alamat CMS lain: isi `CMS_URL` di environment Netlify.
 
 ### Memperbarui data dari ERP
 
