@@ -10,9 +10,6 @@ import { reducedMotion } from './motion'
 
 const INTERVAL = 6000
 
-// pengguna sedang berinteraksi: yang baru siap muncul tanpa animasi agar tidak mengganggu
-let berinteraksi = false
-
 /** Dipanggil setelah gambar selesai dimuat dan didekode (juga bila gagal, agar bingkai tidak menggantung). */
 function reveal (img: HTMLImageElement, done?: () => void): void {
   const show = (): void => {
@@ -29,6 +26,12 @@ function reveal (img: HTMLImageElement, done?: () => void): void {
   }
 }
 
+// pengguna sudah menyentuh, mengetik, atau menggulir halaman sebelum karosel siap
+let halamanDipakai = false
+for (const type of ['pointerdown', 'keydown', 'touchstart', 'wheel', 'scroll']) {
+  window.addEventListener(type, () => { halamanDipakai = true }, { passive: true, once: true, capture: true })
+}
+
 // batas tunggu agar karosel tetap tampil bila ada gambar yang tak kunjung selesai (koneksi sangat lambat)
 const MAX_WAIT = 12000
 
@@ -43,8 +46,12 @@ function openWhenReady (root: HTMLElement, track: HTMLElement): void {
       return
     }
     opened = true
+    // karosel menyisipkan tinggi di atas halaman: bila pengguna sudah mulai memakai halaman, jangan tampilkan sama sekali
     const editing = document.activeElement instanceof HTMLElement && document.activeElement.matches('input, textarea, select, [contenteditable]')
-    root.toggleAttribute('data-diam', berinteraksi || editing || window.scrollY > 8 || reducedMotion())
+    if (halamanDipakai || editing || window.scrollY > 8) {
+      return
+    }
+    root.toggleAttribute('data-diam', reducedMotion())
     // satu frame untuk keadaan awal sebelum transisi dimulai
     requestAnimationFrame(() => root.setAttribute('data-siap', ''))
   }
@@ -202,20 +209,7 @@ export function initKarosel (): void {
   }
 
   let frame = 0
-  let scrolling = 0
-  const touching = { pointer: false, focus: false, touch: false, scroll: false }
-  const sync = (): void => { berinteraksi = Object.values(touching).some(Boolean) || Boolean(dialog?.open) }
-  root.addEventListener('pointerenter', () => { touching.pointer = true; sync() })
-  root.addEventListener('pointerleave', () => { touching.pointer = false; sync() })
-  root.addEventListener('focusin', () => { touching.focus = true; sync() })
-  root.addEventListener('focusout', event => { touching.focus = root.contains(event.relatedTarget as Node | null); sync() })
-  root.addEventListener('touchstart', () => { touching.touch = true; sync() }, { passive: true })
-  root.addEventListener('touchend', () => { touching.touch = false; sync() }, { passive: true })
   track.addEventListener('scroll', () => {
-    touching.scroll = true
-    sync()
-    clearTimeout(scrolling)
-    scrolling = window.setTimeout(() => { touching.scroll = false; sync() }, 700)
     cancelAnimationFrame(frame)
     frame = requestAnimationFrame(renderDots)
   }, { passive: true })
