@@ -29,9 +29,9 @@ const arrow = 'absolute top-[calc(50%-(clamp(36px,6vw,84px)+2.75rem)/2)] z-10 gr
   >
     {slides.map((slide, index) => (
       <li class="w-full shrink-0 snap-start pb-[calc(clamp(36px,6vw,84px)+2.75rem)]" aria-roledescription="slide" aria-label={`${index + 1} dari ${slides.length}`} data-karosel-slide={slide.id}>
-        <button type="button" class="mx-auto block w-full max-w-[calc((100svh-4.25rem-clamp(36px,6vw,84px)-2.75rem)*16/9)] cursor-pointer" aria-label={`${slide.title}, ${slide.tanggal}`} data-karosel-open data-title={slide.title} data-tanggal={slide.tanggal} data-image={slide.image ?? ''} data-gangguan={slide.gangguan ? '' : undefined}>
+        <button type="button" class="mx-auto block w-full max-w-[calc((100svh-4.25rem-clamp(36px,6vw,84px)-2.75rem)*16/9)] cursor-pointer overflow-hidden" aria-label={`${slide.title}, ${slide.tanggal}`} data-karosel-open data-title={slide.title} data-tanggal={slide.tanggal} data-image={slide.image ?? ''} data-gangguan={slide.gangguan ? '' : undefined}>
           {slide.image
-            ? <img src={slide.image} alt="" width="1280" height="720" loading={index === 0 ? 'eager' : 'lazy'} fetchpriority={index === 0 ? 'high' : undefined} decoding="async" class="block aspect-video w-full object-cover" />
+            ? <img src={slide.image} alt="" width="1280" height="720" loading="eager" fetchpriority={index === 0 ? 'high' : 'low'} decoding="async" class="karosel-gambar block aspect-video w-full object-cover" />
             : <span class="grid aspect-video w-full place-items-center p-8 text-center text-title font-extrabold text-white">{slide.title}</span>}
         </button>
         <template data-karosel-detail><div class="content"><slide.Content /></div></template>

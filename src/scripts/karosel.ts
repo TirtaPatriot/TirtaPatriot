@@ -10,19 +10,34 @@ import { reducedMotion } from './motion'
 
 const INTERVAL = 6000
 
+/** Munculkan gambar dengan transisi setelah selesai dimuat dan didekode (juga bila gagal, agar bingkai tidak menggantung). */
+function reveal (img: HTMLImageElement): void {
+  if (img.hasAttribute('data-termuat')) {
+    return
+  }
+  const show = (): void => img.setAttribute('data-termuat', '')
+  if (img.complete) {
+    void img.decode().then(show, show)
+    return
+  }
+  img.addEventListener('load', () => void img.decode().then(show, show), { once: true })
+  img.addEventListener('error', show, { once: true })
+}
+
 function slideFor (item: Pengumuman, index: number, total: number): HTMLLIElement {
   const image = item.cover_image || item.image || ''
-  const loading = index === 0 ? 'eager' : 'lazy'
 
-  const open = el('button', 'mx-auto block w-full max-w-[calc((100svh-4.25rem-clamp(36px,6vw,84px)-2.75rem)*16/9)] cursor-pointer')
+  const open = el('button', 'mx-auto block w-full max-w-[calc((100svh-4.25rem-clamp(36px,6vw,84px)-2.75rem)*16/9)] cursor-pointer overflow-hidden')
   if (image) {
-    const img = el('img', 'block aspect-video w-full object-cover')
+    const img = el('img', 'karosel-gambar block aspect-video w-full object-cover')
     img.src = image
     img.alt = ''
     img.width = 1280
     img.height = 720
-    img.loading = loading
+    img.loading = 'eager'
+    img.fetchPriority = index === 0 ? 'high' : 'low'
     open.append(img)
+    reveal(img)
   } else {
     open.append(el('span', 'grid aspect-video w-full place-items-center p-8 text-center text-title font-extrabold text-white', item.title))
   }
@@ -190,6 +205,9 @@ export function initKarosel (): void {
     }
   }, INTERVAL)
 
+  for (const img of track.querySelectorAll<HTMLImageElement>('.karosel-gambar')) {
+    reveal(img)
+  }
   renderDots()
   void refresh(root, track).then(changed => {
     if (changed) {
