@@ -35,6 +35,14 @@ for (const type of ['pointerdown', 'keydown', 'touchstart', 'wheel', 'scroll']) 
 // batas tunggu agar karosel tetap tampil bila ada gambar yang tak kunjung selesai (koneksi sangat lambat)
 const MAX_WAIT = 12000
 
+/** Beri tahu bahwa karosel sudah tampil sepenuhnya (sekali saja). */
+function announce (root: HTMLElement): void {
+  if (!root.hasAttribute('data-tampil')) {
+    root.setAttribute('data-tampil', '')
+    root.dispatchEvent(new CustomEvent('karosel:tampil'))
+  }
+}
+
 /** Tampilkan karosel setelah semua gambar slidenya siap; bila tak ada gambar, langsung. */
 function openWhenReady (root: HTMLElement, track: HTMLElement): void {
   if (root.hasAttribute('data-siap')) {
@@ -48,9 +56,24 @@ function openWhenReady (root: HTMLElement, track: HTMLElement): void {
     opened = true
     const editing = document.activeElement instanceof HTMLElement && document.activeElement.matches('input, textarea, select, [contenteditable]')
     if (!(halamanDipakai || editing || window.scrollY > 8)) {
-      root.toggleAttribute('data-diam', reducedMotion())
+      const instant = reducedMotion()
+      root.toggleAttribute('data-diam', instant)
       // satu frame untuk keadaan awal sebelum transisi dimulai
-      requestAnimationFrame(() => root.setAttribute('data-siap', ''))
+      requestAnimationFrame(() => {
+        root.setAttribute('data-siap', '')
+        if (instant) {
+          announce(root)
+          return
+        }
+        // putar otomatis menunggu animasi muncul selesai (dengan cadangan bila transisi tak pernah berakhir)
+        const done = (): void => announce(root)
+        root.addEventListener('transitionend', event => {
+          if (event.target === root && event.propertyName === 'grid-template-rows') {
+            done()
+          }
+        })
+        window.setTimeout(done, 1500)
+      })
       return
     }
     // pengguna sudah memakai halaman: sisipkan karosel seketika lalu geser gulir sebesar tingginya (dalam satu frame,
@@ -61,6 +84,7 @@ function openWhenReady (root: HTMLElement, track: HTMLElement): void {
     root.setAttribute('data-siap', '')
     window.scrollBy({ top: root.offsetHeight, behavior: 'instant' })
     requestAnimationFrame(() => { html.style.overflowAnchor = '' })
+    announce(root)
   }
   const images = [...track.querySelectorAll<HTMLImageElement>('.karosel-gambar')]
   let remaining = images.length
@@ -253,11 +277,19 @@ export function initKarosel (): void {
   root.addEventListener('focusin', () => { focused = true })
   root.addEventListener('focusout', event => { focused = root.contains(event.relatedTarget as Node | null) })
   track.addEventListener('touchstart', () => setPaused(true), { passive: true })
-  window.setInterval(() => {
-    if (!paused && !hovering && !focused && !document.hidden && !dialog?.open && stops() > 1) {
-      go(current() + 1)
-    }
-  }, INTERVAL)
+  // dimulai setelah karosel selesai muncul, supaya slide pertama mendapat waktu tayang penuh
+  const startAutoplay = (): void => {
+    window.setInterval(() => {
+      if (!paused && !hovering && !focused && !document.hidden && !dialog?.open && stops() > 1) {
+        go(current() + 1)
+      }
+    }, INTERVAL)
+  }
+  if (root.hasAttribute('data-tampil')) {
+    startAutoplay()
+  } else {
+    root.addEventListener('karosel:tampil', startAutoplay, { once: true })
+  }
 
   const watchImages = (): void => {
     for (const img of track.querySelectorAll<HTMLImageElement>('.karosel-gambar')) {
