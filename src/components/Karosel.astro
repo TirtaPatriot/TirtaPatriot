@@ -18,7 +18,8 @@ const slides = await Promise.all((await getCollection('pengumuman'))
 const arrow = 'absolute top-[calc(50%-(clamp(36px,6vw,84px)+2.75rem)/2)] z-10 grid size-9 -translate-y-1/2 cursor-pointer place-items-center rounded-full bg-pipa-deep/75 text-white ring-1 ring-white/25 backdrop-blur transition hover:bg-patriot sm:size-14'
 ---
 
-<section class="relative isolate overflow-hidden bg-pipa-deep" aria-labelledby="karosel-judul" data-karosel data-karosel-ids={slides.map(slide => slide.id).join(',')} hidden={slides.length === 0}>
+<section class="karosel relative isolate overflow-hidden bg-pipa-deep" aria-labelledby="karosel-judul" data-karosel data-karosel-ids={slides.map(slide => slide.id).join(',')} hidden={slides.length === 0}>
+  <div class="karosel-isi relative">
   <h2 id="karosel-judul" class="sr-only">Info terkini dari aplikasi Tirta Patriot Mobile</h2>
 
   <ul
@@ -57,6 +58,7 @@ const arrow = 'absolute top-[calc(50%-(clamp(36px,6vw,84px)+2.75rem)/2)] z-10 gr
 
   <div class="pointer-events-none">
     <Waves fill="var(--color-pipa)" />
+  </div>
   </div>
 
   <dialog class="m-auto max-h-[92vh] w-[min(94vw,46rem)] overflow-y-auto rounded-2xl bg-white p-0 text-pipa backdrop:bg-pipa/85" aria-labelledby="karosel-dialog-judul" data-karosel-dialog>

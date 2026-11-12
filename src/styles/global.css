@@ -1117,24 +1117,41 @@
   }
 }
 
-/* karosel beranda: gambar yang baru siap naik pelan sambil memudar; data-diam = muncul tanpa gerak (pengguna sedang berinteraksi) */
+/* karosel beranda: tidak ada sama sekali sampai gambar pertamanya siap, lalu terbuka pelan dari atas (data-siap);
+   data-diam = terbuka tanpa gerak karena pengguna sedang berinteraksi */
 @layer components {
   @media (scripting: enabled) {
+    .karosel {
+      display: grid;
+      grid-template-rows: 0fr;
+      opacity: 0;
+      transition:
+        grid-template-rows 0.9s var(--ease-out-soft),
+        opacity 0.9s var(--ease-out-soft);
+    }
+
+    .karosel-isi {
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .karosel[data-siap] {
+      grid-template-rows: 1fr;
+      opacity: 1;
+    }
+
+    .karosel[data-diam] {
+      transition: none;
+    }
+
+    /* gambar slide berikutnya yang menyusul: memudar singkat saat siap */
     .karosel-gambar {
       opacity: 0;
-      transform: translateY(1.25rem);
-      transition:
-        opacity 0.9s var(--ease-out-soft),
-        transform 1.1s var(--ease-out-soft);
+      transition: opacity 0.5s var(--ease-out-soft);
     }
 
     .karosel-gambar[data-termuat] {
       opacity: 1;
-      transform: none;
-    }
-
-    .karosel-gambar[data-diam] {
-      transition: none;
     }
   }
 }

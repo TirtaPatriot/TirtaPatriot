@@ -10,24 +10,42 @@ import { reducedMotion } from './motion'
 
 const INTERVAL = 6000
 
-// pengguna sedang berinteraksi dengan karosel: gambar yang baru siap muncul tanpa animasi agar tidak mengganggu
+// pengguna sedang berinteraksi: yang baru siap muncul tanpa animasi agar tidak mengganggu
 let berinteraksi = false
 
-/** Munculkan gambar dengan transisi setelah selesai dimuat dan didekode (juga bila gagal, agar bingkai tidak menggantung). */
-function reveal (img: HTMLImageElement): void {
-  if (img.hasAttribute('data-termuat')) {
-    return
-  }
+/** Dipanggil setelah gambar selesai dimuat dan didekode (juga bila gagal, agar bingkai tidak menggantung). */
+function reveal (img: HTMLImageElement, done?: () => void): void {
   const show = (): void => {
-    img.toggleAttribute('data-diam', berinteraksi || reducedMotion())
     img.setAttribute('data-termuat', '')
+    done?.()
   }
-  if (img.complete) {
+  if (img.hasAttribute('data-termuat')) {
+    done?.()
+  } else if (img.complete) {
     void img.decode().then(show, show)
+  } else {
+    img.addEventListener('load', () => void img.decode().then(show, show), { once: true })
+    img.addEventListener('error', show, { once: true })
+  }
+}
+
+/** Tampilkan karosel setelah gambar slide pertamanya siap; bila slide pertama tanpa gambar, langsung. */
+function openWhenReady (root: HTMLElement, track: HTMLElement): void {
+  if (root.hasAttribute('data-siap')) {
     return
   }
-  img.addEventListener('load', () => void img.decode().then(show, show), { once: true })
-  img.addEventListener('error', show, { once: true })
+  const open = (): void => {
+    const editing = document.activeElement instanceof HTMLElement && document.activeElement.matches('input, textarea, select, [contenteditable]')
+    root.toggleAttribute('data-diam', berinteraksi || editing || window.scrollY > 8 || reducedMotion())
+    // satu frame untuk keadaan awal sebelum transisi dimulai
+    requestAnimationFrame(() => root.setAttribute('data-siap', ''))
+  }
+  const first = track.querySelector<HTMLImageElement>('.karosel-gambar')
+  if (first) {
+    reveal(first, open)
+  } else {
+    open()
+  }
 }
 
 function slideFor (item: Pengumuman, index: number, total: number): HTMLLIElement {
@@ -43,7 +61,6 @@ function slideFor (item: Pengumuman, index: number, total: number): HTMLLIElemen
     img.loading = 'eager'
     img.fetchPriority = index === 0 ? 'high' : 'low'
     open.append(img)
-    reveal(img)
   } else {
     open.append(el('span', 'grid aspect-video w-full place-items-center p-8 text-center text-title font-extrabold text-white', item.title))
   }
@@ -224,12 +241,18 @@ export function initKarosel (): void {
     }
   }, INTERVAL)
 
-  for (const img of track.querySelectorAll<HTMLImageElement>('.karosel-gambar')) {
-    reveal(img)
+  const watchImages = (): void => {
+    for (const img of track.querySelectorAll<HTMLImageElement>('.karosel-gambar')) {
+      reveal(img)
+    }
   }
+  watchImages()
+  openWhenReady(root, track)
   renderDots()
   void refresh(root, track).then(changed => {
     if (changed) {
+      watchImages()
+      openWhenReady(root, track)
       renderDots()
     }
   })
