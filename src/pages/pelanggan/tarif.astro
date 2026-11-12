@@ -90,10 +90,6 @@ const angka = (value: number) => new Intl.NumberFormat('id-ID').format(value)
             <dt class="flex items-center gap-2 text-white/80"><span class="size-2.5 rounded-full bg-white/50" />Biaya administrasi</dt>
             <dd class="num font-semibold" data-admin>{rupiah(awal.admin)}</dd>
           </div>
-          <div class="flex items-center justify-between gap-4" data-materai-baris hidden>
-            <dt class="text-white/80">Bea materai</dt>
-            <dd class="num font-semibold" data-materai>{rupiah(awal.materai)}</dd>
-          </div>
         </dl>
 
         <p class="mt-6 border-t border-white/15 pt-4 text-sm text-white/70">
@@ -150,8 +146,6 @@ const angka = (value: number) => new Intl.NumberFormat('id-ID').format(value)
         <section aria-labelledby="ket-judul">
           <h3 id="ket-judul" class="text-xl font-bold">Keterangan</h3>
           <ul class="mt-4 grid gap-3 text-redup">
-            <li class="flex gap-3"><Icon name="mdi:check-circle-outline" size={20} class="mt-0.5 shrink-0 text-patriot" />Tidak ada PPN pada rekening air.</li>
-            <li class="flex gap-3"><Icon name="mdi:check-circle-outline" size={20} class="mt-0.5 shrink-0 text-patriot" />Bea materai Rp10.000 dikenakan bila tagihan mencapai Rp5.000.000.</li>
             <li class="flex gap-3"><Icon name="mdi:check-circle-outline" size={20} class="mt-0.5 shrink-0 text-patriot" />Golongan khusus untuk program atau perjanjian tertentu tidak dicantumkan; tanyakan ke unit pelayanan.</li>
           </ul>
           <p class="mt-5 text-sm text-redup">Per {dateLong(TARIF.diambil)}.</p>
@@ -213,7 +207,7 @@ const angka = (value: number) => new Intl.NumberFormat('id-ID').format(value)
     r.blok.forEach((baris, index) => {
       bars[index]!.style.width = `${r.total ? (baris.biaya / r.total) * 100 : 0}%`
     })
-    bars.at(-1)!.style.width = `${r.total ? ((r.admin + r.materai) / r.total) * 100 : 0}%`
+    bars.at(-1)!.style.width = `${r.total ? (r.admin / r.total) * 100 : 0}%`
 
     const rows = [...hasil.querySelectorAll<HTMLElement>('[data-rincian] > div')].slice(0, r.blok.length)
     r.blok.forEach((baris, index) => {
@@ -223,8 +217,6 @@ const angka = (value: number) => new Intl.NumberFormat('id-ID').format(value)
       row.classList.toggle('opacity-40', baris.m3 === 0)
     })
     hasil.querySelector('[data-admin]')!.textContent = rupiah(r.admin)
-    hasil.querySelector<HTMLElement>('[data-materai-baris]')!.hidden = r.materai === 0
-    hasil.querySelector('[data-materai]')!.textContent = rupiah(r.materai)
   }
 
   pakai.addEventListener('input', () => {

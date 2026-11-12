@@ -3,7 +3,6 @@
  *  - pemakaian dihitung paling sedikit sebesar pemakaian minimal golongan
  *  - harga progresif per blok: 0–10 m³, 11–20 m³, di atas 20 m³
  *  - ditambah biaya administrasi menurut ukuran meter
- *  - bea materai bila tagihan mencapai batasnya
  * Denda keterlambatan tidak termasuk.
  */
 import data from '../data/tarif.json'
@@ -19,7 +18,6 @@ export type Rincian = {
   blok: { dari: number, sampai: number | null, m3: number, harga: number, biaya: number }[]
   air: number
   admin: number
-  materai: number
   total: number
 }
 
@@ -37,9 +35,7 @@ export function hitungTagihan (golongan: Golongan, admin: number, pakai: number)
   })
 
   const air = blok.reduce((sum, baris) => sum + baris.biaya, 0)
-  const subtotal = air + admin
-  const materai = subtotal >= data.materai.batas ? data.materai.nominal : 0
-  return { ditagih, blok, air, admin, materai, total: subtotal + materai }
+  return { ditagih, blok, air, admin, total: air + admin }
 }
 
 export function rupiah (value: number): string {

@@ -80,7 +80,6 @@ await write('tarif', {
     dendaPersen: row.perjanjian ? row.persen : null,
   })),
   meter: meter.map(row => ({ ukuran: UKURAN[row.size] ?? row.size, admin: row.admin })),
-  materai: { batas: 5_000_000, nominal: 10_000 },
 })
 
 type KantorRow = { id: number, nama: string, alamat: string, hari: string, jam: string, telepon: string, lat: number, lng: number }

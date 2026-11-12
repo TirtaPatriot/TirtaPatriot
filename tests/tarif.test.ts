@@ -26,12 +26,6 @@ describe('hitungTagihan', () => {
     expect(r.total).toBe(371_000)
   })
 
-  it('bea materai mulai Rp5 juta', () => {
-    const r = hitungTagihan(gol('5C'), 1_235_000, 200)
-    expect(r.materai).toBe(10_000)
-    expect(r.total).toBe(r.air + r.admin + 10_000)
-  })
-
   it('angka pemakaian tidak valid dianggap nol', () => {
     expect(hitungTagihan(gol('2A'), ADMIN_HALF_INCH, -4).ditagih).toBe(10)
   })
