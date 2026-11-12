@@ -29,22 +29,39 @@ function reveal (img: HTMLImageElement, done?: () => void): void {
   }
 }
 
-/** Tampilkan karosel setelah gambar slide pertamanya siap; bila slide pertama tanpa gambar, langsung. */
+// batas tunggu agar karosel tetap tampil bila ada gambar yang tak kunjung selesai (koneksi sangat lambat)
+const MAX_WAIT = 12000
+
+/** Tampilkan karosel setelah semua gambar slidenya siap; bila tak ada gambar, langsung. */
 function openWhenReady (root: HTMLElement, track: HTMLElement): void {
   if (root.hasAttribute('data-siap')) {
     return
   }
+  let opened = false
   const open = (): void => {
+    if (opened) {
+      return
+    }
+    opened = true
     const editing = document.activeElement instanceof HTMLElement && document.activeElement.matches('input, textarea, select, [contenteditable]')
     root.toggleAttribute('data-diam', berinteraksi || editing || window.scrollY > 8 || reducedMotion())
     // satu frame untuk keadaan awal sebelum transisi dimulai
     requestAnimationFrame(() => root.setAttribute('data-siap', ''))
   }
-  const first = track.querySelector<HTMLImageElement>('.karosel-gambar')
-  if (first) {
-    reveal(first, open)
-  } else {
+  const images = [...track.querySelectorAll<HTMLImageElement>('.karosel-gambar')]
+  let remaining = images.length
+  if (remaining === 0) {
     open()
+    return
+  }
+  window.setTimeout(open, MAX_WAIT)
+  for (const img of images) {
+    reveal(img, () => {
+      remaining -= 1
+      if (remaining === 0) {
+        open()
+      }
+    })
   }
 }
 
