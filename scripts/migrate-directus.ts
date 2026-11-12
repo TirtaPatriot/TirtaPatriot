@@ -172,6 +172,11 @@ async function writeJson (name: string, data: unknown): Promise<void> {
 /** Jajaran direksi (manajemen_pegawai dengan manajemen = direksi): nama, jabatan, dan foto. */
 export async function migrateDireksi (): Promise<void> {
   const direksi = await items<Row[]>('manajemen_pegawai', 'filter[manajemen][_eq]=direksi&sort=sort,id&fields=id,nama,jabatan,foto')
+  // CMS yang membalas kosong (izin akses/filter berubah) tidak boleh menimpa direksi di repo
+  if (direksi.length === 0) {
+    console.warn('direksi: CMS kosong, memakai src/data/direksi.json di repo')
+    return
+  }
   await writeJson('direksi', await Promise.all(direksi.map(async row => ({
     id: slugify(row.nama),
     nama: row.nama,
