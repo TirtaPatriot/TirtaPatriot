@@ -10,12 +10,18 @@ import { reducedMotion } from './motion'
 
 const INTERVAL = 6000
 
+// pengguna sedang berinteraksi dengan karosel: gambar yang baru siap muncul tanpa animasi agar tidak mengganggu
+let berinteraksi = false
+
 /** Munculkan gambar dengan transisi setelah selesai dimuat dan didekode (juga bila gagal, agar bingkai tidak menggantung). */
 function reveal (img: HTMLImageElement): void {
   if (img.hasAttribute('data-termuat')) {
     return
   }
-  const show = (): void => img.setAttribute('data-termuat', '')
+  const show = (): void => {
+    img.toggleAttribute('data-diam', berinteraksi || reducedMotion())
+    img.setAttribute('data-termuat', '')
+  }
   if (img.complete) {
     void img.decode().then(show, show)
     return
@@ -162,7 +168,20 @@ export function initKarosel (): void {
   }
 
   let frame = 0
+  let scrolling = 0
+  const touching = { pointer: false, focus: false, touch: false, scroll: false }
+  const sync = (): void => { berinteraksi = Object.values(touching).some(Boolean) || Boolean(dialog?.open) }
+  root.addEventListener('pointerenter', () => { touching.pointer = true; sync() })
+  root.addEventListener('pointerleave', () => { touching.pointer = false; sync() })
+  root.addEventListener('focusin', () => { touching.focus = true; sync() })
+  root.addEventListener('focusout', event => { touching.focus = root.contains(event.relatedTarget as Node | null); sync() })
+  root.addEventListener('touchstart', () => { touching.touch = true; sync() }, { passive: true })
+  root.addEventListener('touchend', () => { touching.touch = false; sync() }, { passive: true })
   track.addEventListener('scroll', () => {
+    touching.scroll = true
+    sync()
+    clearTimeout(scrolling)
+    scrolling = window.setTimeout(() => { touching.scroll = false; sync() }, 700)
     cancelAnimationFrame(frame)
     frame = requestAnimationFrame(renderDots)
   }, { passive: true })
