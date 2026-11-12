@@ -31,7 +31,12 @@ ENV SITE_URL=$SITE_URL \
     PUBLIC_CHATWOOT_BASE_URL=$PUBLIC_CHATWOOT_BASE_URL \
     ASTRO_TELEMETRY_DISABLED=1
 
-RUN bun --bun run build \
+# konten CMS (direksi, berita, halaman) disinkron saat build seperti di Netlify; gagal-aman: bila CMS tidak
+# terjangkau, build memakai konten yang sudah ada di repo. Isi CMS_URL untuk alamat CMS lain.
+ARG CMS_URL
+ENV CMS_URL=$CMS_URL
+RUN (bun run cms || echo 'CMS tidak terjangkau, memakai konten di repo') \
+ && bun --bun run build \
  && bun scripts/nginx-redirects.ts public/_redirects > redirects.conf
 
 # --- runtime: nginx menyajikan berkas statis --------------------------------------------------
