@@ -46,14 +46,21 @@ function openWhenReady (root: HTMLElement, track: HTMLElement): void {
       return
     }
     opened = true
-    // karosel menyisipkan tinggi di atas halaman: bila pengguna sudah mulai memakai halaman, jangan tampilkan sama sekali
     const editing = document.activeElement instanceof HTMLElement && document.activeElement.matches('input, textarea, select, [contenteditable]')
-    if (halamanDipakai || editing || window.scrollY > 8) {
+    if (!(halamanDipakai || editing || window.scrollY > 8)) {
+      root.toggleAttribute('data-diam', reducedMotion())
+      // satu frame untuk keadaan awal sebelum transisi dimulai
+      requestAnimationFrame(() => root.setAttribute('data-siap', ''))
       return
     }
-    root.toggleAttribute('data-diam', reducedMotion())
-    // satu frame untuk keadaan awal sebelum transisi dimulai
-    requestAnimationFrame(() => root.setAttribute('data-siap', ''))
+    // pengguna sudah memakai halaman: sisipkan karosel seketika lalu geser gulir sebesar tingginya (dalam satu frame,
+    // sebelum digambar) agar isi yang sedang dilihat atau diketik tidak berpindah tempat
+    const html = document.documentElement
+    html.style.overflowAnchor = 'none'
+    root.setAttribute('data-diam', '')
+    root.setAttribute('data-siap', '')
+    window.scrollBy({ top: root.offsetHeight, behavior: 'instant' })
+    requestAnimationFrame(() => { html.style.overflowAnchor = '' })
   }
   const images = [...track.querySelectorAll<HTMLImageElement>('.karosel-gambar')]
   let remaining = images.length
