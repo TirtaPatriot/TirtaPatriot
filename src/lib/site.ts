@@ -46,6 +46,11 @@ export const ORGANIZATION_LD = {
     'postalCode': '17142',
     'addressCountry': 'ID',
   },
+  'geo': {
+    '@type': 'GeoCoordinates',
+    'latitude': -6.229475086786146,
+    'longitude': 107.00163507116419,
+  },
   'email': 'sekretariat@tirtapatriot.co.id',
   'telephone': '+6221-8896-6161',
   'contactPoint': {
