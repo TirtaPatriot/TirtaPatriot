@@ -68,11 +68,12 @@ export default defineConfig({
       },
     }),
     {
-      // alamat sitemap yang lazim: /sitemap.xml sama isinya dengan sitemap-index.xml buatan @astrojs/sitemap
+      // /sitemap.xml berisi daftar URL langsung (bukan indeks), disalin dari sitemap-0.xml buatan @astrojs/sitemap;
+      // cukup selama URL di bawah 50.000, jauh di atas jumlah halaman situs ini
       name: 'sitemap-xml',
       hooks: {
         'astro:build:done': async ({ dir }) => {
-          await copyFile(new URL('sitemap-index.xml', dir), new URL('sitemap.xml', dir))
+          await copyFile(new URL('sitemap-0.xml', dir), new URL('sitemap.xml', dir))
         },
       },
     },
