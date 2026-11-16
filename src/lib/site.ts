@@ -53,6 +53,13 @@ export const ORGANIZATION_LD = {
     'telephone': '+62 878-7516-3845',
     'email': 'humas@tirtapatriot.co.id',
   },
+  'openingHoursSpecification': {
+    '@type': 'OpeningHoursSpecification',
+    'dayOfWeek': ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+    'opens': '08:00',
+    'closes': '16:00',
+  },
+  'areaServed': { '@type': 'City', 'name': 'Kota Bekasi' },
   'foundingDate': '2010-01-15',
   'numberOfEmployees': {
     '@type': 'QuantitativeValue',

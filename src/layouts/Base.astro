@@ -37,7 +37,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site)
 const segments = Astro.url.pathname.split('/').filter(Boolean)
 const pageCard = segments.map((_, index) => pageCards[`../assets/og/${segments.slice(0, segments.length - index).join('-')}.jpg`]).find(Boolean)
 const ogImage = image ?? new URL((await getImage({ src: pageCard ?? ogDefault, width: 1200, height: 630, fit: 'cover', format: 'jpg' })).src, Astro.site).toString()
-const ogImageAlt = imageAlt ?? (image || pageCard ? title ?? SITE_NAME : `${SITE_NAME}: Berapa tagihan air Anda bulan ini? Cek tagihan di web.tirtapatriot.id`)
+const ogImageAlt = imageAlt ?? (image || pageCard ? title ?? SITE_NAME : `${SITE_NAME}: Berapa tagihan air Anda bulan ini? Cek tagihan di tirtapatriot.co.id`)
 const facebook = SOCIALS.find(item => item.title === 'Facebook')?.href
 const isHome = Astro.url.pathname === '/'
 
@@ -54,6 +54,9 @@ const chatwootUrl = import.meta.env.PUBLIC_CHATWOOT_BASE_URL
     <meta name="description" content={description}>
     <link rel="canonical" href={canonical}>
     <meta name="robots" content={noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'}>
+    <link rel="alternate" hreflang="id" href={canonical}>
+    <link rel="alternate" hreflang="x-default" href={canonical}>
+    <meta name="author" content={SITE_NAME}>
     <link rel="alternate" type="application/rss+xml" title={`Berita dan edukasi ${SITE_NAME}`} href="/rss.xml">
 
     <meta name="theme-color" content="#0098da">
@@ -90,7 +93,7 @@ const chatwootUrl = import.meta.env.PUBLIC_CHATWOOT_BASE_URL
 
     <Font cssVariable="--font-jakarta" preload />
 
-    {isHome && <script type="application/ld+json" set:html={ldJson({ ...ORGANIZATION_LD, url: Astro.site?.toString(), logo: new URL('/logo.png', Astro.site).toString() })} />}
+    {isHome && <script type="application/ld+json" set:html={ldJson({ ...ORGANIZATION_LD, url: Astro.site?.toString(), '@id': new URL('/#organisasi', Astro.site).toString(), logo: new URL('/logo.png', Astro.site).toString() })} />}
     {isHome && <script type="application/ld+json" set:html={ldJson(websiteLd(Astro.site!))} />}
     <slot name="head" />
   </head>

@@ -19,6 +19,12 @@ export function websiteLd (site: URL | string) {
     'url': site.toString(),
     'description': SITE_DESCRIPTION,
     'inLanguage': 'id-ID',
+    'publisher': { '@id': new URL('/#organisasi', site).toString() },
+    'potentialAction': {
+      '@type': 'SearchAction',
+      'target': { '@type': 'EntryPoint', 'urlTemplate': new URL('/cari?q={search_term_string}', site).toString() },
+      'query-input': 'required name=search_term_string',
+    },
   }
 }
 

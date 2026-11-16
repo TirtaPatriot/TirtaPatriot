@@ -38,7 +38,7 @@ const lastmod = artikelLastmod()
 // https://docs.astro.build/en/reference/configuration-reference/
 export default defineConfig({
   // domain publik untuk URL absolut (canonical, Open Graph, sitemap, robots.txt); bisa diganti lewat build-arg SITE_URL
-  site: process.env.SITE_URL || 'https://web.tirtapatriot.id',
+  site: process.env.SITE_URL || 'https://tirtapatriot.co.id',
   output: 'static',
   trailingSlash: 'ignore',
 

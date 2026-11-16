@@ -38,7 +38,7 @@ const TEXT = {
   judul: ['Berapa tagihan', 'air Anda bulan ini?'],
   lead: ['Cek tagihan, lapor gangguan, dan info', 'layanan air bersih Kota Bekasi.'],
   tombol: 'Cek tagihan',
-  alamat: 'web.tirtapatriot.id',
+  alamat: 'tirtapatriot.co.id',
 }
 
 /** TTF statis per ketebalan, disimpan di dir; UA lama membuat Google Fonts mengirim TTF, bukan WOFF2 */
