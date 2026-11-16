@@ -1,6 +1,7 @@
 import { unified } from '@astrojs/markdown-remark'
 import sitemap from '@astrojs/sitemap'
 import tailwindcss from '@tailwindcss/vite'
+import { copyFile } from 'node:fs/promises'
 import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { defineConfig, fontProviders } from 'astro/config'
@@ -66,6 +67,15 @@ export default defineConfig({
         return date ? { ...item, lastmod: date } : item
       },
     }),
+    {
+      // alamat sitemap yang lazim: /sitemap.xml sama isinya dengan sitemap-index.xml buatan @astrojs/sitemap
+      name: 'sitemap-xml',
+      hooks: {
+        'astro:build:done': async ({ dir }) => {
+          await copyFile(new URL('sitemap-index.xml', dir), new URL('sitemap.xml', dir))
+        },
+      },
+    },
   ],
 
   fonts: [
